@@ -1,7 +1,7 @@
 import Foundation
 
 /// HTTP 请求动词
-enum HttpVerb: String {
+enum HttpRequestMethod: String {
     case get     = "GET"
     case post    = "POST"
     case put     = "PUT"
