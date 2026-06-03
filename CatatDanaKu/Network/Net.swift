@@ -118,7 +118,7 @@ fileprivate class NetCore {
     ) throws -> URLRequest {
         // url
         guard let url = fullURL(path: path, queryParameters: queryParameters) else {
-            throw NetError.invalidURL
+            throw InternalErrors.invalidURL
         }
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod       = method.rawValue
@@ -143,11 +143,11 @@ fileprivate class NetCore {
         if isEncryptedJsonPost && Constants.useEncryption{
             // 加密模式：模型 → JSON 字符串 → 加密 → 放入 body
             guard let body = encodableBody else {
-                throw NetError.emptyBody
+                throw InternalErrors.emptyBody
             }
             let jsonData = try jsonEncoder.encode(body)
             guard let bodyStr = String(data: jsonData, encoding: .utf8) else {
-                throw NetError.jsonError
+                throw InternalErrors.jsonError
             }
             Logger.log("Real Request: \(bodyStr)")
             let encryptedString = try CryBox.realToA(real: bodyStr)
@@ -232,7 +232,7 @@ fileprivate class NetCore {
                 isSuccess:  false,
                 data:    nil,
                 statusCode: 502,
-                message:    LocalizedText.Error.generalFailure
+                message:    LocalizedText.Error.serverUnavailable
             )
         }
     }
@@ -286,7 +286,7 @@ fileprivate class NetCore {
 
     private func resolveMessage(_ msg: String?) -> String {
         if let msg, !msg.isEmpty { return msg }
-        return LocalizedText.Error.generalFailure
+        return LocalizedText.Error.serverUnavailable
     }
 
     // MARK: - 会话过期

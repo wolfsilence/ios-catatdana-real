@@ -9,12 +9,13 @@ import Foundation
 
 class Constants {
     static let useEncryption = false
-    static let baseUrl = "http://api.rp735.xyz/leopard"
-    
+    static let baseUrl = "http://api.rp735.xyz"
+
     static let codeTokenInvalid = 701
-    
+
     static let keyHeaderToken = "x-app-token"
     static let keyHeaderVer = "x-app-version"
-    
-    
+
+    static let aesKey = "5829463175829463"
+    static let aesIV  = "1478523691478523"
 }

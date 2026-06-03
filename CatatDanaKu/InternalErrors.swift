@@ -6,10 +6,11 @@ import Foundation
 //
 //  Created by lishen on 2026/6/3.
 //
-enum NetError: Error {
+enum InternalErrors: Error {
     case invalidURL
     case tokenValid
     case overdue
     case emptyBody
     case jsonError
+    case cryptError
 }
