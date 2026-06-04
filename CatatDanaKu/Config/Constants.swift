@@ -10,12 +10,23 @@ import Foundation
 class Constants {
     static let useEncryption = false
     static let baseUrl = "http://api.rp735.xyz"
+    
+    static let appDatabaseName = "CatatDana"
 
     static let codeTokenInvalid = 701
 
     static let keyHeaderToken = "x-app-token"
     static let keyHeaderVer = "x-app-version"
 
-    static let aesKey = "5829463175829463"
-    static let aesIV  = "1478523691478523"
+    static let aesKey = "7350294618372502"
+    static let aesIV  = "8147253690281472"
+
+    static let privacyPolicyURL = "https://admanfelly.github.io/privacypolicy/"
+
+    // MARK: 登录
+    static let countdownSeconds = 100
+    static let phoneMinDigits = 9
+    static let phoneMaxDigits = 13
+    static let vcodeLength = 4
+    static let intlCode = "62"
 }

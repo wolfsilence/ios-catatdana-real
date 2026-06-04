@@ -11,7 +11,7 @@ import SwiftUI
 struct CatatDanaKuApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView()
+            CDContentView()
         }
     }
 }

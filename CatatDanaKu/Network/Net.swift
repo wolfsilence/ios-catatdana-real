@@ -228,11 +228,12 @@ fileprivate class NetCore {
                 )
             }
         } catch {
+            Logger.log("Error: \(error.localizedDescription)")
             return NetResponse(
                 isSuccess:  false,
                 data:    nil,
                 statusCode: 502,
-                message:    LocalizedText.Error.serverUnavailable
+                message:    Strings.Error.serverUnavailable
             )
         }
     }
@@ -286,7 +287,7 @@ fileprivate class NetCore {
 
     private func resolveMessage(_ msg: String?) -> String {
         if let msg, !msg.isEmpty { return msg }
-        return LocalizedText.Error.serverUnavailable
+        return Strings.Error.serverUnavailable
     }
 
     // MARK: - 会话过期

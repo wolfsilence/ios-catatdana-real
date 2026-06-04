@@ -1,0 +1,37 @@
+import Foundation
+
+//
+//  Keys.swift
+//  CatatDanaKu
+//
+//  Created by lishen on 2026/6/4.
+//
+
+/// UserDefaults / Keychain 存储键
+class Keys {
+    // MARK: 通用
+    static let firstLaunch = "hasLaunchedBefore"
+
+    // MARK: 登录
+    static let countdownExpiry = "com.catatdanaku.login.countdownExpiry"
+    static let countdownMethod = "com.catatdanaku.login.countdownMethod"
+    static let countdownPhone  = "com.catatdanaku.login.countdownPhone"
+    static let lastLoginPhone  = "com.catatdanaku.login.lastPhone"
+
+    // MARK: Token
+    static let accessToken = "com.catatdanaku.access-token"
+
+    // MARK: IDFA
+    static let idfa = "com.catatdanaku.idfa"
+
+    // MARK: Attribution
+    static let adjustId   = "com.catatdanaku.adjustId"
+    static let adjustData = "com.catatdanaku.adjustData"
+    static let referrer   = "com.catatdanaku.referrer"
+
+    // MARK: Redirect URL
+    static let redirectUrl = "com.catatdanaku.login.redirectUrl"
+
+    // MARK: Keychain Service
+    static let keychainService = "com.catatdanaku.keychain"
+}

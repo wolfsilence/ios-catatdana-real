@@ -4,7 +4,7 @@ import Foundation
 class AuthCredentialStore {
     static let shared = AuthCredentialStore()
 
-    private let tokenKey = "com.catatdanaku.access-token"
+    private let tokenKey = Keys.accessToken
 
     private init() {}
 
