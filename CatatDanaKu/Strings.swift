@@ -162,22 +162,22 @@ enum Strings {
     enum Permission {
         static let cameraTitle = NSLocalizedString(
             "permission.cameraTitle",
-            value: "Camera Permission",
+            value: "Izin Kamera",
             comment: ""
         )
         static let cameraMessage = NSLocalizedString(
             "permission.cameraMessage",
-            value: "To provide better service, please go to Settings to enable all permissions. Thank you!",
+            value: "Untuk memberikan layanan yang lebih baik, silakan buka Pengaturan untuk mengaktifkan semua izin. Terima kasih!",
             comment: ""
         )
         static let go = NSLocalizedString(
             "permission.go",
-            value: "Go",
+            value: "Buka Pengaturan",
             comment: ""
         )
         static let cancel = NSLocalizedString(
             "permission.cancel",
-            value: "Cancel",
+            value: "Batal",
             comment: ""
         )
     }

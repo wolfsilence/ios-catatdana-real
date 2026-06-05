@@ -17,9 +17,9 @@ struct CDRedView: View {
     @State private var showCamera = false
     @State private var showGallery = false
     @State private var showContact = false
-    @State private var showInAppBrowser = false
-    @State private var browserURL: URL? = nil
-    @State private var browserTitle = ""
+    @State private var showLiveDetection = false
+    @State private var browserConfig: BrowserConfig?
+    @State private var isFirstLoading = true
     private let handler = JSMessageHandler()
     
     private var redirectURL: URL? {
@@ -37,24 +37,31 @@ struct CDRedView: View {
                     showCamera: $showCamera,
                     showGallery: $showGallery,
                     showContact: $showContact,
+                    isFirstLoading: $isFirstLoading,
                     onLogout: onLogout,
                     onInAppBrowser: { url, title in
-                        browserURL = url
-                        browserTitle = title
-                        showInAppBrowser = true
-                    }
+                        browserConfig = BrowserConfig(url: url, title: title)
+                    },
+                    onLiveDetection: { showLiveDetection = true }
                 )
+                .overlay {
+                    if isFirstLoading {
+                        Color.black.opacity(0.15)
+                            .ignoresSafeArea()
+                        ProgressView()
+                    }
+                }
                 .ignoresSafeArea()
             }
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraPicker { image in
-                Task { await handler.onPhotoCaptured(image: image) }
+                handler.onPhotoCaptured(image: image)
             }
         }
         .fullScreenCover(isPresented: $showGallery) {
             GalleryPicker { image in
-                Task { await handler.onGalleryPicked(image: image) }
+                handler.onGalleryPicked(image: image)
             }
         }
         .sheet(isPresented: $showContact) {
@@ -62,9 +69,14 @@ struct CDRedView: View {
                 handler.onContactPicked(name: name, phone: phone)
             }
         }
-        .fullScreenCover(isPresented: $showInAppBrowser) {
-            if let url = browserURL {
-                InAppBrowserView(url: url, title: browserTitle)
+        .fullScreenCover(item: $browserConfig) { config in
+            CDWebView(url: config.url, title: config.title)
+        }
+        .fullScreenCover(isPresented: $showLiveDetection) {
+            if let url = URL(string: Constants.livenessUrl) {
+                CDLiveView(url: url) { conclusion in
+                    handler.onLiveResult(conclusion)
+                }
             }
         }
     }
@@ -77,8 +89,10 @@ struct CDRedView: View {
         @Binding var showCamera: Bool
         @Binding var showGallery: Bool
         @Binding var showContact: Bool
+        @Binding var isFirstLoading: Bool
         var onLogout: (() -> Void)?
         var onInAppBrowser: ((URL, String) -> Void)?
+        var onLiveDetection: (() -> Void)?
         
         func makeCoordinator() -> Coordinator {
             Coordinator(parent: self)
@@ -89,18 +103,11 @@ struct CDRedView: View {
             let controller = WKUserContentController()
             
             // 注入 JS 桥接：H5 调用 window.Android.callAndroid(json) → WKWebView
-            let bridgeScript = """
-        window.Android = {
-            callAndroid: function(json) {
-                window.webkit.messageHandlers.Android.postMessage(json);
-            }
-        };
-        """
-            let userScript = WKUserScript(source: bridgeScript,
+            let userScript = WKUserScript(source: Webs.bridgeScript,
                                           injectionTime: .atDocumentStart,
                                           forMainFrameOnly: false)
             controller.addUserScript(userScript)
-            controller.add(context.coordinator, name: "Android")
+            controller.add(context.coordinator, name: Webs.android)
             config.userContentController = controller
             
             let webView = WKWebView(frame: .zero, configuration: config)
@@ -126,45 +133,40 @@ struct CDRedView: View {
                         .replacingOccurrences(of: "\\", with: "\\\\")
                         .replacingOccurrences(of: "\"", with: "\\\"")
                         .replacingOccurrences(of: "\n", with: "\\n")
-                    let script = "callJs(\"\(escaped)\")"
-                    DispatchQueue.main.async { webView?.evaluateJavaScript(script) }
+                    let script = "\(Webs.callJs)(\"\(escaped)\")"
+                    DispatchQueue.main.async {
+                        Logger.log(script)
+                        webView?.evaluateJavaScript(script)
+                    }
                 }
                 h.requestCamera = { [weak self] in self?.parent.showCamera = true }
                 h.requestGallery = { [weak self] in self?.parent.showGallery = true }
                 h.requestContact = { [weak self] in self?.parent.showContact = true }
                 h.requestInAppBrowser = { [weak self] url, title in self?.parent.onInAppBrowser?(url, title) }
+                h.requestLiveDetection = { [weak self] in self?.parent.onLiveDetection?() }
+                h.onLogout = { [weak self] in self?.parent.onLogout?() }
             }
             
             func userContentController(_ userContentController: WKUserContentController,
                                        didReceive message: WKScriptMessage) {
-                guard message.name == "Android",
+                guard message.name == Webs.android,
                       let body = message.body as? String,
                       let data = body.data(using: .utf8),
                       let msg = try? JSONDecoder().decode(AndroidJsMsg.self, from: data)
                 else { return }
-                
-                if msg.key == 11 {
-                    AuthCredentialStore.shared.revokeAccess()
-                    UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-                    DispatchQueue.main.async { self.parent.onLogout?() }
-                    return
-                }
-                
-                Task { @MainActor in parent.handler.handle(msg: msg) }
+                Logger.log(body)
+                Task { parent.handler.handle(msg: msg) }
             }
             
             func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-                var msg = AndroidJsMsg()
-                msg.key = 0
-                msg.value = "1"
-                msg.token = AuthCredentialStore.shared.accessToken
-                msg.deviceId = IDFAProvider.idfa()
-                guard let data = try? JSONEncoder().encode(msg),
-                      let json = String(data: data, encoding: .utf8) else { return }
-                let escaped = json
-                    .replacingOccurrences(of: "\\", with: "\\\\")
-                    .replacingOccurrences(of: "\"", with: "\\\"")
-                webView.evaluateJavaScript("callJs(\"\(escaped)\")")
+                if parent.isFirstLoading {
+                    parent.isFirstLoading = false
+                }
+                [Webs.key7, Webs.key10, Webs.key13].forEach { key in
+                    var msg = AndroidJsMsg()
+                    msg.key = key
+                    parent.handler.handle(msg: msg)
+                }
             }
         }
     }
@@ -243,28 +245,12 @@ struct CDRedView: View {
             func contactPickerDidCancel(_ picker: CNContactPickerViewController) { onPick(nil, nil) }
         }
     }
-    
-    // MARK: - In-App Browser
-    
-    private struct InAppBrowserView: View {
+
+    // MARK: - Browser Config
+
+    private struct BrowserConfig: Identifiable {
+        let id = UUID()
         let url: URL
         let title: String
-        @Environment(\.dismiss) private var dismiss
-        var body: some View {
-            NavigationStack {
-                WebViewWrapper(url: url)
-                    .navigationTitle(title)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) { Button("Tutup") { dismiss() } }
-                    }
-            }
-        }
-    }
-    
-    private struct WebViewWrapper: UIViewRepresentable {
-        let url: URL
-        func makeUIView(context: Context) -> WKWebView { WKWebView() }
-        func updateUIView(_ uiView: WKWebView, context: Context) { uiView.load(URLRequest(url: url)) }
     }
 }

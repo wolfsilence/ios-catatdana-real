@@ -1,55 +1,73 @@
-@preconcurrency import UIKit
+import UIKit
 
-//
-//  ImageCompressor.swift
-//  CatatDanaKu
-//
-//  Created by lishen on 2026/6/4.
-//
-
-/// 图片压缩工具（Data 版本可在任意线程调用）
 enum ImageCompressor {
 
-    /// UIImage → 主线程取原始 JPEG Data（调用方必须在主线程）
-    static func extractJPEG(_ image: UIImage, quality: CGFloat = 1.0) -> Data? {
-        image.jpegData(compressionQuality: quality)
+    // MARK: - Public API
+
+    /// UIImage → 压缩后 JPEG Data（先缩分辨率，再 JPEG 编码）
+    static func compress(_ image: UIImage, maxKB: Int = 250) -> Data? {
+        // 1. 缩分辨率：最长边 ≤ maxSide
+        let resized = resize(image, maxSide: 800)
+        // 2. 从合理 quality 出发二分，避免从 1.0 起产生巨量 data
+        guard var jpeg = resized.jpegData(compressionQuality: 0.75) else { return nil }
+        // 3. 二分微调 quality 到目标大小
+        jpeg = compress(jpeg, maxKB: maxKB, sourceImage: resized)
+        return jpeg
     }
 
-    /// 对 JPEG Data 做二分压缩到 maxKB 以下，任意线程安全
-    static func compress(_ data: Data, maxKB: Int = 250) -> Data {
+    /// JPEG Data → 进一步压缩（二分 quality；须主线程调用，涉及 UIImage 重编码）
+    static func compress(_ data: Data, maxKB: Int = 250, sourceImage: UIImage? = nil) -> Data {
         let maxBytes = maxKB * 1024
-        if data.count <= maxBytes { return data }
-        // 二分降低质量重编码
-        var result = data
-        var low: CGFloat = 0, high: CGFloat = 1.0
-        let image = UIImage(data: data)
-        for _ in 0..<8 {
-            let mid = (low + high) / 2
-            guard let compressed = image?.jpegData(compressionQuality: mid) else { break }
+        guard data.count > maxBytes else { return data }
+
+        guard let image = sourceImage ?? UIImage(data: data) else { return data }
+
+        var bestData = data
+        var low: CGFloat = 0.0
+        var high: CGFloat = 1.0
+
+        for _ in 0..<6 {
+            let mid = (low + high) / 2.0
+            guard mid > 0.01,
+                  let compressed = image.jpegData(compressionQuality: mid) else { break }
+
             if compressed.count <= maxBytes {
+                bestData = compressed
                 low = mid
-                result = compressed
             } else {
                 high = mid
             }
+
+            if abs(compressed.count - maxBytes) < maxBytes / 20 { break }
         }
-        return result
+
+        return bestData
     }
 
-    /// UIImage → 主线程取 JPEG + 压缩（便捷方法，需在主线程调用）
-    static func compress(_ image: UIImage, maxKB: Int = 250) -> Data? {
-        guard let data = extractJPEG(image) else { return nil }
-        return compress(data, maxKB: maxKB)
-    }
-
-    /// UIImage → Base64 字符串（调用方必须在主线程）
+    /// UIImage → Base64 字符串（主线程调用）
     static func toBase64(_ image: UIImage, maxKB: Int = 250) -> String? {
         guard let data = compress(image, maxKB: maxKB) else { return nil }
         return dataToBase64(data)
     }
 
-    /// JPEG Data → Base64 字符串，任意线程安全
+    /// Data → Base64 Data URI（任意线程安全）
     static func dataToBase64(_ data: Data) -> String {
-        "data:image/jpeg;base64,\(data.base64EncodedString())"
+        let base64 = data.base64EncodedString()
+        return "data:image/jpeg;base64,\(base64)"
+    }
+
+    // MARK: - Private
+
+    /// 等比缩放，最长边 ≤ maxSide
+    private static func resize(_ image: UIImage, maxSide: CGFloat) -> UIImage {
+        let size = image.size
+        let scale = min(maxSide / size.width, maxSide / size.height, 1)
+        guard scale < 1 else { return image }
+
+        let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        }
     }
 }

@@ -128,6 +128,7 @@ final class LoginViewModel {
         countdownCancellable?.cancel()
         countdownCancellable = nil
         countdownExpiry = nil
+        UserDefaults.standard.removeObject(forKey: Keys.countdownExpiry)
         UserDefaults.standard.removeObject(forKey: Keys.countdownMethod)
         UserDefaults.standard.removeObject(forKey: Keys.countdownPhone)
     }
@@ -149,8 +150,8 @@ final class LoginViewModel {
             intlCode: Constants.intlCode,
             deviceId: IDFAProvider.idfa(),
             vcodeMethod: method.rawValue,
-            latitude: nil,
-            longitude: nil,
+            latitude: LocationManager.shared.latitude,
+            longitude: LocationManager.shared.longitude,
             referrer: nil,
             country: nil
         )
@@ -177,6 +178,7 @@ final class LoginViewModel {
 
         if let token = data.token, !token.isEmpty {
             AuthCredentialStore.shared.accessToken = token
+            clearCountdown()
             isLoggedIn = true
         } else {
             isCodeFieldVisible = true
@@ -195,8 +197,8 @@ final class LoginViewModel {
             phone: extractedPhone,
             intlCode: Constants.intlCode,
             vcodeMethod: vcodeMethod.rawValue,
-            latitude: nil,
-            longitude: nil,
+            latitude: LocationManager.shared.latitude,
+            longitude: LocationManager.shared.longitude,
             country: nil,
             referrer: nil
         )
@@ -260,6 +262,7 @@ final class LoginViewModel {
         if result.isSuccess, let data = result.data, let token = data.token, !token.isEmpty {
             AuthCredentialStore.shared.accessToken = token
             UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
+            clearCountdown()
             isLoggedIn = true
         } else {
             errorMessage = result.message ?? Strings.Error.serverUnavailable

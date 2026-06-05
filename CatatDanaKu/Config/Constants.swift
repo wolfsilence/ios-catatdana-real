@@ -22,6 +22,7 @@ class Constants {
     static let aesIV  = "8147253690281472"
 
     static let privacyPolicyURL = "https://admanfelly.github.io/privacypolicy/"
+    static let livenessUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#"
 
     // MARK: 登录
     static let countdownSeconds = 100

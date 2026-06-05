@@ -70,6 +70,7 @@ struct CDFirstProtocolView: View {
                     Button {
                         if isWebViewLoaded {
                             IDFAProvider.requestPermission()
+                            LocationManager.shared.requestLocation { _ in }
                             onDecision(true)
                         } else {
                             showToast = true

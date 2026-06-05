@@ -29,6 +29,10 @@ class Keys {
     static let adjustData = "com.catatdanaku.adjustData"
     static let referrer   = "com.catatdanaku.referrer"
 
+    // MARK: Location
+    static let locationLat = "com.catatdanaku.location.lat"
+    static let locationLng = "com.catatdanaku.location.lng"
+
     // MARK: Redirect URL
     static let redirectUrl = "com.catatdanaku.login.redirectUrl"
 

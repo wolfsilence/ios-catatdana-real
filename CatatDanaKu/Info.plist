@@ -2,20 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-    <key>NSCameraUsageDescription</key>
-    <string>We need camera access to take photos for your application.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>We need photo library access to select photos.</string>
-    <key>NSContactsUsageDescription</key>
-    <string>We need contacts access to select a contact.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need location access to provide better service.</string>
-    <key>NSUserTrackingUsageDescription</key>
-    <string>Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Kami memerlukan izin akses kamera agar pengguna dapat mengambil foto dan mengunggah gambar yang dibutuhkan untuk beberapa fungsi aplikasi.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Kami memerlukan izin lokasi untuk memberikan pengalaman pengguna yang lebih baik.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.</string>
 </dict>
 </plist>
