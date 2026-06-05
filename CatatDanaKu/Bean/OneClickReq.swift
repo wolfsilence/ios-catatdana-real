@@ -11,6 +11,7 @@ struct OneClickReq: Codable {
     var longitude: String?
     var referrer: String?
     var country: String?
+    var sign: String?
     var uescwnw: Int?
     var aqlbt: Int?
     var clhdk: Bool?
