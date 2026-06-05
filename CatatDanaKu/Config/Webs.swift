@@ -15,6 +15,7 @@ enum Webs {
     static let android      = "Android"
     static let callAndroid  = "callAndroid"
     static let callJs       = "callJs"
+    static let consoleLog   = "consoleLog"
 
     // MARK: - Message Keys
     static let key1  = 1   // 拍照
@@ -37,5 +38,21 @@ window.\(android) = {
         window.webkit.messageHandlers.\(android).postMessage(json);
     }
 };
+(function() {
+    var con = window.webkit.messageHandlers.\(consoleLog);
+    var fn = function(level) {
+        return function() {
+            var args = Array.prototype.slice.call(arguments);
+            var msg = args.map(function(a) {
+                try { return typeof a === 'object' ? JSON.stringify(a) : String(a); } catch(e) { return String(a); }
+            }).join(' ');
+            con.postMessage({level: level, message: msg});
+        };
+    };
+    console.log = fn('log');
+    console.warn = fn('warn');
+    console.error = fn('error');
+    console.info = fn('info');
+})();
 """
 }

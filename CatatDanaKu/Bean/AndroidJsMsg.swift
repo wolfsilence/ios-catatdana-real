@@ -26,13 +26,4 @@ struct AndroidJsMsg: Codable {
     var logs: [String]?
     var livenessId: String?
     var livenessImg: String?
-    var ocxcldqrn: Int?
-    var vmhwzcwphjab: Bool?
-    var ndpcjx: Bool?
-    var web: Int?
-    var vuijpqebrk: Bool?
-    var cnflkg: Double?
-    var zocyckp: Int?
-    var emej: Int?
-    var ospzhyv: Double?
 }

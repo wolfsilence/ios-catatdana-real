@@ -108,6 +108,7 @@ struct CDRedView: View {
                                           forMainFrameOnly: false)
             controller.addUserScript(userScript)
             controller.add(context.coordinator, name: Webs.android)
+            controller.add(context.coordinator, name: Webs.consoleLog)
             config.userContentController = controller
             
             let webView = WKWebView(frame: .zero, configuration: config)
@@ -149,13 +150,25 @@ struct CDRedView: View {
             
             func userContentController(_ userContentController: WKUserContentController,
                                        didReceive message: WKScriptMessage) {
-                guard message.name == Webs.android,
-                      let body = message.body as? String,
-                      let data = body.data(using: .utf8),
-                      let msg = try? JSONDecoder().decode(AndroidJsMsg.self, from: data)
-                else { return }
-                Logger.log(body)
-                Task { parent.handler.handle(msg: msg) }
+                switch message.name {
+                case Webs.android:
+                    guard let body = message.body as? String,
+                          let data = body.data(using: .utf8),
+                          let msg = try? JSONDecoder().decode(AndroidJsMsg.self, from: data)
+                    else { return }
+                    Logger.log(body)
+                    Task { parent.handler.handle(msg: msg) }
+
+                case Webs.consoleLog:
+                    guard let dict = message.body as? [String: Any],
+                          let level = dict["level"] as? String,
+                          let text = dict["message"] as? String
+                    else { return }
+                    Logger.log("[Web] [\(level)] \(text)")
+
+                default:
+                    break
+                }
             }
             
             func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
