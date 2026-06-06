@@ -27,6 +27,7 @@ class Keys {
     // MARK: Attribution
     static let adjustId   = "com.catatdanaku.adjustId"
     static let adjustData = "com.catatdanaku.adjustData"
+    static let adjustNetwork   = "com.catatdanaku.adjustNetwork"
     static let referrer   = "com.catatdanaku.referrer"
 
     // MARK: Location

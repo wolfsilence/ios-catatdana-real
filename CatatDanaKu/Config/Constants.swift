@@ -12,6 +12,8 @@ class Constants {
     static let baseUrl = "http://api.rp735.xyz"
     
     static let appDatabaseName = "CatatDana"
+    
+    static let adjustToken = "7spuzmmjuruo"
 
     static let codeTokenInvalid = 701
 

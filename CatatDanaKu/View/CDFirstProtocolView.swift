@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import AdjustSdk
 
 //
 //  CDFirstProtocolView.swift
@@ -69,6 +70,7 @@ struct CDFirstProtocolView: View {
                 VStack(spacing: 0) {
                     Button {
                         if isWebViewLoaded {
+                            Adjust.endFirstSessionDelay()
                             IDFAProvider.requestPermission()
                             LocationManager.shared.requestLocation { _ in }
                             onDecision(true)

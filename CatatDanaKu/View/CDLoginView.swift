@@ -113,6 +113,12 @@ struct CDLoginView: View {
         .sheet(isPresented: $showPrivacy) {
             privacySheet
         }
+        .onAppear {
+            Tk.shared.track(page: Points.PAGE_LOGIN, act: Points.ACT_IN)
+        }
+        .onChange(of: vm.codeInput) { _, _ in
+            vm.onCodeInputChanged()
+        }
     }
 
     // MARK: - Content Body

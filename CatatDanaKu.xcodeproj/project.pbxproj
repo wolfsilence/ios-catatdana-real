@@ -7,13 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B452F592FD476F000C9B4B7 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9B452F582FD476F000C9B4B7 /* Gzip */; };
+		9B452FE22FD4A24600C9B4B7 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9B452FE12FD4A24600C9B4B7 /* Gzip */; };
+		9B452FE32FD4A25800C9B4B7 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6A2FD18950001B07DB /* AdSupport.framework */; };
+		9B452FE52FD4A26300C9B4B7 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B452FE42FD4A26300C9B4B7 /* AdServices.framework */; };
+		9B452FE72FD4A26F00C9B4B7 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B452FE62FD4A26F00C9B4B7 /* StoreKit.framework */; };
+		9B452FE82FD4A27C00C9B4B7 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6C2FD1895C001B07DB /* AppTrackingTransparency.framework */; };
+		9B452FEA2FD4A29300C9B4B7 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B452FE92FD4A29300C9B4B7 /* WebKit.framework */; };
+		9B452FEC2FD4A87C00C9B4B7 /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 9B452FEB2FD4A87C00C9B4B7 /* AdjustSdk */; };
+		9B452FEE2FD4A88200C9B4B7 /* AdjustGoogleOdm in Frameworks */ = {isa = PBXBuildFile; productRef = 9B452FED2FD4A88200C9B4B7 /* AdjustGoogleOdm */; };
 		9B5B7B6B2FD18950001B07DB /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6A2FD18950001B07DB /* AdSupport.framework */; };
 		9B5B7B6D2FD1895C001B07DB /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6C2FD1895C001B07DB /* AppTrackingTransparency.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatatDanaKu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B452FE42FD4A26300C9B4B7 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AdServices.framework; sourceTree = DEVELOPER_DIR; };
+		9B452FE62FD4A26F00C9B4B7 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
+		9B452FE92FD4A29300C9B4B7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		9B5B7B6A2FD18950001B07DB /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
 		9B5B7B6C2FD1895C001B07DB /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -44,9 +54,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B452FEC2FD4A87C00C9B4B7 /* AdjustSdk in Frameworks */,
+				9B452FE52FD4A26300C9B4B7 /* AdServices.framework in Frameworks */,
 				9B5B7B6B2FD18950001B07DB /* AdSupport.framework in Frameworks */,
+				9B452FEA2FD4A29300C9B4B7 /* WebKit.framework in Frameworks */,
+				9B452FE32FD4A25800C9B4B7 /* AdSupport.framework in Frameworks */,
+				9B452FE72FD4A26F00C9B4B7 /* StoreKit.framework in Frameworks */,
 				9B5B7B6D2FD1895C001B07DB /* AppTrackingTransparency.framework in Frameworks */,
-				9B452F592FD476F000C9B4B7 /* Gzip in Frameworks */,
+				9B452FE82FD4A27C00C9B4B7 /* AppTrackingTransparency.framework in Frameworks */,
+				9B452FE22FD4A24600C9B4B7 /* Gzip in Frameworks */,
+				9B452FEE2FD4A88200C9B4B7 /* AdjustGoogleOdm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +90,9 @@
 		9B5B7B692FD18950001B07DB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9B452FE92FD4A29300C9B4B7 /* WebKit.framework */,
+				9B452FE62FD4A26F00C9B4B7 /* StoreKit.framework */,
+				9B452FE42FD4A26300C9B4B7 /* AdServices.framework */,
 				9B5B7B6C2FD1895C001B07DB /* AppTrackingTransparency.framework */,
 				9B5B7B6A2FD18950001B07DB /* AdSupport.framework */,
 			);
@@ -99,7 +119,9 @@
 			);
 			name = CatatDanaKu;
 			packageProductDependencies = (
-				9B452F582FD476F000C9B4B7 /* Gzip */,
+				9B452FE12FD4A24600C9B4B7 /* Gzip */,
+				9B452FEB2FD4A87C00C9B4B7 /* AdjustSdk */,
+				9B452FED2FD4A88200C9B4B7 /* AdjustGoogleOdm */,
 			);
 			productName = CatatDanaKu;
 			productReference = 9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */;
@@ -131,6 +153,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9B452F572FD476F000C9B4B7 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+				9B452FE02FD4A1A600C9B4B7 /* XCRemoteSwiftPackageReference "ios_sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9B3E763C2FCFD7D1002D7093 /* Products */;
@@ -415,13 +438,31 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		9B452FE02FD4A1A600C9B4B7 /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 5.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9B452F582FD476F000C9B4B7 /* Gzip */ = {
+		9B452FE12FD4A24600C9B4B7 /* Gzip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9B452F572FD476F000C9B4B7 /* XCRemoteSwiftPackageReference "GzipSwift" */;
 			productName = Gzip;
+		};
+		9B452FEB2FD4A87C00C9B4B7 /* AdjustSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B452FE02FD4A1A600C9B4B7 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustSdk;
+		};
+		9B452FED2FD4A88200C9B4B7 /* AdjustGoogleOdm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B452FE02FD4A1A600C9B4B7 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustGoogleOdm;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

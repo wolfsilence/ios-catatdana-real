@@ -219,9 +219,9 @@ final class CatatDanaJS: NSObject {
         resp.value = "1"
         resp.appId = Bundle.main.bundleIdentifier
         resp.deviceId = IDFAProvider.idfa()
-        resp.adjustId = UserDefaults.standard.string(forKey: Keys.adjustId)
-        resp.adjustData = UserDefaults.standard.string(forKey: Keys.adjustData)
-        resp.referrer = UserDefaults.standard.string(forKey: Keys.referrer)
+        resp.adjustId = KeychainHelper.read(key: Keys.adjustId)
+        resp.adjustData = KeychainHelper.read(key: Keys.adjustData)
+        resp.referrer = KeychainHelper.read(key: Keys.adjustNetwork)
         let info = Bundle.main.infoDictionary
         resp.vName = info?["CFBundleShortVersionString"] as? String
         resp.vCode = (info?["CFBundleVersion"] as? String)

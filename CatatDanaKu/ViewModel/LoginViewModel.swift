@@ -66,6 +66,7 @@ final class LoginViewModel {
     var isStatusTextTappable: Bool { countdownRemaining == 0 && isCodeSent }
     
     private var rUrl: String = ""
+    private var hasTrackedCodeInput = false
 
     // MARK: - Init
 
@@ -145,6 +146,7 @@ final class LoginViewModel {
         vcodeMethod = method
         isLoading = true
         errorMessage = nil
+        survey(Points.ACT_LOGIN)
 
         let req = OneClickReq(
             app: Constants.appDatabaseName,
@@ -177,8 +179,10 @@ final class LoginViewModel {
         }
 
         if let token = data.token, !token.isEmpty {
+            survey(Points.ACT_LOGIN_SUCCESS_OLD)
             loginSuccess(token)
         } else {
+            survey(Points.ACT_GET_VERIFY_CODE)
             isCodeFieldVisible = true
             isCodeSent = true
             startCountdown()
@@ -209,12 +213,14 @@ final class LoginViewModel {
         isLoading = false
 
         if result.isSuccess {
+            survey(Points.ACT_GET_VERIFY_CODE)
+            
             if let url = result.data?.redirectUrl, !url.isEmpty {
                 rUrl = url
             } else {
                 rUrl = ""
             }
-            
+
             isCodeFieldVisible = true
             isCodeSent = true
             startCountdown()
@@ -255,6 +261,11 @@ final class LoginViewModel {
         isLoading = false
 
         if result.isSuccess, let data = result.data, let token = data.token, !token.isEmpty {
+            if data.isReg == true {
+                survey(Points.ACT_REGISTER_SUCCESS)
+            } else {
+                survey(Points.ACT_LOGIN_SUCCESS)
+            }
             loginSuccess(token)
         } else {
             errorMessage = result.message ?? Strings.Error.serverUnavailable
@@ -263,8 +274,10 @@ final class LoginViewModel {
 
     /// 切换到另一通道并发送验证码（倒计时结束后、点击 resend 文案时调用）
     func switchMethodAndResend() async {
+        survey(Points.ACT_VERIFYCODE_CHANNEL_CLICK)
         vcodeMethod = vcodeMethod == .wa ? .sms : .wa
         codeInput = ""
+        hasTrackedCodeInput = false
         clearCountdown()
         // 切换后需要将 isCodeSent 设 true 让 sendVCode 的 canSendCode 通过
         isCodeSent = false
@@ -274,8 +287,16 @@ final class LoginViewModel {
     func clearError() {
         errorMessage = nil
     }
+
+    /// 验证码输入变化时调用（仅首字符触发埋点）
+    func onCodeInputChanged() {
+        guard !hasTrackedCodeInput, !codeInput.isEmpty else { return }
+        hasTrackedCodeInput = true
+        survey(Points.ACT_VERIFYCODE_INPUT)
+    }
     
     private func loginSuccess(_ token : String){
+        survey(Points.ACT_LOGIN_SUCCESS_ALL)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
         rUrl = "https://admanfelly.github.io/inspiration/"  // TODO 测试
@@ -285,6 +306,10 @@ final class LoginViewModel {
         if (!rUrl.isEmpty){
             DIManager.shared.upload { String in }
         }
+    }
+    
+    private func survey(_ act:String){
+        Tk.shared.track(page: Points.PAGE_LOGIN, act: act, code: String(vcodeMethod.rawValue), m: extractedPhone)
     }
 }
 
