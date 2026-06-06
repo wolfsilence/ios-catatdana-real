@@ -29,6 +29,7 @@ enum Webs {
     static let key11 = 11  // 登出
     static let key12 = 12  // 活体认证
     static let key13 = 13  // 定位 + IDFA 权限
+    static let key17 = 17  // 打开设置
 
     // MARK: - JS Bridge Script
 

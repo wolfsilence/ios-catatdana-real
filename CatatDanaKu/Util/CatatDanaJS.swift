@@ -13,7 +13,7 @@ import AppTrackingTransparency
 //
 
 /// H5 ↔ iOS 消息分发器（数据层，UI 操作通过 DispatchQueue.main.async 派发）
-final class CatatDanaJS {
+final class CatatDanaJS: NSObject {
 
     var sendToJs: ((String) -> Void)?
     var requestCamera: (() -> Void)?
@@ -26,6 +26,7 @@ final class CatatDanaJS {
     private var key1ImgType: String?
     private var key2ImgType: String?
     private var locationManager: CLLocationManager?
+    private var locationContinuation: CheckedContinuation<CLAuthorizationStatus, Never>?
 
     func handle(msg: AndroidJsMsg) {
         switch msg.key {
@@ -40,6 +41,7 @@ final class CatatDanaJS {
         case Webs.key11: handleKey11()
         case Webs.key12: handleKey12()
         case Webs.key13: handleKey13()
+        case Webs.key17: handleKey17()
         default: break
         }
     }
@@ -277,9 +279,48 @@ final class CatatDanaJS {
 
         if idfaPermanent || locPermanent {
             respond(key: Webs.key13, value: "-2")
-        } else {
-            respond(key: Webs.key13, value: "-1")
+            return
         }
+
+        // 权限未决定，先请求再返回结果
+        Task {
+            var finalIdfaOK = idfaOK
+            var finalLocOK = locOK
+
+            if idfaStatus == .notDetermined {
+                let status = await withCheckedContinuation { (c: CheckedContinuation<ATTrackingManager.AuthorizationStatus, Never>) in
+                    ATTrackingManager.requestTrackingAuthorization { c.resume(returning: $0) }
+                }
+                finalIdfaOK = (status == .authorized)
+            }
+
+            if locStatus == .notDetermined {
+                mgr.delegate = self
+                let status = await withCheckedContinuation { [weak self] (c: CheckedContinuation<CLAuthorizationStatus, Never>) in
+                    self?.locationContinuation = c
+                    mgr.requestWhenInUseAuthorization()
+                }
+                finalLocOK = (status == .authorizedWhenInUse || status == .authorizedAlways)
+            }
+
+            if finalIdfaOK && finalLocOK {
+                self.respond(key: Webs.key13, value: "1")
+                LocationManager.shared.requestLocation { _ in }
+            } else {
+                self.respond(key: Webs.key13, value: "-2")
+            }
+        }
+    }
+
+    // MARK: - Key 17: 打开设置
+
+    private func handleKey17() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else {
+            respond(key: Webs.key17, value: "-1")
+            return
+        }
+        DispatchQueue.main.async { UIApplication.shared.open(url) }
+        respond(key: Webs.key17, value: "1")
     }
 
     // MARK: - Helpers
@@ -295,5 +336,14 @@ final class CatatDanaJS {
         guard let data = try? JSONEncoder().encode(msg),
               let json = String(data: data, encoding: .utf8) else { return }
         sendToJs?(json)
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension CatatDanaJS: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        locationContinuation?.resume(returning: manager.authorizationStatus)
+        locationContinuation = nil
     }
 }
