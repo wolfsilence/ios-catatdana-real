@@ -62,7 +62,7 @@ class Net {
     }
 
     /// 上传二进制数据（如图片）
-    func upload<T: Codable>(
+    func postRaw<T: Codable>(
         path: String,
         rawBody: Data
     ) async -> NetResponse<T> {

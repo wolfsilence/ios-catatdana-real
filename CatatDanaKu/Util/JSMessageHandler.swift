@@ -98,7 +98,7 @@ final class JSMessageHandler {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.upload(
+            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.postRaw(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
@@ -135,7 +135,7 @@ final class JSMessageHandler {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.upload(
+            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.postRaw(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )

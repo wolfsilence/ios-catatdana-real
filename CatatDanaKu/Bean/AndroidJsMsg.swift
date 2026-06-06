@@ -15,6 +15,8 @@ struct AndroidJsMsg: Codable {
     var deviceId: String?
     var adjustId: String?
     var adjustData: String?
+    var conversionData: String?
+    var afid: String?
     var appId: String?
     var referrer: String?
     var phone: String?
