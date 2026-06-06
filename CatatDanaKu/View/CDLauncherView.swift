@@ -62,7 +62,7 @@ struct CDLauncherView: View {
     // MARK: - Helpers
 
     private var isAuthenticated: Bool {
-        AuthCredentialStore.shared.isAuthenticated
+        AuthManager.shared.isAuthenticated
     }
 
     private func isFirstLaunch() -> Bool {

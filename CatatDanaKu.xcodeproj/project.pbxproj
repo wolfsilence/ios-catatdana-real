@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B452F592FD476F000C9B4B7 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9B452F582FD476F000C9B4B7 /* Gzip */; };
 		9B5B7B6B2FD18950001B07DB /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6A2FD18950001B07DB /* AdSupport.framework */; };
 		9B5B7B6D2FD1895C001B07DB /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B7B6C2FD1895C001B07DB /* AppTrackingTransparency.framework */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 			files = (
 				9B5B7B6B2FD18950001B07DB /* AdSupport.framework in Frameworks */,
 				9B5B7B6D2FD1895C001B07DB /* AppTrackingTransparency.framework in Frameworks */,
+				9B452F592FD476F000C9B4B7 /* Gzip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +99,7 @@
 			);
 			name = CatatDanaKu;
 			packageProductDependencies = (
+				9B452F582FD476F000C9B4B7 /* Gzip */,
 			);
 			productName = CatatDanaKu;
 			productReference = 9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */;
@@ -126,6 +129,9 @@
 			);
 			mainGroup = 9B3E76322FCFD7D1002D7093;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9B452F572FD476F000C9B4B7 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9B3E763C2FCFD7D1002D7093 /* Products */;
 			projectDirPath = "";
@@ -399,6 +405,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9B452F572FD476F000C9B4B7 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9B452F582FD476F000C9B4B7 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B452F572FD476F000C9B4B7 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9B3E76332FCFD7D1002D7093 /* Project object */;
 }

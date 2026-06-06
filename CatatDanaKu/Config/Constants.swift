@@ -8,7 +8,7 @@ import Foundation
 //
 
 class Constants {
-    static let useEncryption = false
+    static let useEncryption = true
     static let baseUrl = "http://api.rp735.xyz"
     
     static let appDatabaseName = "CatatDana"

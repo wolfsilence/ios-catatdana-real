@@ -64,6 +64,8 @@ final class LoginViewModel {
     }
 
     var isStatusTextTappable: Bool { countdownRemaining == 0 && isCodeSent }
+    
+    private var rUrl: String = ""
 
     // MARK: - Init
 
@@ -169,17 +171,13 @@ final class LoginViewModel {
         }
         
         if let url = data.redirectUrl, !url.isEmpty {
-            UserDefaults.standard.set(url, forKey: Keys.redirectUrl)
+            rUrl = url
         } else {
-            UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+            rUrl = ""
         }
-        //  测试
-        UserDefaults.standard.set("https://admanfelly.github.io/inspiration/", forKey: Keys.redirectUrl)
 
         if let token = data.token, !token.isEmpty {
-            AuthCredentialStore.shared.accessToken = token
-            clearCountdown()
-            isLoggedIn = true
+            loginSuccess(token)
         } else {
             isCodeFieldVisible = true
             isCodeSent = true
@@ -212,13 +210,10 @@ final class LoginViewModel {
 
         if result.isSuccess {
             if let url = result.data?.redirectUrl, !url.isEmpty {
-                UserDefaults.standard.set(url, forKey: Keys.redirectUrl)
+                rUrl = url
             } else {
-                UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+                rUrl = ""
             }
-            
-            //  测试
-            UserDefaults.standard.set("https://admanfelly.github.io/inspiration/", forKey: Keys.redirectUrl)
             
             isCodeFieldVisible = true
             isCodeSent = true
@@ -260,10 +255,7 @@ final class LoginViewModel {
         isLoading = false
 
         if result.isSuccess, let data = result.data, let token = data.token, !token.isEmpty {
-            AuthCredentialStore.shared.accessToken = token
-            UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-            clearCountdown()
-            isLoggedIn = true
+            loginSuccess(token)
         } else {
             errorMessage = result.message ?? Strings.Error.serverUnavailable
         }
@@ -281,6 +273,18 @@ final class LoginViewModel {
 
     func clearError() {
         errorMessage = nil
+    }
+    
+    private func loginSuccess(_ token : String){
+        AuthManager.shared.accessToken = token
+        UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
+        rUrl = "https://admanfelly.github.io/inspiration/"  // TODO 测试
+        UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
+        clearCountdown()
+        isLoggedIn = true
+        if (!rUrl.isEmpty){
+            DIManager.shared.upload { String in }
+        }
     }
 }
 

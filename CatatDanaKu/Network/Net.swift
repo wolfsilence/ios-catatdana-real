@@ -1,4 +1,5 @@
 import Foundation
+import Gzip
 
 /// 对外暴露的 Web 请求门户（单例）
 /// 提供便捷的 GET / POST / UPLOAD 方法，内部委托 HttpPerformer 执行
@@ -62,7 +63,7 @@ class Net {
     }
 
     /// 上传二进制数据（如图片）
-    func postRaw<T: Codable>(
+    func uploadImage<T: Codable>(
         path: String,
         rawBody: Data
     ) async -> NetResponse<T> {
@@ -72,6 +73,20 @@ class Net {
             method: .post,
             headerFields: headers,
             rawBody: rawBody
+        )
+    }
+    
+    /// 上传二进制数据（如图片）
+    func postGzip<T: Codable>(
+        path: String,
+        gzipedBody: Data
+    ) async -> NetResponse<T> {
+        let headers = ["Content-Encoding":"gzip","Content-Type":"application/octet-stream"]
+        return await request(
+            path: path,
+            method: .post,
+            headerFields: headers,
+            rawBody: gzipedBody
         )
     }
 }
@@ -129,7 +144,7 @@ fileprivate class NetCore {
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }
         // 认证令牌
-        if let token = AuthCredentialStore.shared.accessToken {
+        if let token = AuthManager.shared.accessToken {
             urlRequest.setValue(token, forHTTPHeaderField: Constants.keyHeaderToken)
         }
         // 客户端版本（加密模式下附带）
@@ -295,8 +310,8 @@ fileprivate class NetCore {
     /// 特定错误码触发强制登出
     private func checkSessionExpiry(_ code: Int) {
         if code == Constants.codeTokenInvalid {
-            if AuthCredentialStore.shared.isAuthenticated {
-                AuthCredentialStore.shared.revokeAccess()
+            if AuthManager.shared.isAuthenticated {
+                AuthManager.shared.revokeAccess()
                 NotificationCenter.default.post(
                     name: NSNotification.Name(NotiName.TokenInvalid),
                     object: nil

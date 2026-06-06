@@ -64,7 +64,7 @@ struct CDContentView: View {
 
         case .redirect:
             CDRedView {
-                AuthCredentialStore.shared.revokeAccess()
+                AuthManager.shared.revokeAccess()
                 UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
                 UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
                 activeCover = .login
@@ -98,7 +98,7 @@ struct CDContentView: View {
     // MARK: - Helpers
 
     private var isAuthenticated: Bool {
-        AuthCredentialStore.shared.isAuthenticated
+        AuthManager.shared.isAuthenticated
     }
 
     private var hasRedirectURL: Bool {

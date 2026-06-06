@@ -13,7 +13,7 @@ import AppTrackingTransparency
 //
 
 /// H5 ↔ iOS 消息分发器（数据层，UI 操作通过 DispatchQueue.main.async 派发）
-final class JSMessageHandler {
+final class CatatDanaJS {
 
     var sendToJs: ((String) -> Void)?
     var requestCamera: (() -> Void)?
@@ -98,7 +98,7 @@ final class JSMessageHandler {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.postRaw(
+            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
@@ -135,7 +135,7 @@ final class JSMessageHandler {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.postRaw(
+            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
@@ -202,8 +202,10 @@ final class JSMessageHandler {
     // MARK: - Key 6: 设备信息
 
     private func handleKey6() {
-        DeviceInfoManager.shared.upload { [weak self] value in
-            self?.respond(key: Webs.key6, value: value)
+        DIManager.shared.upload { [weak self] value in
+            if (value == "1"){
+                self?.respond(key: Webs.key6, value: value)
+            }
         }
     }
 
@@ -230,7 +232,7 @@ final class JSMessageHandler {
         var resp = AndroidJsMsg()
         resp.key = Webs.key10
         resp.value = "1"
-        resp.token = AuthCredentialStore.shared.accessToken
+        resp.token = AuthManager.shared.accessToken
         resp.phone = UserDefaults.standard.string(forKey: Keys.lastLoginPhone)
         postResponse(resp)
     }
@@ -238,7 +240,7 @@ final class JSMessageHandler {
     // MARK: - Key 11: 登出
 
     private func handleKey11() {
-        AuthCredentialStore.shared.revokeAccess()
+        AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
         DispatchQueue.main.async { self.onLogout?() }
     }

@@ -1,8 +1,8 @@
 import Foundation
 
 /// 认证凭据存储（单例）
-class AuthCredentialStore {
-    static let shared = AuthCredentialStore()
+class AuthManager {
+    static let shared = AuthManager()
 
     private let tokenKey = Keys.accessToken
 

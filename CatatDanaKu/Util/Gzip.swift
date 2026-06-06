@@ -3,17 +3,15 @@ import Compression
 
 //  Gzip.swift
 //  CatatDanaKu
-//
-//  Created by lishen on 2026/6/6.
 
-/// gzip 压缩工具 — 使用 Apple Compression framework 完成 deflate，再手工封装 gzip 格式
+/// gzip 压缩 — 使用 Compression framework
 enum Gzip {
 
     /// 将 Data 压缩为 gzip 格式
     static func compress(_ data: Data) -> Data? {
-        guard !data.isEmpty else { return nil }
+        guard !data.isEmpty else { return data }
 
-        // 1. deflate 压缩（zlib 格式：2 字节头 + 压缩数据 + 4 字节 Adler32 尾）
+        // 1. deflate（zlib 格式）
         let maxDst = data.count + 256
         let dst = UnsafeMutablePointer<UInt8>.allocate(capacity: maxDst)
         defer { dst.deallocate() }
@@ -26,32 +24,32 @@ enum Gzip {
                 COMPRESSION_ZLIB
             )
         }
-        guard zlibSize > 6 else { return nil }
+        guard zlibSize > 6 else { return data }
 
-        // 2. 剥离 zlib 壳 — 跳过头 2 字节 + 尾 4 字节，只留 raw deflate
+        // 2. 剥离 zlib 头尾，只留 deflate 数据
         let deflateData = Data(bytes: dst.advanced(by: 2), count: zlibSize - 6)
 
-        // 3. 组装 gzip
+        // 3. 组装 gzip 格式
         var result = Data()
-        // Gzip 头: ID1 ID2 CM FLG MTIME(4) XFL OS
+        // gzip 头: ID1 ID2 CM FLG MTIME XFL OS
         result.append(contentsOf: [0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03])
         result.append(deflateData)
         // CRC32
-        let crc = crc32Sum(data)
+        let crc = data.crc32()
         var crcLE = crc.littleEndian
         result.append(Data(bytes: &crcLE, count: 4))
-        // ISIZE (原始大小 mod 2^32)
-        var sizeLE = UInt32(data.count % (1 << 32)).littleEndian
+        // ISIZE
+        var sizeLE = UInt32(data.count).littleEndian
         result.append(Data(bytes: &sizeLE, count: 4))
 
         return result
     }
+}
 
-    // MARK: - CRC32
-
-    private static func crc32Sum(_ data: Data) -> UInt32 {
+private extension Data {
+    func crc32() -> UInt32 {
         var crc: UInt32 = 0xffffffff
-        for byte in data {
+        for byte in self {
             crc ^= UInt32(byte)
             for _ in 0..<8 {
                 if (crc & 1) != 0 {
