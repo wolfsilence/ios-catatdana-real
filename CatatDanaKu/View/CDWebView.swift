@@ -12,6 +12,7 @@ import WebKit
 struct CDWebView: View {
     let url: URL
     let title: String
+    var onBack: (() -> Void)? = nil
 
     @Environment(\.dismiss) private var dismiss
     @State private var progress: Double = 0
@@ -29,7 +30,11 @@ struct CDWebView: View {
     private var barView: some View {
         HStack(spacing: 0) {
             Button {
-                dismiss()
+                if let onBack {
+                    onBack()
+                } else {
+                    dismiss()
+                }
             } label: {
                 Image("ic_back_black")
                     .resizable()
@@ -37,7 +42,8 @@ struct CDWebView: View {
             }
             Spacer()
             Text(title)
-                .font(.system(size: 14))
+                .font(.system(size: 18))
+                .fontWeight(.semibold)
                 .foregroundColor(Colors.textPrimary)
                 .lineLimit(1)
             Spacer()
@@ -45,6 +51,7 @@ struct CDWebView: View {
         }
         .frame(height: 48)
         .padding(.horizontal, 16)
+        .background(Color.white)
     }
 
     // MARK: - Progress Bar

@@ -299,7 +299,7 @@ final class LoginViewModel {
         survey(Points.ACT_LOGIN_SUCCESS_ALL)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-        rUrl = "https://admanfelly.github.io/inspiration/"  // TODO 测试
+        //rUrl = "https://admanfelly.github.io/inspiration/"  // TODO 测试
         UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
         clearCountdown()
         isLoggedIn = true

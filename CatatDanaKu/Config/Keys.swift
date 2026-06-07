@@ -37,6 +37,10 @@ class Keys {
     // MARK: Redirect URL
     static let redirectUrl = "com.catatdanaku.login.redirectUrl"
 
+    // MARK: Profile
+    static let profileNickname  = "com.catatdanaku.profile.nickname"
+    static let profileAvatarURL = "com.catatdanaku.profile.avatarURL"
+
     // MARK: Keychain Service
     static let keychainService = "com.catatdanaku.keychain"
 }
