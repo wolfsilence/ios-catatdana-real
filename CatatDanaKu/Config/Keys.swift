@@ -23,12 +23,16 @@ class Keys {
 
     // MARK: IDFA
     static let idfa = "com.catatdanaku.idfa"
+    static let idfaEverRequest = "com.catatdanaku.idfaEverRequest"
 
     // MARK: Attribution
     static let adjustId   = "com.catatdanaku.adjustId"
     static let adjustData = "com.catatdanaku.adjustData"
     static let adjustNetwork   = "com.catatdanaku.adjustNetwork"
     static let referrer   = "com.catatdanaku.referrer"
+    
+    static let conversationData = "com.catatdanaku.conversationData"
+    static let afId = "com.catatdanaku.afId"
 
     // MARK: Location
     static let locationLat = "com.catatdanaku.location.lat"

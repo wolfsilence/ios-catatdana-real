@@ -70,9 +70,10 @@ struct CDFirstProtocolView: View {
                 VStack(spacing: 0) {
                     Button {
                         if isWebViewLoaded {
-                            Adjust.endFirstSessionDelay()
-                            IDFAProvider.requestPermission()
                             LocationManager.shared.requestLocation { _ in }
+                            IDFAProvider.requestPermission {
+                                NotificationCenter.default.post(name: Notification.Name(NotiName.idfaPermissionResolved), object: nil)
+                            }
                             onDecision(true)
                         } else {
                             showToast = true

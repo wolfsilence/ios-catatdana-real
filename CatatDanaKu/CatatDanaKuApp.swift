@@ -7,6 +7,8 @@
 
 import SwiftUI
 import AdjustSdk
+import FirebaseCore
+import AppsFlyerLib
 
 @main
 struct CatatDanaKuApp: App {
@@ -21,12 +23,25 @@ struct CatatDanaKuApp: App {
 }
 
 
-class AppDelegate: NSObject, UIApplicationDelegate, AdjustDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyerLibDelegate{
+    
+    private var idfaEverRequest = false
+    private var appsFlyerSdkReady = false
+    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        // 监听 CDFirstProtocolView 权限申请完成通知
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onIDFAPermissionResolved),
+            name: Notification.Name(NotiName.idfaPermissionResolved),
+            object: nil
+        )
         initAdjust()
+        FirebaseApp.configure()
+        initAppsflyer()
         return true
     }
     
@@ -67,5 +82,55 @@ class AppDelegate: NSObject, UIApplicationDelegate, AdjustDelegate {
         if let network = attribution.network, !network.isEmpty {
             KeychainHelper.write(key: Keys.adjustNetwork, value: network)
         }
+    }
+    
+    /// 供 CDFirstProtocolView 权限申请完成后调用，持久化标记并尝试 start
+    @objc func onIDFAPermissionResolved() {
+        // af start
+        UserDefaults.standard.set(true, forKey: Keys.idfaEverRequest)
+        idfaEverRequest = true
+        appsflyerStartIfReady()
+        // adjust
+        Adjust.endFirstSessionDelay()
+    }
+
+    private func initAppsflyer(){
+        // 恢复本地标记：上次启动已申请过权限
+        if UserDefaults.standard.bool(forKey: Keys.idfaEverRequest) {
+            idfaEverRequest = true
+        }
+        AppsFlyerLib.shared().initialize(devKey: Constants.appsFlyerDevKey, appId: Constants.appleAppID)
+        AppsFlyerLib.shared().registerSessionReadyListener {
+            self.appsFlyerSdkReady = true
+            self.appsflyerStartIfReady()
+        }
+        AppsFlyerLib.shared().delegate = self
+        #if DEBUG
+        AppsFlyerLib.shared().isDebug = true
+        #endif
+    }
+    
+    private func appsflyerStartIfReady() {
+        guard idfaEverRequest, appsFlyerSdkReady else { return }
+        appsFlyerSdkReady = false
+        AppsFlyerLib.shared().start()
+        let afId = AppsFlyerLib.shared().getAppsFlyerUID()
+        if !afId.isEmpty {
+            Logger.log("AppsFlyer id: \(afId)")
+            KeychainHelper.write(key: Keys.afId, value: afId)
+        }
+     }
+    
+    func onConversionDataSuccess(_ installData: [AnyHashable: Any]) {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: installData, options: []),
+           let json = String(data: jsonData, encoding: .utf8) {
+            Logger.log("AppsFlyer conversion data: \(json)")
+            KeychainHelper.write(key: Keys.conversationData, value: json)
+        }
+    }
+
+    func onConversionDataFail(_ error: Error) {
+        // Invoked when conversion data resolution fails
+        Logger.log("AppsFlyer conversion data Fail")
     }
 }

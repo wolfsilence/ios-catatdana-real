@@ -17,8 +17,8 @@ enum IDFAProvider {
     /// 全零 UUID（未授权兜底）
     static let zeroUUID = "00000000-0000-0000-0000-000000000000"
 
-    /// 请求 ATT 授权（弹出系统弹窗）
-    static func requestPermission() {
+    /// 请求 ATT 授权（弹出系统弹窗），completion 在授权结果返回后调用
+    static func requestPermission(completion: (() -> Void)? = nil) {
         ATTrackingManager.requestTrackingAuthorization { status in
             if status == .authorized {
                 let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
@@ -26,6 +26,7 @@ enum IDFAProvider {
                     KeychainHelper.write(key: keychainKey, value: idfa)
                 }
             }
+            completion?()
         }
     }
 

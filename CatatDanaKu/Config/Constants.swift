@@ -14,6 +14,9 @@ class Constants {
     static let appDatabaseName = "CatatDana"
     
     static let adjustToken = "7spuzmmjuruo"
+    
+    static let appleAppID = "6777928492"
+    static let appsFlyerDevKey = "Vqkksyx7bJzau8wywy2fPi"
 
     static let codeTokenInvalid = 701
 

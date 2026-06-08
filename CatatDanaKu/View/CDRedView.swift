@@ -2,6 +2,7 @@ import SwiftUI
 import WebKit
 import PhotosUI
 import ContactsUI
+import AppsFlyerLib
 
 //
 //  CDRedView.swift
