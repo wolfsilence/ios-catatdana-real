@@ -8,6 +8,7 @@
 import SwiftUI
 import AdjustSdk
 import FirebaseCore
+import FirebaseMessaging
 import AppsFlyerLib
 
 @main
@@ -40,8 +41,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
             object: nil
         )
         initAdjust()
-        FirebaseApp.configure()
         initAppsflyer()
+        FirebaseApp.configure()
+        // FCM
+        PushNotificationManager.shared.configure()
+        
+        // 检查是否是由远程推送唤醒的
+        if let remoteNotification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
+            if let jsonData = try? JSONSerialization.data(withJSONObject: remoteNotification, options: []),
+               let json = String(data: jsonData, encoding: .utf8) {
+                Logger.log("👉 App launcher by push, push = \(json)")
+                UserDefaults.standard.set(json, forKey: Keys.pushDataStr)
+            }
+        }
         return true
     }
     
@@ -101,13 +113,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         }
         AppsFlyerLib.shared().initialize(devKey: Constants.appsFlyerDevKey, appId: Constants.appleAppID)
         AppsFlyerLib.shared().registerSessionReadyListener {
+            AppsFlyerLib.shared().unregisterSessionReadyListener()
             self.appsFlyerSdkReady = true
             self.appsflyerStartIfReady()
         }
         AppsFlyerLib.shared().delegate = self
-        #if DEBUG
-        AppsFlyerLib.shared().isDebug = true
-        #endif
+//        #if DEBUG
+//        AppsFlyerLib.shared().isDebug = true
+//        #endif
     }
     
     private func appsflyerStartIfReady() {
@@ -132,5 +145,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
     func onConversionDataFail(_ error: Error) {
         // Invoked when conversion data resolution fails
         Logger.log("AppsFlyer conversion data Fail")
+    }
+    
+    // 3. APNs Token 桥接（仅此一处需要留在 AppDelegate）
+    func application(
+            _ application: UIApplication,
+            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        // 如果开启了 Swizzling（默认开启），Firebase 会自动拦截此回调
+        // 如果关闭了 Swizzling，则必须手动设置：
+        // Messaging.messaging().apnsToken = deviceToken
+        Logger.log("✅ APNs Device Token: (\(deviceToken.count) bytes)")
+    }
+        
+    func application(
+            _ application: UIApplication,
+            didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        Logger.log("❌ APNs Register: \(error.localizedDescription)")
     }
 }

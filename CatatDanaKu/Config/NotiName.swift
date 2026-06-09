@@ -10,4 +10,5 @@ import Foundation
 class NotiName {
     static let TokenInvalid = "NotiTokenInvalid"
     static let idfaPermissionResolved = "com.catatdanaku.idfaPermissionResolved"
+    static let pushDataReceived = "com.catatdanaku.pushDataReceived"
 }

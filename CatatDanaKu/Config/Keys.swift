@@ -47,4 +47,8 @@ class Keys {
 
     // MARK: Keychain Service
     static let keychainService = "com.catatdanaku.keychain"
+    
+    // MARK: Push
+    static let pushToken = "com.catatdanaku.pushToken"
+    static let pushDataStr = "com.catatdanaku.pushDataStr"
 }

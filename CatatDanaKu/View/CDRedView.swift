@@ -163,12 +163,12 @@ struct CDRedView: View {
                     Logger.log(body)
                     Task { parent.handler.handle(msg: msg) }
 
-                case Webs.consoleLog:
-                    guard let dict = message.body as? [String: Any],
-                          let level = dict["level"] as? String,
-                          let text = dict["message"] as? String
-                    else { return }
-                    Logger.log("[Web] [\(level)] \(text)")
+//                case Webs.consoleLog:
+//                    guard let dict = message.body as? [String: Any],
+//                          let level = dict["level"] as? String,
+//                          let text = dict["message"] as? String
+//                    else { return }
+//                    Logger.log("[Web] [\(level)] \(text)")
 
                 default:
                     break
@@ -179,7 +179,7 @@ struct CDRedView: View {
                 if parent.isFirstLoading {
                     parent.isFirstLoading = false
                 }
-                [Webs.key7, Webs.key10, Webs.key13].forEach { key in
+                [Webs.key7, Webs.key10, Webs.key13, Webs.key15, Webs.key16].forEach { key in
                     var msg = AndroidJsMsg()
                     msg.key = key
                     parent.handler.handle(msg: msg)

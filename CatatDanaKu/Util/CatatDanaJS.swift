@@ -28,6 +28,20 @@ final class CatatDanaJS: NSObject {
     private var locationManager: CLLocationManager?
     private var locationContinuation: CheckedContinuation<CLAuthorizationStatus, Never>?
 
+    override init() {
+        super.init()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onPushDataReceived),
+            name: NSNotification.Name(NotiName.pushDataReceived),
+            object: nil
+        )
+    }
+
+    @objc private func onPushDataReceived() {
+        handleKey16()
+    }
+
     func handle(msg: AndroidJsMsg) {
         switch msg.key {
         case Webs.key1:  handleKey1(msg: msg)
@@ -41,6 +55,8 @@ final class CatatDanaJS: NSObject {
         case Webs.key11: handleKey11()
         case Webs.key12: handleKey12()
         case Webs.key13: handleKey13()
+        case Webs.key15: handleKey15()
+        case Webs.key16: handleKey16()
         case Webs.key17: handleKey17()
         default: break
         }
@@ -310,6 +326,29 @@ final class CatatDanaJS: NSObject {
                 self.respond(key: Webs.key13, value: "-2")
             }
         }
+    }
+
+    // MARK: - Key 15: Push Token
+
+    private func handleKey15() {
+        guard let pushToken = UserDefaults.standard.string(forKey: Keys.pushToken) else { return }
+        var resp = AndroidJsMsg()
+        resp.key = Webs.key15
+        resp.value = pushToken
+        resp.token = AuthManager.shared.accessToken
+        postResponse(resp)
+    }
+
+    // MARK: - Key 16: Push Data
+
+    private func handleKey16() {
+        guard let pushDataStr = UserDefaults.standard.string(forKey: Keys.pushDataStr) else { return }
+        var resp = AndroidJsMsg()
+        resp.key = Webs.key16
+        Logger.log("pushDataStr = \(pushDataStr)")
+        resp.value = pushDataStr
+        postResponse(resp)
+        UserDefaults.standard.removeObject(forKey: Keys.pushDataStr)
     }
 
     // MARK: - Key 17: 打开设置
