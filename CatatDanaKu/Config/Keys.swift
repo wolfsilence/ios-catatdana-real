@@ -51,4 +51,6 @@ class Keys {
     // MARK: Push
     static let pushToken = "com.catatdanaku.pushToken"
     static let pushDataStr = "com.catatdanaku.pushDataStr"
+    // MARK: Firebase
+    static let appInstanceID = "com.catatdanaku.appInstanceID"
 }

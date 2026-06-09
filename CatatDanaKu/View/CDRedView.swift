@@ -21,7 +21,7 @@ struct CDRedView: View {
     @State private var showLiveDetection = false
     @State private var browserConfig: BrowserConfig?
     @State private var isFirstLoading = true
-    private let handler = CatatDanaJS()
+    private let handler = CatatDanaBox()
     
     private var redirectURL: URL? {
         guard let str = UserDefaults.standard.string(forKey: Keys.redirectUrl),
@@ -89,7 +89,7 @@ struct CDRedView: View {
     
     private struct RedWebViewWrapper: UIViewRepresentable {
         let url: URL
-        let handler: CatatDanaJS
+        let handler: CatatDanaBox
         @Binding var showCamera: Bool
         @Binding var showGallery: Bool
         @Binding var showContact: Bool

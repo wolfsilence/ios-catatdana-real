@@ -137,14 +137,14 @@ final class DIManager {
         return RuntimeReq(
             deviceDetails: details,
             addressList: nil,
-            afId: "",
+            afId: KeychainHelper.read(key: Keys.afId),
             fbc: "",
             fbp: "",
-            appInstanceID: "",
-            conversionData: "",
+            appInstanceID: KeychainHelper.read(key: Keys.appInstanceID),
+            conversionData: KeychainHelper.read(key: Keys.conversationData),
             contact: "[]",
-            adID: UserDefaults.standard.string(forKey: Keys.adjustId),
-            adConversionData: UserDefaults.standard.string(forKey: Keys.adjustData)
+            adID: KeychainHelper.read(key: Keys.adjustId),
+            adConversionData: KeychainHelper.read(key: Keys.adjustData)
         )
     }
 

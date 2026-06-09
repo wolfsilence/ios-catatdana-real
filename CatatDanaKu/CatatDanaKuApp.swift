@@ -10,6 +10,7 @@ import AdjustSdk
 import FirebaseCore
 import FirebaseMessaging
 import AppsFlyerLib
+import FirebaseAnalytics
 
 @main
 struct CatatDanaKuApp: App {
@@ -43,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         initAdjust()
         initAppsflyer()
         FirebaseApp.configure()
+        saveAppInstanceID()
         // FCM
         PushNotificationManager.shared.configure()
         
@@ -55,6 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
             }
         }
         return true
+    }
+    
+    // 同步获取 appInstanceID
+    private func saveAppInstanceID(){
+        guard let instanceId = Analytics.appInstanceID(), !instanceId.isEmpty else {
+            return
+        }
+        KeychainHelper.write(key: Keys.appInstanceID, value: instanceId)
     }
     
     func adjustAttributionChanged(_ attribution: ADJAttribution?) {

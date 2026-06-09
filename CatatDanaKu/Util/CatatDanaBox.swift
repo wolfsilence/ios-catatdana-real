@@ -13,7 +13,7 @@ import AppTrackingTransparency
 //
 
 /// H5 ↔ iOS 消息分发器（数据层，UI 操作通过 DispatchQueue.main.async 派发）
-final class CatatDanaJS: NSObject {
+final class CatatDanaBox: NSObject {
 
     var sendToJs: ((String) -> Void)?
     var requestCamera: (() -> Void)?
@@ -238,6 +238,8 @@ final class CatatDanaJS: NSObject {
         resp.adjustId = KeychainHelper.read(key: Keys.adjustId)
         resp.adjustData = KeychainHelper.read(key: Keys.adjustData)
         resp.referrer = KeychainHelper.read(key: Keys.adjustNetwork)
+        resp.afid = KeychainHelper.read(key: Keys.afId)
+        resp.conversionData = KeychainHelper.read(key: Keys.conversationData)
         let info = Bundle.main.infoDictionary
         resp.vName = info?["CFBundleShortVersionString"] as? String
         resp.vCode = (info?["CFBundleVersion"] as? String)
@@ -380,7 +382,7 @@ final class CatatDanaJS: NSObject {
 
 // MARK: - CLLocationManagerDelegate
 
-extension CatatDanaJS: CLLocationManagerDelegate {
+extension CatatDanaBox: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         locationContinuation?.resume(returning: manager.authorizationStatus)
         locationContinuation = nil
