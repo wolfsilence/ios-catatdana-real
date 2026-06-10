@@ -249,7 +249,7 @@ private struct LiveDetectionWebView: UIViewRepresentable {
 
             Task { [weak self] in
                 let result: NetResponse<bkciawd> = await Net.shared.post(
-                    path: NetPath.accRecgFace,
+                    path: NetPath.pvyft,
                     encodableBody: req
                 )
                 await MainActor.run {

@@ -9,12 +9,12 @@ import Foundation
 
 class Constants {
     static let useEncryption = true
-    static let baseUrl = "https://staging3.rp525.xyz"
+    static let baseUrl = "https://staging3.rp525.xyz" //TODO
     
     // 8652323821 0281
     static let appDatabaseName = "CatatDana"
     
-    static let adjustToken = "7spuzmmjuruo" //TODO
+    static let adjustToken = "hg856jtr1dkw"
     
     static let appleAppID = "6777928492"// TODO
     static let appsFlyerDevKey = "Vqkksyx7bJzau8wywy2fPi"// TODO
@@ -24,11 +24,11 @@ class Constants {
     static let keyHeaderToken = "x-k"
     static let keyHeaderVer = "x-klxob"
 
-    static let aesKey = "2857461309987612"
-    static let aesIV  = "7391564820012345"
+    static let cryK = "2857461309987612"
+    static let cryI  = "7391564820012345"
 
     static let privacyPolicyURL = "https://admanfelly.github.io/privacypolicy/" // TODO
-    static let livenessUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#" // TODO
+    static let realManUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#" // TODO
 
     // MARK: 登录
     static let countdownSeconds = 100

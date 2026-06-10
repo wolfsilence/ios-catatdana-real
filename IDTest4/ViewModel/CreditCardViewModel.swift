@@ -70,7 +70,7 @@ final class CreditCardViewModel {
             "paymentDate": String(parsedPaymentDate),
         ])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
 

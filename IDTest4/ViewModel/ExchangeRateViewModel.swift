@@ -103,7 +103,7 @@ final class ExchangeRateViewModel {
             "amount": amount,
         ])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
     }

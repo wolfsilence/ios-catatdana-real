@@ -61,7 +61,7 @@ final class Tk {
         
         Task.detached {
             let _: NetResponse<EmptyResp> = await Net.shared.post(
-                path: NetPath.survey,
+                path: NetPath.ncqmpcg,
                 encodableBody: req
             )
         }

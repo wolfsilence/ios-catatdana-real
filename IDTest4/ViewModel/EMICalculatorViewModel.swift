@@ -51,7 +51,7 @@ final class EMICalculatorViewModel {
             "result": String(format: "%.0f", emi),
         ])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
     }

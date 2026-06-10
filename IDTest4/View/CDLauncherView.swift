@@ -14,7 +14,7 @@ struct CDLauncherView: View {
     var body: some View {
         splashView
             .onAppear {
-                Tk.shared.track(page: Points.PAGE_WELCOME, act: Points.ACT_IN)
+                Tk.shared.track(page: Points.p2b8zu, act: Points.a89gkqm)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     if isFirstLaunch() {
                         onFinish(.firstProtocol)

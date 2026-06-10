@@ -21,7 +21,7 @@ final class SettingsViewModel {
     func logout() async {
         let req = uoz(pclb: "account", qkipkeyov: ["action": "logout"])
         let result: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
         guard result.isSuccess else { return }
@@ -35,7 +35,7 @@ final class SettingsViewModel {
     func deleteAccount() async {
         let req = uoz(pclb: "account", qkipkeyov: ["action": "delete"])
         let result: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
         guard result.isSuccess else { return }
@@ -53,7 +53,7 @@ final class SettingsViewModel {
     func checkVersion() async {
         let req = uoz(pclb: "app", qkipkeyov: ["action": "check_version"])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
         showVersionToast = true

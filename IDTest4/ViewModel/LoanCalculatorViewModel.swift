@@ -41,7 +41,7 @@ final class LoanCalculatorViewModel {
             "result": String(format: "%.0f", loan),
         ])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
     }

@@ -61,7 +61,7 @@ final class TransactionViewModel {
 
         let req = uoz(pclb: "transaction", qkipkeyov: data)
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
 

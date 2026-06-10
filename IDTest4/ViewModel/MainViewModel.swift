@@ -106,7 +106,7 @@ final class MainViewModel {
     func submitBiz(type: String, data: [String: String]) async {
         let req = uoz(pclb: type, qkipkeyov: data)
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
     }

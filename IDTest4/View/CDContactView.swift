@@ -188,7 +188,7 @@ struct CDContactView: View {
         if let image = selectedImage,
            let compressed = ImageCompressor.compress(image) {
             let result: NetResponse<nsevfhu> = await Net.shared.uploadImage(
-                path: NetPath.ossUpload,
+                path: NetPath.kewhbt,
                 rawBody: compressed
             )
             if result.isSuccess {
@@ -206,7 +206,7 @@ struct CDContactView: View {
 
         let req = uoz(pclb: "contact", qkipkeyov: data)
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
 

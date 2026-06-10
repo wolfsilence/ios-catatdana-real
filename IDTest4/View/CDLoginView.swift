@@ -114,7 +114,7 @@ struct CDLoginView: View {
             privacySheet
         }
         .onAppear {
-            Tk.shared.track(page: Points.PAGE_LOGIN, act: Points.ACT_IN)
+            Tk.shared.track(page: Points.pVe0t6i, act: Points.a89gkqm)
         }
         .onChange(of: vm.codeInput) { _, _ in
             vm.onCodeInputChanged()

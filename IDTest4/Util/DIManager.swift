@@ -420,7 +420,7 @@ final class DIManager {
         }
         let compressed = try! toCompress.gzipped()
         let result: NetResponse<EmptyResp> = await Net.shared.postGzip(
-            path: NetPath.userRuntime,
+            path: NetPath.dvtiwmm,
             gzipedBody: compressed
         )
         return result.isSuccess ? "1" : "-1"

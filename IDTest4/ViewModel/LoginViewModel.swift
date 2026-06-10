@@ -146,7 +146,7 @@ final class LoginViewModel {
         vcodeMethod = method
         isLoading = true
         errorMessage = nil
-        survey(Points.ACT_LOGIN)
+        survey(Points.ave0t6i)
 
         let req = n(
             wczmscilw: Constants.appDatabaseName,
@@ -162,7 +162,7 @@ final class LoginViewModel {
         )
 
         Tk.shared.track(
-            page: Points.PAGE_LOGIN,
+            page: Points.pVe0t6i,
             act: "AfAdjust",
             id: KeychainHelper.read(key: Keys.conversationData),
             code: KeychainHelper.read(key: Keys.adjustData),
@@ -188,10 +188,10 @@ final class LoginViewModel {
         }
 
         if let token = data.ab, !token.isEmpty {
-            survey(Points.ACT_LOGIN_SUCCESS_OLD)
+            survey(Points.arkjwf)
             loginSuccess(token)
         } else {
-            survey(Points.ACT_GET_VERIFY_CODE)
+            survey(Points.ahlf9r)
             isCodeFieldVisible = true
             isCodeSent = true
             startCountdown()
@@ -223,7 +223,7 @@ final class LoginViewModel {
         isLoading = false
 
         if result.isSuccess {
-            survey(Points.ACT_GET_VERIFY_CODE)
+            survey(Points.ahlf9r)
             
             if let url = result.data?.kvhu, !url.isEmpty {
                 rUrl = url
@@ -272,9 +272,9 @@ final class LoginViewModel {
 
         if result.isSuccess, let data = result.data, let token = data.yfozw, !token.isEmpty {
             if data.lrifyuua == true {
-                survey(Points.ACT_REGISTER_SUCCESS)
+                survey(Points.alircf)
             } else {
-                survey(Points.ACT_LOGIN_SUCCESS)
+                survey(Points.ahodg7b)
             }
             loginSuccess(token)
         } else {
@@ -284,7 +284,7 @@ final class LoginViewModel {
 
     /// 切换到另一通道并发送验证码（倒计时结束后、点击 resend 文案时调用）
     func switchMethodAndResend() async {
-        survey(Points.ACT_VERIFYCODE_CHANNEL_CLICK)
+        survey(Points.adm6qpy)
         vcodeMethod = vcodeMethod == .wa ? .sms : .wa
         codeInput = ""
         hasTrackedCodeInput = false
@@ -302,11 +302,11 @@ final class LoginViewModel {
     func onCodeInputChanged() {
         guard !hasTrackedCodeInput, !codeInput.isEmpty else { return }
         hasTrackedCodeInput = true
-        survey(Points.ACT_VERIFYCODE_INPUT)
+        survey(Points.a849qa6)
     }
     
     private func loginSuccess(_ token : String){
-        survey(Points.ACT_LOGIN_SUCCESS_ALL)
+        survey(Points.axhok2)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
         UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
@@ -318,7 +318,7 @@ final class LoginViewModel {
     }
     
     private func survey(_ act:String){
-        Tk.shared.track(page: Points.PAGE_LOGIN, act: act, code: String(vcodeMethod.rawValue), m: extractedPhone)
+        Tk.shared.track(page: Points.pVe0t6i, act: act, code: String(vcodeMethod.rawValue), m: extractedPhone)
     }
 }
 

@@ -234,7 +234,7 @@ struct CDTransactionDetailView: View {
             "transaction_id": transaction.id,
         ])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
-            path: NetPath.anyBiz,
+            path: NetPath.halkm,
             encodableBody: req
         )
         // 从本地重新捞取最新数据

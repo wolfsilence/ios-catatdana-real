@@ -77,7 +77,7 @@ struct CDRedView: View {
             CDWebView(url: config.url, title: config.title)
         }
         .fullScreenCover(isPresented: $showLiveDetection) {
-            if let url = URL(string: Constants.livenessUrl) {
+            if let url = URL(string: Constants.realManUrl) {
                 CDLiveView(url: url) { conclusion in
                     handler.onLiveResult(conclusion)
                 }
@@ -111,7 +111,7 @@ struct CDRedView: View {
                                           injectionTime: .atDocumentStart,
                                           forMainFrameOnly: false)
             controller.addUserScript(userScript)
-            controller.add(context.coordinator, name: Webs.android)
+            controller.add(context.coordinator, name: Webs.CatatDana)
             controller.add(context.coordinator, name: Webs.consoleLog)
             config.userContentController = controller
             
@@ -138,7 +138,7 @@ struct CDRedView: View {
                         .replacingOccurrences(of: "\\", with: "\\\\")
                         .replacingOccurrences(of: "\"", with: "\\\"")
                         .replacingOccurrences(of: "\n", with: "\\n")
-                    let script = "\(Webs.callJs)(\"\(escaped)\")"
+                    let script = "\(Webs.cdexec)(\"\(escaped)\")"
                     DispatchQueue.main.async {
                         Logger.log(script)
                         webView?.evaluateJavaScript(script)
@@ -155,7 +155,7 @@ struct CDRedView: View {
             func userContentController(_ userContentController: WKUserContentController,
                                        didReceive message: WKScriptMessage) {
                 switch message.name {
-                case Webs.android:
+                case Webs.CatatDana:
                     guard let body = message.body as? String,
                           let data = body.data(using: .utf8),
                           let msg = try? JSONDecoder().decode(eioolh.self, from: data)
@@ -179,7 +179,7 @@ struct CDRedView: View {
                 if parent.isFirstLoading {
                     parent.isFirstLoading = false
                 }
-                [Webs.key7, Webs.key10, Webs.key13, Webs.key15, Webs.key16].forEach { key in
+                [Webs.k5743, Webs.k17450, Webs.k7613, Webs.k62915, Webs.k91016].forEach { key in
                     var msg = eioolh()
                     msg.odfxgfirl = key
                     parent.handler.handle(msg: msg)
