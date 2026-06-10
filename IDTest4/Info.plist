@@ -7,11 +7,5 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Kami memerlukan izin akses kamera agar pengguna dapat mengambil foto dan mengunggah gambar yang dibutuhkan untuk beberapa fungsi aplikasi.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Kami memerlukan izin lokasi untuk memberikan pengalaman pengguna yang lebih baik.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.</string>
 </dict>
 </plist>

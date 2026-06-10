@@ -335,6 +335,9 @@
 				INFOPLIST_FILE = IDTest4/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Kami memerlukan izin akses kamera agar pengguna dapat mengambil foto dan mengunggah gambar yang dibutuhkan untuk beberapa fungsi aplikasi.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Kami memerlukan izin lokasi untuk memberikan pengalaman pengguna yang lebih baik.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Perekaman video umpan balik memerlukan pemberian izin perekaman audio secara bersamaan.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -388,6 +391,9 @@
 				INFOPLIST_FILE = IDTest4/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Kami memerlukan izin akses kamera agar pengguna dapat mengambil foto dan mengunggah gambar yang dibutuhkan untuk beberapa fungsi aplikasi.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Kami memerlukan izin lokasi untuk memberikan pengalaman pengguna yang lebih baik.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Perekaman video umpan balik memerlukan pemberian izin perekaman audio secara bersamaan.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
