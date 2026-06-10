@@ -148,17 +148,17 @@ final class LoginViewModel {
         errorMessage = nil
         survey(Points.ACT_LOGIN)
 
-        let req = OneClickReq(
-            app: Constants.appDatabaseName,
-            phone: extractedPhone,
-            intlCode: Constants.intlCode,
-            deviceId: IDFAProvider.idfa(),
-            vcodeMethod: method.rawValue,
-            latitude: LocationManager.shared.latitude,
-            longitude: LocationManager.shared.longitude,
-            referrer: KeychainHelper.read(key: Keys.adjustNetwork),
-            country: Locale.current.region?.identifier,
-            conversionData: KeychainHelper.read(key: Keys.conversationData)
+        let req = n(
+            wczmscilw: Constants.appDatabaseName,
+            cg: extractedPhone,
+            knrb: Constants.intlCode,
+            v: IDFAProvider.idfa(),
+            jmtgx: method.rawValue,
+            ifvmxc: LocationManager.shared.latitude,
+            ksqpmd: LocationManager.shared.longitude,
+            toy: KeychainHelper.read(key: Keys.adjustNetwork),
+            cbylac: Locale.current.region?.identifier,
+            gqba: KeychainHelper.read(key: Keys.conversationData)
         )
 
         Tk.shared.track(
@@ -169,8 +169,8 @@ final class LoginViewModel {
             m: extractedPhone
         )
 
-        let result: NetResponse<OneClickResp> = await Net.shared.post(
-            path: NetPath.loginOneClick,
+        let result: NetResponse<c> = await Net.shared.post(
+            path: NetPath.nyzca,
             encodableBody: req
         )
 
@@ -181,13 +181,13 @@ final class LoginViewModel {
             return
         }
         
-        if let url = data.redirectUrl, !url.isEmpty {
+        if let url = data.xvupmmlv, !url.isEmpty {
             rUrl = url
         } else {
             rUrl = ""
         }
 
-        if let token = data.token, !token.isEmpty {
+        if let token = data.ab, !token.isEmpty {
             survey(Points.ACT_LOGIN_SUCCESS_OLD)
             loginSuccess(token)
         } else {
@@ -203,20 +203,20 @@ final class LoginViewModel {
         isLoading = true
         errorMessage = nil
 
-        let req = VCodeReq(
-            app: Constants.appDatabaseName,
-            phone: extractedPhone,
-            intlCode: Constants.intlCode,
-            vcodeMethod: vcodeMethod.rawValue,
-            latitude: LocationManager.shared.latitude,
-            longitude: LocationManager.shared.longitude,
-            country: Locale.current.region?.identifier,
-            referrer: KeychainHelper.read(key: Keys.adjustNetwork),
-            conversionData: KeychainHelper.read(key: Keys.conversationData)
+        let req = tdzno(
+            cfn: Constants.appDatabaseName,
+            toykkb: extractedPhone,
+            btd: Constants.intlCode,
+            ti: vcodeMethod.rawValue,
+            shvdpemq: LocationManager.shared.latitude,
+            is: LocationManager.shared.longitude,
+            uitd: Locale.current.region?.identifier,
+            nxaxgxj: KeychainHelper.read(key: Keys.adjustNetwork),
+            awccm: KeychainHelper.read(key: Keys.conversationData)
         )
 
-        let result: NetResponse<VCodeResp> = await Net.shared.post(
-            path: NetPath.loginVCode,
+        let result: NetResponse<nwfwd> = await Net.shared.post(
+            path: NetPath.cawbxn,
             encodableBody: req
         )
 
@@ -225,7 +225,7 @@ final class LoginViewModel {
         if result.isSuccess {
             survey(Points.ACT_GET_VERIFY_CODE)
             
-            if let url = result.data?.redirectUrl, !url.isEmpty {
+            if let url = result.data?.kvhu, !url.isEmpty {
                 rUrl = url
             } else {
                 rUrl = ""
@@ -255,23 +255,23 @@ final class LoginViewModel {
         isLoading = true
         errorMessage = nil
 
-        let req = LoginReq(
-            app: Constants.appDatabaseName,
-            phone: extractedPhone,
-            vcode: codeInput,
-            deviceId: KeychainHelper.read(key: Keys.idfa),
+        let req = hgkkvqxf(
+            atm: Constants.appDatabaseName,
+            iqojyq: extractedPhone,
+            wnywejdcv: codeInput,
+            abacopve: KeychainHelper.read(key: Keys.idfa),
             source: KeychainHelper.read(key: Keys.adjustNetwork)
         )
 
-        let result: NetResponse<LoginResp> = await Net.shared.post(
+        let result: NetResponse<dbxynzvm> = await Net.shared.post(
             path: NetPath.login,
             encodableBody: req
         )
 
         isLoading = false
 
-        if result.isSuccess, let data = result.data, let token = data.token, !token.isEmpty {
-            if data.isReg == true {
+        if result.isSuccess, let data = result.data, let token = data.yfozw, !token.isEmpty {
+            if data.lrifyuua == true {
                 survey(Points.ACT_REGISTER_SUCCESS)
             } else {
                 survey(Points.ACT_LOGIN_SUCCESS)
@@ -309,7 +309,6 @@ final class LoginViewModel {
         survey(Points.ACT_LOGIN_SUCCESS_ALL)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-        rUrl = "http://192.168.29.21:8080/#/"  // TODO 测试
         UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
         clearCountdown()
         isLoggedIn = true

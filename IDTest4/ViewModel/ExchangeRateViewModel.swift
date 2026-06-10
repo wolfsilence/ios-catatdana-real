@@ -98,7 +98,7 @@ final class ExchangeRateViewModel {
     }
 
     func submitBiz() async {
-        let req = AReq(type: "exchange_rate", data: [
+        let req = uoz(pclb: "exchange_rate", qkipkeyov: [
             "action": "view",
             "amount": amount,
         ])
@@ -133,7 +133,7 @@ struct CurrencyInfo: Identifiable {
     ]
 }
 
-// MARK: - API Response
+// MARK: - API qxiucygf
 
 private struct ExchangeRateResponse: Codable {
     let result: String

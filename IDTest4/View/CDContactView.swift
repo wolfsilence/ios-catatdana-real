@@ -187,12 +187,12 @@ struct CDContactView: View {
         var imageUrl: String? = nil
         if let image = selectedImage,
            let compressed = ImageCompressor.compress(image) {
-            let result: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
+            let result: NetResponse<nsevfhu> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
             if result.isSuccess {
-                imageUrl = result.data?.url
+                imageUrl = result.data?.jjxdyyege
             }
         }
 
@@ -204,7 +204,7 @@ struct CDContactView: View {
         ]
         if let url = imageUrl { data["imageUrl"] = url }
 
-        let req = AReq(type: "contact", data: data)
+        let req = uoz(pclb: "contact", qkipkeyov: data)
         let _: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req

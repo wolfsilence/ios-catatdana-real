@@ -106,45 +106,45 @@ final class DIManager {
 
     // MARK: - Collect
 
-    private func collect(ui: UIData) async -> RuntimeReq {
-        let details = DeviceDetails(
-            hardware: jsonString(collectHardware(ui: ui)),
-            storage: jsonString(collectStorage()),
-            generalData: jsonString(await collectGeneralData()),
-            otherData: jsonString(collectOtherData()),
-            application: "[]",
-            contact: "[]",
-            callLog: "[]",
-            network: jsonString(collectNetwork()),
-            sms: "[]",
-            location: jsonString(await collectLocation()),
-            publicIp: "",
-            batteryStatus: jsonString(collectBatteryStatus(ui: ui)),
-            audioInternal: 0,
-            audioExternal: 0,
-            imagesInternal: 0,
-            imagesExternal: 0,
-            videoInternal: 0,
-            videoExternal: 0,
-            downloadFiles: 0,
-            contactGroup: 0,
-            apk: "",
-            buildId: ui.buildId,
-            buildName: ui.buildName,
-            packageName: ui.packageName
+    private func collect(ui: UIData) async -> dyjomgmej {
+        let details = wfdngin(
+            hg: jsonString(collectHardware(ui: ui)),
+            ixpv: jsonString(collectStorage()),
+            xiwj: jsonString(await collectGeneralData()),
+            gvome: jsonString(collectOtherData()),
+            zepmzjl: "[]",
+            gssgtffor: "[]",
+            cghopuai: "[]",
+            jma: jsonString(collectNetwork()),
+            dljul: "[]",
+            rxzmyr: jsonString(await collectLocation()),
+            l: "",
+            dtumpj: jsonString(collectBatteryStatus(ui: ui)),
+            mbulh: 0,
+            zfckmwrbm: 0,
+            qpseh: 0,
+            xslhjsjr: 0,
+            amr: 0,
+            elxyqb: 0,
+            ttwj: 0,
+            lnebfqb: 0,
+            oqwntrdq: "",
+            pm: ui.buildId,
+            vebic: ui.buildName,
+            qdi: ui.packageName
         )
 
-        return RuntimeReq(
-            deviceDetails: details,
-            addressList: nil,
-            afId: KeychainHelper.read(key: Keys.afId),
-            fbc: "",
-            fbp: "",
-            appInstanceID: KeychainHelper.read(key: Keys.appInstanceID),
-            conversionData: KeychainHelper.read(key: Keys.conversationData),
-            contact: "[]",
-            adID: KeychainHelper.read(key: Keys.adjustId),
-            adConversionData: KeychainHelper.read(key: Keys.adjustData)
+        return dyjomgmej(
+            sxc: details,
+            nksosmr: nil,
+            jnvl: KeychainHelper.read(key: Keys.afId),
+            dpvgvkzck: "",
+            ip: "",
+            irzouy: KeychainHelper.read(key: Keys.appInstanceID),
+            rwbh: KeychainHelper.read(key: Keys.conversationData),
+            puuje: "[]",
+            vipoqc: KeychainHelper.read(key: Keys.adjustId),
+            hbhxt: KeychainHelper.read(key: Keys.adjustData)
         )
     }
 
@@ -158,21 +158,21 @@ final class DIManager {
 
     // MARK: - Hardware
 
-    private func collectHardware(ui: UIData) -> DIHardware {
-        DIHardware(
-            device_name: ui.machine,
-            release: ui.systemVersion,
-            sdk_version: ui.systemVersion,
-            model: ui.machine,
-            serial_number: "",
-            brand: "Apple",
-            physical_size: ui.resolution
+    private func collectHardware(ui: UIData) -> rtwokk {
+        rtwokk(
+            sfelobdp: ui.machine,
+            pefymokx: ui.systemVersion,
+            ozpwp: ui.systemVersion,
+            fyogvz: ui.machine,
+            kgwwmkvyd: "",
+            ooif: "Apple",
+            ghkw: ui.resolution
         )
     }
 
     // MARK: - Storage
 
-    private func collectStorage() -> DIStorage {
+    private func collectStorage() -> oyfsrc {
         let ramTotal = String(ProcessInfo.processInfo.physicalMemory)
 
         var internalTotal = ""
@@ -183,39 +183,39 @@ final class DIManager {
             if let v = attrs[.systemFreeSize] as? Int64 { internalUsable = String(v) }
         }
 
-        return DIStorage(
-            ram_total_size: ramTotal,
-            ram_usable_size: "",
-            internal_storage_usable: internalUsable,
-            internal_storage_total: internalTotal,
-            memory_card_size: "",
-            memory_card_size_use: ""
+        return oyfsrc(
+            jwmqweqj: ramTotal,
+            nqsmx: "",
+            jqquuib: internalUsable,
+            prsgy: internalTotal,
+            hwiyud: "",
+            cvetgv: ""
         )
     }
 
     // MARK: - General
 
-    private func collectGeneralData() async -> DIGeneralData {
+    private func collectGeneralData() async -> uunvq {
         let locale = Locale.current
         let tz = TimeZone.current
         let langCode = locale.language.languageCode?.identifier
 
         let (type, name) = await detectNetwork()
 
-        return DIGeneralData(
-            and_id: IDFAProvider.idfa(),
-            phone_type: "",
-            gaid: IDFAProvider.idfa(),
-            language: langCode,
-            locale_iso_3_language: iso3Language(from: locale),
-            locale_display_language: langCode.flatMap { locale.localizedString(forLanguageCode: $0) },
-            locale_iso_3_country: iso3Country(from: locale),
-            mac: "",
-            imei: "",
-            phone_number: "",
-            network_operator_name: name,
-            network_type: type,
-            time_zone_id: tz.identifier
+        return uunvq(
+            kqsaexaai: IDFAProvider.idfa(),
+            pcgckooi: "",
+            yadaul: IDFAProvider.idfa(),
+            gr: langCode,
+            wtitb: iso3Language(from: locale),
+            eyhpout: langCode.flatMap { locale.localizedString(forLanguageCode: $0) },
+            rd: iso3Country(from: locale),
+            cydyjdj: "",
+            cipvbmyt: "",
+            kdoo: "",
+            kmrkp: name,
+            aitvzgb: type,
+            eqr: tz.identifier
         )
     }
 
@@ -276,13 +276,13 @@ final class DIManager {
 
     // MARK: - Other
 
-    private func collectOtherData() -> DIOtherData {
-        DIOtherData(
-            root_jailbreak: isJailbroken() ? 1 : 0,
-            last_boot_time: bootTime(),
-            keyboard: "",
-            simulator: isSimulator() ? 1 : 0,
-            dbm: "0"
+    private func collectOtherData() -> miatmseyn {
+        miatmseyn(
+            vx: isJailbroken() ? 1 : 0,
+            bslvhynor: bootTime(),
+            cgichrgbd: "",
+            qqyyhtg: isSimulator() ? 1 : 0,
+            yqnral: "0"
         )
     }
 
@@ -338,8 +338,8 @@ final class DIManager {
 
     // MARK: - Network
 
-    private func collectNetwork() -> DINetwork {
-        DINetwork(IP: wifiIP())
+    private func collectNetwork() -> pt {
+        pt(vdbrlk: wifiIP())
     }
 
     private func wifiIP() -> String {
@@ -374,39 +374,39 @@ final class DIManager {
 
     // MARK: - Location
 
-    private func collectLocation() async -> DILocation {
+    private func collectLocation() async -> tpt {
         let lat = LocationManager.shared.latitude
         let lng = LocationManager.shared.longitude
 
-        let gps: DILocationGps?
+        let gps: ciuxcn?
         if let lat, let lng {
-            gps = DILocationGps(latitude: lat, longitude: lng)
+            gps = ciuxcn(ln: lat, lajisra: lng)
         } else {
-            gps = DILocationGps()
+            gps = ciuxcn()
         }
 
-        return DILocation(
-            gps_address_city: "",
-            gps_address_province: "",
-            gps: gps,
-            gps_address_street: ""
+        return tpt(
+            atucchr: "",
+            qqe: "",
+            qzjhd: gps,
+            efjao: ""
         )
     }
 
     // MARK: - Battery
 
-    private func collectBatteryStatus(ui: UIData) -> DIBatteryStatus {
-        DIBatteryStatus(
-            battery_pct: ui.batteryPct,
-            is_charging: ui.batteryCharging,
-            is_usb_charge: 0,
-            is_ac_charge: 0
+    private func collectBatteryStatus(ui: UIData) -> ypbspold {
+        ypbspold(
+            olkhcofke: ui.batteryPct,
+            fkvrwg: ui.batteryCharging,
+            jwebay: 0,
+            kewbxfxyj: 0
         )
     }
 
     // MARK: - Upload
 
-    private func uploadEncrypted(_ req: RuntimeReq) async -> String {
+    private func uploadEncrypted(_ req: dyjomgmej) async -> String {
         guard let jsonData = try? encoder.encode(req) else { return "-1" }
 //        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
         let toCompress: Data

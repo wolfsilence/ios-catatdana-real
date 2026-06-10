@@ -362,11 +362,11 @@ struct CDRecordTransactionView: View {
         guard let image = capturedImage,
               let compressed = ImageCompressor.compress(image) else { return }
         Task.detached(priority: .userInitiated) {
-            let result: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
+            let result: NetResponse<nsevfhu> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
-            guard result.isSuccess, let url = result.data?.url, !url.isEmpty else { return }
+            guard result.isSuccess, let url = result.data?.jjxdyyege, !url.isEmpty else { return }
             await MainActor.run {
                 vm.photoPath = url
             }

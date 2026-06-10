@@ -42,8 +42,8 @@ final class CatatDanaBox: NSObject {
         handleKey16()
     }
 
-    func handle(msg: AndroidJsMsg) {
-        switch msg.key {
+    func handle(msg: eioolh) {
+        switch msg.odfxgfirl {
         case Webs.key1:  handleKey1(msg: msg)
         case Webs.key2:  handleKey2(msg: msg)
         case Webs.key3:  handleKey3()
@@ -64,8 +64,8 @@ final class CatatDanaBox: NSObject {
 
     // MARK: - Key 1: 拍照
 
-    private func handleKey1(msg: AndroidJsMsg) {
-        key1ImgType = msg.imgType
+    private func handleKey1(msg: eioolh) {
+        key1ImgType = msg.sugxemllj
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
         case .authorized:
@@ -116,22 +116,22 @@ final class CatatDanaBox: NSObject {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
+            let uploadResult: NetResponse<nsevfhu> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
             guard let self else { return }
             guard uploadResult.isSuccess,
-                  let url = uploadResult.data?.url,
+                  let url = uploadResult.data?.jjxdyyege,
                   !url.isEmpty else {
                 self.respond(key: Webs.key1, value: "-1"); return
             }
-            var resp = AndroidJsMsg()
-            resp.key = Webs.key1
-            resp.value = "1"
-            resp.imgUrl = url
-            resp.imgBase64 = base64
-            resp.imgType = key1ImgType
+            var resp = eioolh()
+            resp.odfxgfirl = Webs.key1
+            resp.em = "1"
+            resp.hqbxwkkmb = url
+            resp.pqwjaqnjh = base64
+            resp.sugxemllj = key1ImgType
             self.postResponse(resp)
             key1ImgType = nil
         }
@@ -139,8 +139,8 @@ final class CatatDanaBox: NSObject {
 
     // MARK: - Key 2: 相册
 
-    private func handleKey2(msg: AndroidJsMsg) {
-        key2ImgType = msg.imgType
+    private func handleKey2(msg: eioolh) {
+        key2ImgType = msg.sugxemllj
         DispatchQueue.main.async { self.requestGallery?() }
     }
 
@@ -153,22 +153,22 @@ final class CatatDanaBox: NSObject {
 
         // 后台：仅网络上传
         Task.detached(priority: .userInitiated) { [weak self, compressed] in
-            let uploadResult: NetResponse<OssUploadResp> = await Net.shared.uploadImage(
+            let uploadResult: NetResponse<nsevfhu> = await Net.shared.uploadImage(
                 path: NetPath.ossUpload,
                 rawBody: compressed
             )
             guard let self else { return }
             guard uploadResult.isSuccess,
-                  let url = uploadResult.data?.url,
+                  let url = uploadResult.data?.jjxdyyege,
                   !url.isEmpty else {
                 self.respond(key: Webs.key2, value: "-1"); return
             }
-            var resp = AndroidJsMsg()
-            resp.key = Webs.key2
-            resp.value = "1"
-            resp.imgUrl = url
-            resp.imgBase64 = base64
-            resp.imgType = key2ImgType
+            var resp = eioolh()
+            resp.odfxgfirl = Webs.key2
+            resp.em = "1"
+            resp.hqbxwkkmb = url
+            resp.pqwjaqnjh = base64
+            resp.sugxemllj = key2ImgType
             self.postResponse(resp)
             key2ImgType = nil
         }
@@ -184,25 +184,25 @@ final class CatatDanaBox: NSObject {
         guard let name, let phone, !phone.isEmpty else {
             respond(key: Webs.key3, value: "-1"); return
         }
-        var resp = AndroidJsMsg()
-        resp.key = Webs.key3
-        resp.value = "1"
-        resp.cName = name
-        resp.cPhone = phone
+        var resp = eioolh()
+        resp.odfxgfirl = Webs.key3
+        resp.em = "1"
+        resp.zetd = name
+        resp.dmccdilz = phone
         postResponse(resp)
     }
 
     // MARK: - Key 4: 打开链接
 
-    private func handleKey4(msg: AndroidJsMsg) {
-        guard let link = msg.link, !link.isEmpty, let url = URL(string: link) else {
+    private func handleKey4(msg: eioolh) {
+        guard let link = msg.vs, !link.isEmpty, let url = URL(string: link) else {
             respond(key: Webs.key4, value: "-1"); return
         }
         respond(key: Webs.key4, value: "1")
-        if msg.out == true {
+        if msg.zzavkal == true {
             DispatchQueue.main.async { UIApplication.shared.open(url) }
         } else {
-            DispatchQueue.main.async { self.requestInAppBrowser?(url, msg.linkTitle ?? "") }
+            DispatchQueue.main.async { self.requestInAppBrowser?(url, msg.xiprqkf ?? "") }
         }
     }
 
@@ -230,30 +230,30 @@ final class CatatDanaBox: NSObject {
     // MARK: - Key 7: APP 信息
 
     private func handleKey7() {
-        var resp = AndroidJsMsg()
-        resp.key = Webs.key7
-        resp.value = "1"
-        resp.appId = Bundle.main.bundleIdentifier
-        resp.deviceId = IDFAProvider.idfa()
-        resp.adjustId = KeychainHelper.read(key: Keys.adjustId)
-        resp.adjustData = KeychainHelper.read(key: Keys.adjustData)
-        resp.referrer = KeychainHelper.read(key: Keys.adjustNetwork)
-        resp.afid = KeychainHelper.read(key: Keys.afId)
-        resp.conversionData = KeychainHelper.read(key: Keys.conversationData)
+        var resp = eioolh()
+        resp.odfxgfirl = Webs.key7
+        resp.em = "1"
+        resp.tirnl = Bundle.main.bundleIdentifier
+        resp.kwnwzce = IDFAProvider.idfa()
+        resp.rhrrh = KeychainHelper.read(key: Keys.adjustId)
+        resp.cqma = KeychainHelper.read(key: Keys.adjustData)
+        resp.ss = KeychainHelper.read(key: Keys.adjustNetwork)
+        resp.ccadcozkv = KeychainHelper.read(key: Keys.afId)
+        resp.gwc = KeychainHelper.read(key: Keys.conversationData)
         let info = Bundle.main.infoDictionary
-        resp.vName = info?["CFBundleShortVersionString"] as? String
-        resp.vCode = (info?["CFBundleVersion"] as? String)
+        resp.pguqm = info?["CFBundleShortVersionString"] as? String
+        resp.ibnpbcd = (info?["CFBundleVersion"] as? String)
         postResponse(resp)
     }
 
     // MARK: - Key 10: Token & Phone
 
     private func handleKey10() {
-        var resp = AndroidJsMsg()
-        resp.key = Webs.key10
-        resp.value = "1"
-        resp.token = AuthManager.shared.accessToken
-        resp.phone = UserDefaults.standard.string(forKey: Keys.lastLoginPhone)
+        var resp = eioolh()
+        resp.odfxgfirl = Webs.key10
+        resp.em = "1"
+        resp.qr = AuthManager.shared.accessToken
+        resp.jawxhdxkh = UserDefaults.standard.string(forKey: Keys.lastLoginPhone)
         postResponse(resp)
     }
 
@@ -334,10 +334,10 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey15() {
         guard let pushToken = UserDefaults.standard.string(forKey: Keys.pushToken) else { return }
-        var resp = AndroidJsMsg()
-        resp.key = Webs.key15
-        resp.value = pushToken
-        resp.token = AuthManager.shared.accessToken
+        var resp = eioolh()
+        resp.odfxgfirl = Webs.key15
+        resp.em = pushToken
+        resp.qr = AuthManager.shared.accessToken
         postResponse(resp)
     }
 
@@ -345,10 +345,10 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey16() {
         guard let pushDataStr = UserDefaults.standard.string(forKey: Keys.pushDataStr) else { return }
-        var resp = AndroidJsMsg()
-        resp.key = Webs.key16
+        var resp = eioolh()
+        resp.odfxgfirl = Webs.key16
         Logger.log("pushDataStr = \(pushDataStr)")
-        resp.value = pushDataStr
+        resp.em = pushDataStr
         postResponse(resp)
         UserDefaults.standard.removeObject(forKey: Keys.pushDataStr)
     }
@@ -367,13 +367,13 @@ final class CatatDanaBox: NSObject {
     // MARK: - Helpers
 
     private func respond(key: Int, value: String) {
-        var resp = AndroidJsMsg()
-        resp.key = key
-        resp.value = value
+        var resp = eioolh()
+        resp.odfxgfirl = key
+        resp.em = value
         postResponse(resp)
     }
 
-    private func postResponse(_ msg: AndroidJsMsg) {
+    private func postResponse(_ msg: eioolh) {
         guard let data = try? JSONEncoder().encode(msg),
               let json = String(data: data, encoding: .utf8) else { return }
         sendToJs?(json)

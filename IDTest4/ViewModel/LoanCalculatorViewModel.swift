@@ -33,7 +33,7 @@ final class LoanCalculatorViewModel {
         let loan = (emi * (1 - pow(1 + r, -n))) / r
         maxLoan = loan
 
-        let req = AReq(type: "maxloan_calc", data: [
+        let req = uoz(pclb: "maxloan_calc", qkipkeyov: [
             "action": "calculate",
             "monthlyPayment": String(emi),
             "months": String(Int(n)),

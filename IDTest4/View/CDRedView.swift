@@ -158,7 +158,7 @@ struct CDRedView: View {
                 case Webs.android:
                     guard let body = message.body as? String,
                           let data = body.data(using: .utf8),
-                          let msg = try? JSONDecoder().decode(AndroidJsMsg.self, from: data)
+                          let msg = try? JSONDecoder().decode(eioolh.self, from: data)
                     else { return }
                     Logger.log(body)
                     Task { parent.handler.handle(msg: msg) }
@@ -180,8 +180,8 @@ struct CDRedView: View {
                     parent.isFirstLoading = false
                 }
                 [Webs.key7, Webs.key10, Webs.key13, Webs.key15, Webs.key16].forEach { key in
-                    var msg = AndroidJsMsg()
-                    msg.key = key
+                    var msg = eioolh()
+                    msg.odfxgfirl = key
                     parent.handler.handle(msg: msg)
                 }
             }

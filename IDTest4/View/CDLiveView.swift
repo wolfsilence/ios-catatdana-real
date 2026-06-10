@@ -242,18 +242,18 @@ private struct LiveDetectionWebView: UIViewRepresentable {
 
             hasReported = true
 
-            var req = RecgFaceReq()
-            req.imageID = imageId
-            req.livenessId = imageId
-            req.livenessImg = base64Image
+            var req = tgq()
+            req.govizh = imageId
+            req.prmp = imageId
+            req.rruguses = base64Image
 
             Task { [weak self] in
-                let result: NetResponse<RecgFaceResp> = await Net.shared.post(
+                let result: NetResponse<bkciawd> = await Net.shared.post(
                     path: NetPath.accRecgFace,
                     encodableBody: req
                 )
                 await MainActor.run {
-                    if result.isSuccess, let conclusion = result.data?.conclusion {
+                    if result.isSuccess, let conclusion = result.data?.yfccnpcp {
                         self?.onResult(conclusion)
                     } else {
                         self?.onResult(nil)

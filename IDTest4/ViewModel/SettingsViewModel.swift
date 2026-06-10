@@ -19,7 +19,7 @@ final class SettingsViewModel {
     // MARK: - Logout
 
     func logout() async {
-        let req = AReq(type: "account", data: ["action": "logout"])
+        let req = uoz(pclb: "account", qkipkeyov: ["action": "logout"])
         let result: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req
@@ -33,7 +33,7 @@ final class SettingsViewModel {
     // MARK: - Delete Account
 
     func deleteAccount() async {
-        let req = AReq(type: "account", data: ["action": "delete"])
+        let req = uoz(pclb: "account", qkipkeyov: ["action": "delete"])
         let result: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req
@@ -51,7 +51,7 @@ final class SettingsViewModel {
     // MARK: - Version Check
 
     func checkVersion() async {
-        let req = AReq(type: "app", data: ["action": "check_version"])
+        let req = uoz(pclb: "app", qkipkeyov: ["action": "check_version"])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req

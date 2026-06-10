@@ -12,26 +12,26 @@ enum Webs {
 
     // MARK: - JS Bridge Names
 
-    static let android      = "Android"
-    static let callAndroid  = "callAndroid"
-    static let callJs       = "callJs"
+    static let android      = "CatatDana" // Android -> CatatDana
+    static let callAndroid  = "cdandr" // callAndroid -> cdandr
+    static let callJs       = "cdexec" // callJs -> cdexec
     static let consoleLog   = "consoleLog"
 
     // MARK: - Message Keys
-    static let key1  = 1   // 拍照
-    static let key2  = 2   // 相册
-    static let key3  = 3   // 联系人
-    static let key4  = 4   // 打开链接
-    static let key5  = 5   // 评分
-    static let key6  = 6   // 设备信息
-    static let key7  = 7   // APP 信息
-    static let key10 = 10  // Token & Phone
-    static let key11 = 11  // 登出
-    static let key12 = 12  // 活体认证
-    static let key13 = 13  // 定位 + IDFA 权限
-    static let key15 = 15
-    static let key16 = 16
-    static let key17 = 17  // 打开设置
+    static let key1  = 4829   // 1 -> 4829 拍照
+    static let key2  = 71536  // 2 -> 71536 相册
+    static let key3  = 9384   // 3 -> 9384 联系人
+    static let key4  = 26517  // 4 -> 26517 打开链接
+    static let key5  = 3391   // 5 -> 3391 评分
+    static let key6  = 82     // 6 -> 82 设备信息
+    static let key7  = 5743   // 7 -> 5743 APP 信息
+    static let key10 = 17450  // 10 -> 17450 Token & Phone
+    static let key11 = 2936   // 11 -> 2936 登出
+    static let key12 = 405821 // 12 -> 405821 活体认证
+    static let key13 = 7613   // 13 -> 7613 定位 + IDFA 权限
+    static let key15 = 62915  // 15 -> 62915
+    static let key16 = 91016  // 16 -> 91016
+    static let key17 = 15817  // 17 -> 15817 打开设置
 
     // MARK: - JS Bridge Script
 

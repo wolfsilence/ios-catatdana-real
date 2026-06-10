@@ -61,7 +61,7 @@ final class ReminderViewModel {
         // 安排本地推送通知
         scheduleNotification(for: reminder)
 
-        let req = AReq(type: "reminder", data: [
+        let req = uoz(pclb: "reminder", qkipkeyov: [
             "action": "save",
             "name": name,
             "amount": String(parsedAmount),

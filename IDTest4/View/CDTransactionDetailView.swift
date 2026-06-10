@@ -229,7 +229,7 @@ struct CDTransactionDetailView: View {
     // MARK: - API
 
     private func submitBizAndReload() async {
-        let req = AReq(type: "transaction", data: [
+        let req = uoz(pclb: "transaction", qkipkeyov: [
             "action": "view",
             "transaction_id": transaction.id,
         ])

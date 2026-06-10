@@ -43,7 +43,7 @@ final class EMICalculatorViewModel {
         monthlyEMI = emi
 
         // 提交 anyBiz
-        let req = AReq(type: "emi_calc", data: [
+        let req = uoz(pclb: "emi_calc", qkipkeyov: [
             "action": "calculate",
             "loanAmount": String(P),
             "months": String(Int(n)),

@@ -36,28 +36,28 @@ final class Tk {
     func track(page: String, act: String, id: String? = nil, code: String? = nil, m: String? = nil) {
         Logger.log("track: page=\(page) act=\(act) id=\(id ?? "") code=\(code ?? "") m=\(m ?? "")")
         
-        var log = SurveyLog()
+        var log = enfpzts()
         let now = Date()
-        log.t = String(Int64(now.timeIntervalSince1970 * 1000))
-        log.idn_date = Self.dateFormatter.string(from: now)
-        log.idn_time = Self.timeFormatter.string(from: now)
-        log.env = "Production"
-        log.v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        log.m = (m?.isEmpty == false) ? m! : UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? ""
-        log.p = page
-        log.act = act
-        log.id = id
-        log.code = code
-        log.deviceId = IDFAProvider.idfa()
-        log.source = KeychainHelper.read(key: Keys.adjustNetwork) ?? ""
-        log.vestName = Constants.appDatabaseName
-        log.partner = Constants.appDatabaseName
-        log.referer = KeychainHelper.read(key: Keys.conversationData)
-            
-        var req = SurveyReq()
-        req.adid = KeychainHelper.read(key: Keys.adjustId) ?? ""
-        req.afid = KeychainHelper.read(key: Keys.afId) ?? ""
-        req.__logs__ = [log]
+        log.uzekwal = String(Int64(now.timeIntervalSince1970 * 1000))
+        log.nlzyjsr = Self.dateFormatter.string(from: now)
+        log.yilaltn = Self.timeFormatter.string(from: now)
+        log.yjg = "Production"
+        log.bmytdbexp = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        log.gcuvthapc = (m?.isEmpty == false) ? m! : UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? ""
+        log.vh = page
+        log.lljletl = act
+        log.httfxskg = id
+        log.vuuuda = code
+        log.hxj = IDFAProvider.idfa()
+        log.zsjkam = KeychainHelper.read(key: Keys.adjustNetwork) ?? ""
+        log.yty = Constants.appDatabaseName
+        log.pnft = Constants.appDatabaseName
+        log.ru = KeychainHelper.read(key: Keys.conversationData)
+
+        var req = okak()
+        req.gkykpehpn = KeychainHelper.read(key: Keys.adjustId) ?? ""
+        req.sxe = KeychainHelper.read(key: Keys.afId) ?? ""
+        req.nvoclmw = [log]
         
         Task.detached {
             let _: NetResponse<EmptyResp> = await Net.shared.post(

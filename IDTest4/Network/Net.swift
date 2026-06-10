@@ -220,7 +220,7 @@ fileprivate class NetCore {
             let (data, response) = try await urlSession.data(for: urlRequest)
             traceIncoming(response, data: data)
 
-            let resp = try jsonDecoder.decode(Response<T>.self, from: data)
+            let resp = try jsonDecoder.decode(qxiucygf<T>.self, from: data)
             let code = resp.code
             let msg  = resp.msg
 

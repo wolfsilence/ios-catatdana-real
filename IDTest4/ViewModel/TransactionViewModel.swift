@@ -59,7 +59,7 @@ final class TransactionViewModel {
         if !location.isEmpty { data["location"] = location }
         if !note.isEmpty { data["note"] = note }
 
-        let req = AReq(type: "transaction", data: data)
+        let req = uoz(pclb: "transaction", qkipkeyov: data)
         let _: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req

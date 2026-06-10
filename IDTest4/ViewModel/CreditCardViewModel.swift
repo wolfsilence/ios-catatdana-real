@@ -64,7 +64,7 @@ final class CreditCardViewModel {
         DatabaseManager.shared.saveCreditCard(card)
         load()
 
-        let req = AReq(type: "creditcard", data: [
+        let req = uoz(pclb: "creditcard", qkipkeyov: [
             "action": "save",
             "bank": bank,
             "paymentDate": String(parsedPaymentDate),

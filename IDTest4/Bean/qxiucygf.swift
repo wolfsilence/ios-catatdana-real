@@ -7,10 +7,10 @@ import Foundation
 //
 
 // 通用的响应包装类
-struct Response<T: Decodable>: Decodable {
-    let code: Int
-    let msg: String
-    let data: T? // 必须是可选类型
+struct qxiucygf<T: Decodable>: Decodable {
+    let code: Int // code ->
+    let msg: String // msg ->
+    let data: T? // data ->
 
     enum CodingKeys: String, CodingKey {
         case code, msg, data
@@ -29,4 +29,10 @@ struct Response<T: Decodable>: Decodable {
             data = nil
         }
     }
+    var scapb: Bool? // scapb ->
+    var vsqoal: Bool? // vsqoal ->
+    var mnacqo: Bool? // mnacqo ->
+    var x: Double? // x ->
+    var w: Int64? // w ->
+    var j: Int64? // j ->
 }
