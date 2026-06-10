@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatatDanaKu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B3E763B2FCFD7D1002D7093 /* IDTest4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IDTest4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B452FE42FD4A26300C9B4B7 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/AdServices.framework; sourceTree = DEVELOPER_DIR; };
 		9B452FE62FD4A26F00C9B4B7 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		9B452FE92FD4A29300C9B4B7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -33,22 +33,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9B5B7B6F2FD18A35001B07DB /* Exceptions for "CatatDanaKu" folder in "CatatDanaKu" target */ = {
+		9B5B7B6F2FD18A35001B07DB /* Exceptions for "IDTest4" folder in "IDTest4" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 9B3E763A2FCFD7D1002D7093 /* CatatDanaKu */;
+			target = 9B3E763A2FCFD7D1002D7093 /* IDTest4 */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9B3E763D2FCFD7D1002D7093 /* CatatDanaKu */ = {
+		9B3E763D2FCFD7D1002D7093 /* IDTest4 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				9B5B7B6F2FD18A35001B07DB /* Exceptions for "CatatDanaKu" folder in "CatatDanaKu" target */,
+				9B5B7B6F2FD18A35001B07DB /* Exceptions for "IDTest4" folder in "IDTest4" target */,
 			);
-			path = CatatDanaKu;
+			path = IDTest4;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -81,7 +81,7 @@
 		9B3E76322FCFD7D1002D7093 = {
 			isa = PBXGroup;
 			children = (
-				9B3E763D2FCFD7D1002D7093 /* CatatDanaKu */,
+				9B3E763D2FCFD7D1002D7093 /* IDTest4 */,
 				9B5B7B692FD18950001B07DB /* Frameworks */,
 				9B3E763C2FCFD7D1002D7093 /* Products */,
 			);
@@ -90,7 +90,7 @@
 		9B3E763C2FCFD7D1002D7093 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */,
+				9B3E763B2FCFD7D1002D7093 /* IDTest4.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,9 +110,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9B3E763A2FCFD7D1002D7093 /* CatatDanaKu */ = {
+		9B3E763A2FCFD7D1002D7093 /* IDTest4 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9B3E76462FCFD7D2002D7093 /* Build configuration list for PBXNativeTarget "CatatDanaKu" */;
+			buildConfigurationList = 9B3E76462FCFD7D2002D7093 /* Build configuration list for PBXNativeTarget "IDTest4" */;
 			buildPhases = (
 				9B3E76372FCFD7D1002D7093 /* Sources */,
 				9B3E76382FCFD7D1002D7093 /* Frameworks */,
@@ -123,9 +123,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				9B3E763D2FCFD7D1002D7093 /* CatatDanaKu */,
+				9B3E763D2FCFD7D1002D7093 /* IDTest4 */,
 			);
-			name = CatatDanaKu;
+			name = IDTest4;
 			packageProductDependencies = (
 				9B87B3982FD66DF800BBAAA3 /* Gzip */,
 				9B87B39B2FD66E3E00BBAAA3 /* AdjustSdk */,
@@ -136,7 +136,7 @@
 				9B87B3A82FD6AB8000BBAAA3 /* AppsFlyerLib-Static */,
 			);
 			productName = CatatDanaKu;
-			productReference = 9B3E763B2FCFD7D1002D7093 /* CatatDanaKu.app */;
+			productReference = 9B3E763B2FCFD7D1002D7093 /* IDTest4.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -154,7 +154,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9B3E76362FCFD7D1002D7093 /* Build configuration list for PBXProject "CatatDanaKu" */;
+			buildConfigurationList = 9B3E76362FCFD7D1002D7093 /* Build configuration list for PBXProject "IDTest4" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -174,7 +174,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9B3E763A2FCFD7D1002D7093 /* CatatDanaKu */,
+				9B3E763A2FCFD7D1002D7093 /* IDTest4 */,
 			);
 		};
 /* End PBXProject section */
@@ -322,7 +322,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = CatatDanaKu/CatatDanaKu.entitlements;
+				CODE_SIGN_ENTITLEMENTS = IDTest4/CatatDanaKu.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 100;
@@ -332,8 +332,8 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CatatDanaKu/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Catat DanaKu";
+				INFOPLIST_FILE = IDTest4/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -375,7 +375,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = CatatDanaKu/CatatDanaKu.entitlements;
+				CODE_SIGN_ENTITLEMENTS = IDTest4/CatatDanaKu.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 100;
@@ -385,8 +385,8 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CatatDanaKu/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Catat DanaKu";
+				INFOPLIST_FILE = IDTest4/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Kami perlu mendapatkan pengidentifikasi perangkat Anda untuk memberikan pengalaman iklan yang dipersonalisasi.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -425,7 +425,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9B3E76362FCFD7D1002D7093 /* Build configuration list for PBXProject "CatatDanaKu" */ = {
+		9B3E76362FCFD7D1002D7093 /* Build configuration list for PBXProject "IDTest4" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9B3E76442FCFD7D2002D7093 /* Debug */,
@@ -434,7 +434,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9B3E76462FCFD7D2002D7093 /* Build configuration list for PBXNativeTarget "CatatDanaKu" */ = {
+		9B3E76462FCFD7D2002D7093 /* Build configuration list for PBXNativeTarget "IDTest4" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9B3E76472FCFD7D2002D7093 /* Debug */,
