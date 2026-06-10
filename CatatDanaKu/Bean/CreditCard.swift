@@ -29,9 +29,12 @@ struct CreditCard: Codable, Identifiable {
         "Mandiri":  ["#002855", "#004aad"],
         "BNI":      ["#e95c0b", "#f47421"],
         "CIMB":     ["#be0000", "#e60000"],
+        "BTN":     ["#003f8a", "#0065cc"],
+        "Danamon":  ["#002855", "#004aad"],
+        "BSI":     ["#002855", "#004aad"],
         "Default":  ["#374151", "#6B7280"],
     ]
 
     /// 银行列表
-    static let bankList = ["BCA", "BRI", "Mandiri", "BNI", "CIMB"]
+    static let bankList = ["BCA", "BRI", "Mandiri", "BNI", "CIMB", "BTN", "Danamon", "BSI"]
 }

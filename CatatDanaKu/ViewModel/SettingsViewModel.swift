@@ -11,58 +11,51 @@ import Observation
 @MainActor
 @Observable
 final class SettingsViewModel {
-    var notificationsEnabled: Bool {
-        didSet { UserDefaults.standard.set(notificationsEnabled, forKey: Keys.notificationsEnabled) }
-    }
-    var biometricEnabled: Bool {
-        didSet { UserDefaults.standard.set(biometricEnabled, forKey: Keys.biometricEnabled) }
-    }
-
     var showLogoutConfirm: Bool = false
     var showDeleteConfirm: Bool = false
+    var showDeleteSecondConfirm: Bool = false
+    var showVersionToast: Bool = false
 
-    var userName: String {
-        let phone = UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? ""
-        if !phone.isEmpty {
-            return "Pengguna \(phone.suffix(4))"
-        }
-        return "Pengguna"
-    }
+    // MARK: - Logout
 
-    var userPhone: String {
-        let phone = UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? ""
-        return "+62 \(phone)"
-    }
-
-    init() {
-        self.notificationsEnabled = UserDefaults.standard.bool(forKey: Keys.notificationsEnabled)
-        self.biometricEnabled = UserDefaults.standard.bool(forKey: Keys.biometricEnabled)
-    }
-
-    func logout() {
+    func logout() async {
+        let req = AReq(type: "account", data: ["action": "logout"])
+        let result: NetResponse<EmptyResp> = await Net.shared.post(
+            path: NetPath.anyBiz,
+            encodableBody: req
+        )
+        guard result.isSuccess else { return }
         AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
+        NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
     }
 
-    func deleteAccount() {
+    // MARK: - Delete Account
+
+    func deleteAccount() async {
+        let req = AReq(type: "account", data: ["action": "delete"])
+        let result: NetResponse<EmptyResp> = await Net.shared.post(
+            path: NetPath.anyBiz,
+            encodableBody: req
+        )
+        guard result.isSuccess else { return }
         DatabaseManager.shared.clearAll()
         AuthManager.shared.revokeAccess()
+        UserDefaults.standard.removeObject(forKey: Keys.profileNickname)
+        UserDefaults.standard.removeObject(forKey: Keys.profileAvatarURL)
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
         UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+        NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
     }
 
-    func submitBiz(type: String, data: [String: String]) async {
-        let req = AReq(type: type, data: data)
+    // MARK: - Version Check
+
+    func checkVersion() async {
+        let req = AReq(type: "app", data: ["action": "check_version"])
         let _: NetResponse<EmptyResp> = await Net.shared.post(
             path: NetPath.anyBiz,
             encodableBody: req
         )
+        showVersionToast = true
     }
-}
-
-// MARK: - Keys Extension
-
-extension Keys {
-    static let notificationsEnabled = "cdku_notifications_enabled"
-    static let biometricEnabled = "cdku_biometric_enabled"
 }

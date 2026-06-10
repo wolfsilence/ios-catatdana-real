@@ -23,6 +23,9 @@ struct CDContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.35), value: activeCover)
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name(NotiName.logout))) { _ in
+            activeCover = .login
+        }
         .onAppear {
             activeCover = .launcher
         }

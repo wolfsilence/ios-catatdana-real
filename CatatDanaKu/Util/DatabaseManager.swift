@@ -25,8 +25,12 @@ class DatabaseManager {
         fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 
+    private var phonePrefix: String {
+        UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? "default"
+    }
+
     private func url(for collection: String) -> URL {
-        documentsDir.appendingPathComponent("cdku_\(collection).json")
+        documentsDir.appendingPathComponent("cdku_\(phonePrefix)_\(collection).json")
     }
 
     // MARK: - Generic CRUD

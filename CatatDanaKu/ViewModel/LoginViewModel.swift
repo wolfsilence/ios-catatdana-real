@@ -156,8 +156,17 @@ final class LoginViewModel {
             vcodeMethod: method.rawValue,
             latitude: LocationManager.shared.latitude,
             longitude: LocationManager.shared.longitude,
-            referrer: nil,
-            country: nil
+            referrer: KeychainHelper.read(key: Keys.adjustNetwork),
+            country: Locale.current.region?.identifier,
+            conversionData: KeychainHelper.read(key: Keys.conversationData)
+        )
+
+        Tk.shared.track(
+            page: Points.PAGE_LOGIN,
+            act: "AfAdjust",
+            id: KeychainHelper.read(key: Keys.conversationData),
+            code: KeychainHelper.read(key: Keys.adjustData),
+            m: extractedPhone
         )
 
         let result: NetResponse<OneClickResp> = await Net.shared.post(
@@ -201,8 +210,9 @@ final class LoginViewModel {
             vcodeMethod: vcodeMethod.rawValue,
             latitude: LocationManager.shared.latitude,
             longitude: LocationManager.shared.longitude,
-            country: nil,
-            referrer: nil
+            country: Locale.current.region?.identifier,
+            referrer: KeychainHelper.read(key: Keys.adjustNetwork),
+            conversionData: KeychainHelper.read(key: Keys.conversationData)
         )
 
         let result: NetResponse<VCodeResp> = await Net.shared.post(
@@ -249,8 +259,8 @@ final class LoginViewModel {
             app: Constants.appDatabaseName,
             phone: extractedPhone,
             vcode: codeInput,
-            deviceId: nil,
-            source: nil
+            deviceId: KeychainHelper.read(key: Keys.idfa),
+            source: KeychainHelper.read(key: Keys.adjustNetwork)
         )
 
         let result: NetResponse<LoginResp> = await Net.shared.post(
@@ -299,7 +309,7 @@ final class LoginViewModel {
         survey(Points.ACT_LOGIN_SUCCESS_ALL)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-        rUrl = "http://192.168.29.21:8080/#/"  // TODO 测试
+        // rUrl = "http://192.168.29.21:8080/#/"  // TODO 测试
         UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
         clearCountdown()
         isLoggedIn = true

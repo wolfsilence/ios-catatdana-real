@@ -19,6 +19,7 @@ struct CDRecordTransactionView: View {
     @State private var showPhotoAction = false
     @State private var capturedImage: UIImage? = nil
     @State private var isLocating = false
+    @State private var showSavedToast = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -37,6 +38,7 @@ struct CDRecordTransactionView: View {
             }
         }
         .background(Colors.launchBackground)
+        .toast(isPresented: $showSavedToast, message: Strings.RecordTransaction.savedToast)
         .onAppear { detectLocation() }
         .fullScreenCover(isPresented: $showCamera) {
             RecordCameraView { image in
@@ -318,7 +320,13 @@ struct CDRecordTransactionView: View {
         .disabled(!vm.isValid || vm.isSaving)
         .opacity(vm.isValid ? 1 : 0.6)
         .onChange(of: vm.saved) { _, saved in
-            if saved { onSaved() }
+            if saved {
+                onSaved()
+                showSavedToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onBack()
+                }
+            }
         }
     }
 

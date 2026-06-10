@@ -221,6 +221,18 @@ enum Strings {
         static let photoAttached = NSLocalizedString("record.photoAttached", value: "Foto terlampir", comment: "")
         static let takePhoto = NSLocalizedString("record.takePhoto", value: "Ambil / Pilih Foto", comment: "")
         static let category = NSLocalizedString("record.category", value: "Kategori", comment: "")
+        static let savedToast = NSLocalizedString("record.savedToast", value: "Tersimpan!", comment: "")
+    }
+
+    enum TransactionDetail {
+        static let title = NSLocalizedString("detail.title", value: "Detail Transaksi", comment: "")
+        static let type = NSLocalizedString("detail.type", value: "Tipe", comment: "")
+        static let category = NSLocalizedString("detail.category", value: "Kategori", comment: "")
+        static let amount = NSLocalizedString("detail.amount", value: "Jumlah", comment: "")
+        static let date = NSLocalizedString("detail.date", value: "Tanggal", comment: "")
+        static let location = NSLocalizedString("detail.location", value: "Lokasi", comment: "")
+        static let note = NSLocalizedString("detail.note", value: "Catatan", comment: "")
+        static let photo = NSLocalizedString("detail.photo", value: "Foto Bukti", comment: "")
     }
 
     enum Category {
@@ -233,6 +245,16 @@ enum Strings {
         static let education = NSLocalizedString("category.education", value: "Pendidikan", comment: "")
         static let utilities = NSLocalizedString("category.utilities", value: "Utilitas", comment: "")
         static let otherExpense = NSLocalizedString("category.otherExpense", value: "Lainnya", comment: "")
+        static let groceries = NSLocalizedString("category.groceries", value: "Sembako", comment: "")
+        static let housing = NSLocalizedString("category.housing", value: "Perumahan/Sewa", comment: "")
+        static let communication = NSLocalizedString("category.communication", value: "Pulsa & Internet", comment: "")
+        static let family = NSLocalizedString("category.family", value: "Keluarga & Anak", comment: "")
+        static let insurance = NSLocalizedString("category.insurance", value: "Asuransi", comment: "")
+        static let pets = NSLocalizedString("category.pets", value: "Hewan Peliharaan", comment: "")
+        static let subscriptions = NSLocalizedString("category.subscriptions", value: "Langganan", comment: "")
+        static let personalCare = NSLocalizedString("category.personalCare", value: "Perawatan Diri", comment: "")
+        static let gifts = NSLocalizedString("category.gifts", value: "Hadiah & Donasi", comment: "")
+        static let travel = NSLocalizedString("category.travel", value: "Perjalanan/Wisata", comment: "")
         // Income
         static let salary = NSLocalizedString("category.salary", value: "Gaji", comment: "")
         static let investment = NSLocalizedString("category.investment", value: "Pendapatan Investasi", comment: "")
@@ -348,18 +370,12 @@ enum Strings {
         static let avatarTitle = NSLocalizedString("profile.avatarTitle", value: "Foto Profil", comment: "")
         static let takePhoto = NSLocalizedString("profile.takePhoto", value: "Ambil Foto", comment: "")
         static let pickGallery = NSLocalizedString("profile.pickGallery", value: "Pilih dari Galeri", comment: "")
-        static let version = NSLocalizedString("profile.version", value: "CatatDanaKu v1.0.0", comment: "")
     }
 
     enum Settings {
         static let title = NSLocalizedString("settings.title", value: "Pengaturan", comment: "")
-        static let account = NSLocalizedString("settings.account", value: "Akun", comment: "")
-        static let notifications = NSLocalizedString("settings.notifications", value: "Notifikasi Pengingat", comment: "")
-        static let biometric = NSLocalizedString("settings.biometric", value: "Login Biometrik", comment: "")
-        static let appInfo = NSLocalizedString("settings.appInfo", value: "Informasi Aplikasi", comment: "")
+        static let appInfo = NSLocalizedString("settings.appInfo", value: "Informasi", comment: "")
         static let version = NSLocalizedString("settings.version", value: "Versi Aplikasi", comment: "")
-        static let lastUpdated = NSLocalizedString("settings.lastUpdated", value: "Terakhir Diperbarui", comment: "")
-        static let platform = NSLocalizedString("settings.platform", value: "Platform", comment: "")
         static let dangerZone = NSLocalizedString("settings.dangerZone", value: "Zona Berbahaya", comment: "")
         static let logout = NSLocalizedString("settings.logout", value: "Keluar dari Akun", comment: "")
         static let deleteData = NSLocalizedString("settings.deleteData", value: "Hapus Data Akun", comment: "")
@@ -367,8 +383,12 @@ enum Strings {
         static let logoutMessage = NSLocalizedString("settings.logoutMessage", value: "Anda akan keluar dari akun CatatDanaKu. Data Anda tetap tersimpan dengan aman.", comment: "")
         static let deleteTitle = NSLocalizedString("settings.deleteTitle", value: "⚠️ Hapus Data Akun?", comment: "")
         static let deleteMessage = NSLocalizedString("settings.deleteMessage", value: "Tindakan ini tidak dapat dibatalkan. Semua data transaksi, pengingat, dan kartu kredit Anda akan dihapus secara permanen.", comment: "")
+        static let deleteSecondTitle = NSLocalizedString("settings.deleteSecondTitle", value: "⚠️ Konfirmasi Ulang", comment: "")
+        static let deleteSecondMessage = NSLocalizedString("settings.deleteSecondMessage", value: "Penghapusan data tidak dapat dibatalkan, harap konfirmasi lagi.", comment: "")
         static let logoutConfirm = NSLocalizedString("settings.logoutConfirm", value: "Keluar", comment: "")
         static let deleteConfirm = NSLocalizedString("settings.deleteConfirm", value: "Hapus Akun", comment: "")
+        static let deleteSecondConfirm = NSLocalizedString("settings.deleteSecondConfirm", value: "Hapus Permanen", comment: "")
+        static let alreadyLatest = NSLocalizedString("settings.alreadyLatest", value: "Sudah versi terbaru", comment: "")
     }
 
     enum Contact {

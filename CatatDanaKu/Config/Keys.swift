@@ -42,8 +42,11 @@ class Keys {
     static let redirectUrl = "com.catatdanaku.login.redirectUrl"
 
     // MARK: Profile
-    static let profileNickname  = "com.catatdanaku.profile.nickname"
-    static let profileAvatarURL = "com.catatdanaku.profile.avatarURL"
+    private static var phoneSuffix: String {
+        UserDefaults.standard.string(forKey: Keys.lastLoginPhone) ?? "default"
+    }
+    static var profileNickname: String { "com.catatdanaku.profile.nickname.\(phoneSuffix)" }
+    static var profileAvatarURL: String { "com.catatdanaku.profile.avatarURL.\(phoneSuffix)" }
 
     // MARK: Keychain Service
     static let keychainService = "com.catatdanaku.keychain"

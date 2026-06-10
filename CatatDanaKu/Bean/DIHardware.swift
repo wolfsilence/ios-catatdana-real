@@ -8,13 +8,4 @@ struct DIHardware: Codable {
     var serial_number: String? // 写“”
     var brand: String? // 写 Apple
     var physical_size: String? //
-    
-    // 屏幕尺寸（英寸） physical_size
-        //val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        //val point = Point()
-        //windowManager.defaultDisplay.getRealSize(point)
-        //val displayMetrics: DisplayMetrics = context.resources.displayMetrics
-        //val w = (point.x / displayMetrics.xdpi).toDouble().pow(2.0)
-        //val h = (point.y / displayMetrics.ydpi).toDouble().pow(2.0)
-        //return "${sqrt(w + h)}"
 }

@@ -42,7 +42,6 @@ struct CDProfileView: View {
                 avatarAndInfo
                 statsBar
                 menuSection
-                versionLabel
             }
         }
         .padding(.top, 8)
@@ -322,14 +321,6 @@ struct CDProfileView: View {
         }
     }
 
-    // MARK: - Version
-
-    private var versionLabel: some View {
-        Text(Strings.Profile.version)
-            .font(.system(size: 12))
-            .foregroundColor(Colors.textHint)
-            .padding(.vertical, 24)
-    }
 }
 
 // MARK: - Camera View (UIImagePickerController wrapper)

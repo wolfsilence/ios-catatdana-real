@@ -10,9 +10,5 @@ struct VCodeReq: Codable {
     var longitude: String?
     var country: String?
     var referrer: String?
-    var spbzozhlws: Bool?
-    var bseb: Bool?
-    var bnvedpboqdecv: String?
-    var fpz: String?
-    var pzbseenhovb: Int?
+    var conversionData: String?
 }

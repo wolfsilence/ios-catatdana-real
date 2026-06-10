@@ -11,6 +11,7 @@ import SwiftUI
 struct CDMainView: View {
     @State private var vm = MainViewModel()
     @State private var activeFeature: MainFeature? = nil
+    @State private var selectedTransaction: Transaction? = nil
 
     var body: some View {
         ZStack {
@@ -29,6 +30,7 @@ struct CDMainView: View {
                             onLogout: {
                                 AuthManager.shared.revokeAccess()
                                 UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
+                                NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
                             },
                             transactionsCount: vm.transactions.count,
                             cardsCount: vm.creditCards.count,
@@ -57,6 +59,9 @@ struct CDMainView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: activeFeature)
+        .fullScreenCover(item: $selectedTransaction) { tx in
+            CDTransactionDetailView(transaction: tx, onBack: { selectedTransaction = nil })
+        }
         .onAppear { vm.refreshData() }
     }
 
@@ -308,38 +313,41 @@ struct CDMainView: View {
     }
 
     private func transactionRow(_ tx: Transaction) -> some View {
-        HStack(spacing: 12) {
-            // 分类图标
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Colors.launchBackground)
-                .frame(width: 40, height: 40)
-                .overlay(
-                    Text(TransactionCategory.all.first { $0.id == tx.category }?.icon ?? "📦")
-                        .font(.system(size: 18))
-                )
+        Button {
+            selectedTransaction = tx
+        } label: {
+            HStack(spacing: 12) {
+                // 分类图标
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Colors.launchBackground)
+                    .frame(width: 40, height: 40)
+                    .overlay(
+                        Text(TransactionCategory.all.first { $0.id == tx.category }?.icon ?? "📦")
+                            .font(.system(size: 18))
+                    )
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(categoryLabel(for: tx.category))
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Colors.textPrimary)
-                HStack(spacing: 4) {
-                    Text(tx.type == .income ? Strings.Common.income : categoryLabel(for: tx.category))
-                        .font(.system(size: 12))
-                        .foregroundColor(Colors.textHint)
-                    Text("·")
-                        .foregroundColor(Colors.textHint)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text(categoryLabel(for: tx.category))
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Colors.textPrimary)
+                        Text(tx.type == .income ? Strings.Common.income : Strings.Common.expense)
+                            .font(.system(size: 12))
+                            .foregroundColor(Colors.textHint)
+                    }
                     Text(relativeDate(tx.date))
                         .font(.system(size: 12))
                         .foregroundColor(Colors.textHint)
                 }
+                Spacer()
+                Text(tx.type == .income ? "+\(formatIDR(tx.amount))" : "-\(formatIDR(tx.amount))")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(tx.type == .income ? Colors.primary : .red)
             }
-            Spacer()
-            Text(tx.type == .income ? "+\(formatIDR(tx.amount))" : "-\(formatIDR(tx.amount))")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(tx.type == .income ? Colors.primary : Colors.textPrimary)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .buttonStyle(.plain)
     }
 
     // MARK: - Bottom Tab Bar
@@ -388,13 +396,7 @@ struct CDMainView: View {
         case .analysis:
             CDFinancialAnalysisView(onBack: { activeFeature = nil })
         case .settings:
-            CDSettingsView(
-                onBack: { activeFeature = nil },
-                onLogout: {
-                    AuthManager.shared.revokeAccess()
-                    UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-                }
-            )
+            CDSettingsView(onBack: { activeFeature = nil })
         case .privacyView:
             CDPrivacySheetView(onBack: { activeFeature = nil })
         case .contact:

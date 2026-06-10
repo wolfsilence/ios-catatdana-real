@@ -162,7 +162,7 @@ struct CDPaymentReminderView: View {
 
             formField(Strings.Reminder.nameLabel, placeholder: Strings.Reminder.namePlaceholder, text: $vm.name)
             formField(Strings.Reminder.amountLabel, placeholder: Strings.Reminder.amountPlaceholder, text: $vm.amount, keyboard: .numberPad)
-            DatePicker(Strings.Reminder.dueDateLabel, selection: $vm.dueDate, displayedComponents: .date)
+            DatePicker(Strings.Reminder.dueDateLabel, selection: $vm.dueDate, in: Date()..., displayedComponents: .date)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
             formField(Strings.Reminder.noteLabel, placeholder: Strings.Reminder.notePlaceholder, text: $vm.note)

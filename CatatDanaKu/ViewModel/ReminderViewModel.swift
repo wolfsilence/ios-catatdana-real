@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UserNotifications
 
 //
 //  ReminderViewModel.swift
@@ -57,6 +58,9 @@ final class ReminderViewModel {
         DatabaseManager.shared.saveReminder(reminder)
         load()
 
+        // 安排本地推送通知
+        scheduleNotification(for: reminder)
+
         let req = AReq(type: "reminder", data: [
             "action": "save",
             "name": name,
@@ -76,6 +80,7 @@ final class ReminderViewModel {
 
     func delete(_ reminder: Reminder) {
         DatabaseManager.shared.deleteReminder(id: reminder.id)
+        cancelNotification(for: reminder)
         load()
     }
 
@@ -86,5 +91,32 @@ final class ReminderViewModel {
         note = ""
         saved = false
         showForm = false
+    }
+
+    // MARK: - Local Notifications
+
+    private func scheduleNotification(for reminder: Reminder) {
+        let content = UNMutableNotificationContent()
+        content.title = reminder.name
+        content.body = "Rp \(formatIDR(reminder.amount)) — \(Strings.Reminder.dueDateLabel)"
+        content.sound = .default
+
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: reminder.dueDate)
+        components.hour = 12
+        components.minute = 0
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+
+        let request = UNNotificationRequest(
+            identifier: "reminder_\(reminder.id)",
+            content: content,
+            trigger: trigger
+        )
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error { Logger.log("❌ Reminder notification error: \(error.localizedDescription)") }
+        }
+    }
+
+    private func cancelNotification(for reminder: Reminder) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["reminder_\(reminder.id)"])
     }
 }

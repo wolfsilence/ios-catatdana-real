@@ -32,12 +32,22 @@ struct TransactionCategory: Identifiable {
 
     static let expenseCategories: [TransactionCategory] = [
         .init(id: "food",           label: Strings.Category.food,           icon: "🍔"),
+        .init(id: "groceries",      label: Strings.Category.groceries,      icon: "🛒"),
         .init(id: "transport",      label: Strings.Category.transport,      icon: "🚗"),
+        .init(id: "housing",        label: Strings.Category.housing,        icon: "🏠"),
+        .init(id: "communication",  label: Strings.Category.communication,  icon: "📱"),
+        .init(id: "utilities",      label: Strings.Category.utilities,      icon: "⚡"),
         .init(id: "shopping",       label: Strings.Category.shopping,       icon: "🛍️"),
         .init(id: "health",         label: Strings.Category.health,         icon: "🏥"),
-        .init(id: "entertainment",  label: Strings.Category.entertainment,  icon: "🎬"),
+        .init(id: "insurance",      label: Strings.Category.insurance,      icon: "🛡️"),
+        .init(id: "family",         label: Strings.Category.family,         icon: "👶"),
         .init(id: "education",      label: Strings.Category.education,      icon: "📚"),
-        .init(id: "utilities",      label: Strings.Category.utilities,      icon: "⚡"),
+        .init(id: "entertainment",  label: Strings.Category.entertainment,  icon: "🎬"),
+        .init(id: "travel",         label: Strings.Category.travel,         icon: "✈️"),
+        .init(id: "subscriptions",  label: Strings.Category.subscriptions,  icon: "💳"),
+        .init(id: "personalCare",   label: Strings.Category.personalCare,   icon: "💇‍♀️"),
+        .init(id: "pets",           label: Strings.Category.pets,           icon: "🐾"),
+        .init(id: "gifts",          label: Strings.Category.gifts,          icon: "🎁"),
         .init(id: "other_expense",  label: Strings.Category.otherExpense,   icon: "📦"),
     ]
 

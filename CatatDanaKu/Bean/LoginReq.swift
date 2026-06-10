@@ -7,7 +7,4 @@ struct LoginReq: Codable {
     var vcode: String?
     var deviceId: String?
     var source: String?
-    var rbictdrjuhokr: Int?
-    var tcziiyrjkkzt: Int?
-    var yptvtxshcvozs: String?
 }
