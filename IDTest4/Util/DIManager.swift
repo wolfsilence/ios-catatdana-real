@@ -269,9 +269,16 @@ final class DIManager {
         }
 
         let tel = CTTelephonyNetworkInfo()
-        let carrier = tel.serviceSubscriberCellularProviders?.values.first?.carrierName ?? ""
-
-        return (type, carrier)
+        
+        var carrierName = ""
+//        if let carriers = tel.serviceSubscriberCellularProviders {
+//            // 取第一个可用的 SIM 卡信息（主卡）
+//            if let firstCarrier = carriers.values.first {
+//                // 注意：即便使用新接口，在用户未授权“精准位置”或处于飞行模式时仍可能为空
+//                carrierName = firstCarrier.carrierName ?? ""
+//            }
+//        }
+        return (type, carrierName)
     }
 
     // MARK: - Other

@@ -397,9 +397,15 @@ enum Strings {
         static let attachmentLabel = NSLocalizedString("contact.attachmentLabel", value: "Lampiran (opsional)", comment: "")
         static let addImage = NSLocalizedString("contact.addImage", value: "Tambah Gambar", comment: "")
         static let contactPlaceholder = NSLocalizedString("contact.contactPlaceholder", value: "Masukkan email atau WhatsApp Anda", comment: "")
+        static let contactLabel = NSLocalizedString("contact.contactLabel", value: "Email / WhatsApp", comment: "")
         static let submit = NSLocalizedString("contact.submit", value: "Kirim", comment: "")
         static let submitting = NSLocalizedString("contact.submitting", value: "Mengirim...", comment: "")
         static let successMessage = NSLocalizedString("contact.successMessage", value: "Terkirim! Kami akan segera menghubungi Anda.", comment: "")
         static let attachmentSheet = NSLocalizedString("contact.attachmentSheet", value: "Lampiran", comment: "")
+        static let videoLabel = NSLocalizedString("contact.videoLabel", value: "Video (opsional)", comment: "")
+        static let addVideo = NSLocalizedString("contact.addVideo", value: "Tambah Video", comment: "")
+        static let videoSheet = NSLocalizedString("contact.videoSheet", value: "Video", comment: "")
+        static let recordVideo = NSLocalizedString("contact.recordVideo", value: "Rekam Video", comment: "")
+        static let pickVideo = NSLocalizedString("contact.pickVideo", value: "Pilih dari Galeri", comment: "")
     }
 }

@@ -33,16 +33,6 @@ struct CDLoginView: View {
         )
     }
 
-    private var codeBinding: Binding<String> {
-        Binding(
-            get: { vm.codeInput },
-            set: { newValue in
-                let filtered = newValue.filter { $0.isNumber }
-                vm.codeInput = String(filtered.prefix(Constants.vcodeLength))
-            }
-        )
-    }
-
     var body: some View {
         GeometryReader { geo in
             let contentTop = geo.size.height * 0.25
@@ -204,18 +194,12 @@ struct CDLoginView: View {
     private var codeField: some View {
         VStack(spacing: 4) {
             HStack(spacing: 8) {
-                ZStack(alignment: .leading) {
-                    if vm.codeInput.isEmpty {
-                        Text(Strings.Login.codeHint)
-                            .font(.system(size: 16))
-                            .foregroundColor(Colors.textHint)
-                            .allowsHitTesting(false)
-                    }
-                    TextField("", text: codeBinding)
-                        .font(.system(size: 16))
-                        .foregroundColor(Colors.textPrimary)
-                        .keyboardType(.numberPad)
-                }
+                CodeTextField(
+                    text: $vm.codeInput,
+                    maxLength: Constants.vcodeLength,
+                    placeholder: Strings.Login.codeHint
+                )
+                .frame(height: 22)
 
                 Button {
                     Task { await vm.sendVCode() }
@@ -344,6 +328,63 @@ struct CDLoginView: View {
 
 private func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+}
+
+// MARK: - Code TextField（UIKit 层限制输入，无截断闪现）
+
+private struct CodeTextField: UIViewRepresentable {
+    @Binding var text: String
+    let maxLength: Int
+    let placeholder: String
+
+    func makeUIView(context: Context) -> UITextField {
+        let tf = UITextField()
+        tf.delegate = context.coordinator
+        tf.keyboardType = .numberPad
+        tf.font = .systemFont(ofSize: 16)
+        // #222222
+        tf.textColor = UIColor(red: 0x22 / 255, green: 0x22 / 255, blue: 0x22 / 255, alpha: 1)
+        // #8F8FA1
+        tf.attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 16),
+                .foregroundColor: UIColor(red: 0x8F / 255, green: 0x8F / 255, blue: 0xA1 / 255, alpha: 1)
+            ]
+        )
+        return tf
+    }
+
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        if uiView.text != text {
+            uiView.text = text
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    final class Coordinator: NSObject, UITextFieldDelegate {
+        let parent: CodeTextField
+
+        init(_ parent: CodeTextField) {
+            self.parent = parent
+        }
+
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let current = textField.text ?? ""
+            let filtered = string.filter { $0.isNumber }
+            let newText = (current as NSString).replacingCharacters(in: range, with: filtered)
+            guard newText.count <= parent.maxLength else { return false }
+            // 手动设置 text 并同步 SwiftUI，阻止 UIKit 默认行为
+            textField.text = newText
+            parent.text = newText
+            // 发送 textFieldDidChange 让 SwiftUI 感知变化
+            textField.sendActions(for: .editingChanged)
+            return false
+        }
+    }
 }
 
 // MARK: - Privacy WebView

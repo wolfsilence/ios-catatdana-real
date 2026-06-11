@@ -27,6 +27,7 @@ final class SettingsViewModel {
         guard result.isSuccess else { return }
         AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
+        UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
         NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
     }
 
