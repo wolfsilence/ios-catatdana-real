@@ -12,7 +12,7 @@ class Constants {
     static let baseUrl = "https://staging3.rp525.xyz" //TODO
     
     // 8652323821 0281
-    static let appDatabaseName = "CatatDana"
+    static let appDatabaseName = "CatatDanaKu"
     
     static let adjustToken = "hg856jtr1dkw"
     
