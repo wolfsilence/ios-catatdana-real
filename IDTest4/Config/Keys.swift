@@ -33,6 +33,7 @@ class Keys {
     
     static let conversationData = "com.catatdanaku.conversationData"
     static let afId = "com.catatdanaku.afId"
+    static let afSource = "com.catatdanaku.afSource"
 
     // MARK: Location
     static let locationLat = "com.catatdanaku.location.lat"

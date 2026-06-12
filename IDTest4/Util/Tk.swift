@@ -52,7 +52,7 @@ final class Tk {
         log.zsjkam = KeychainHelper.read(key: Keys.adjustNetwork) ?? ""
         log.yty = Constants.appDatabaseName
         log.pnft = Constants.appDatabaseName
-        log.ru = KeychainHelper.read(key: Keys.conversationData)
+        log.ru = KeychainHelper.read(key: Keys.afSource)
 
         var req = okak()
         req.gkykpehpn = KeychainHelper.read(key: Keys.adjustId) ?? ""

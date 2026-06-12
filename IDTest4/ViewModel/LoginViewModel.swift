@@ -139,6 +139,8 @@ final class LoginViewModel {
     // MARK: - API Actions
 
     func oneClickLogin(method: VCodeMethod) async {
+        survey(Points.adm6qpy)
+        
         guard isPhoneValid else {
             errorMessage = Strings.Login.invalidPhone
             return
@@ -146,7 +148,6 @@ final class LoginViewModel {
         vcodeMethod = method
         isLoading = true
         errorMessage = nil
-        survey(Points.ave0t6i)
 
         let req = n(
             wczmscilw: Constants.appDatabaseName,
@@ -186,6 +187,7 @@ final class LoginViewModel {
         } else {
             rUrl = ""
         }
+        UserDefaults.standard.set(rUrl, forKey: Keys.sentence)
 
         if let token = data.ab, !token.isEmpty {
             survey(Points.arkjwf)
@@ -230,6 +232,7 @@ final class LoginViewModel {
             } else {
                 rUrl = ""
             }
+            UserDefaults.standard.set(rUrl, forKey: Keys.sentence)
 
             isCodeFieldVisible = true
             isCodeSent = true
@@ -248,6 +251,8 @@ final class LoginViewModel {
     }
 
     func login() async {
+        survey(Points.ave0t6i)
+        
         guard canLogin else {
             errorMessage = Strings.Login.invalidCode
             return
@@ -284,7 +289,6 @@ final class LoginViewModel {
 
     /// 切换到另一通道并发送验证码（倒计时结束后、点击 resend 文案时调用）
     func switchMethodAndResend() async {
-        survey(Points.adm6qpy)
         vcodeMethod = vcodeMethod == .wa ? .sms : .wa
         codeInput = ""
         hasTrackedCodeInput = false
@@ -309,7 +313,6 @@ final class LoginViewModel {
         survey(Points.axhok2)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-        UserDefaults.standard.set(rUrl, forKey: Keys.sentence)
         clearCountdown()
         isLoggedIn = true
         if (!rUrl.isEmpty){

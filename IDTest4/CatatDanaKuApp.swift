@@ -149,6 +149,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
            let json = String(data: jsonData, encoding: .utf8) {
             Logger.log("AppsFlyer conversion data: \(json)")
             KeychainHelper.write(key: Keys.conversationData, value: json)
+            let mediaSource = installData["media_source"] as? String ?? ""
+            KeychainHelper.write(key: Keys.afSource, value: mediaSource)
         }
     }
 

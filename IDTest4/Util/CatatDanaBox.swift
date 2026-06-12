@@ -237,7 +237,7 @@ final class CatatDanaBox: NSObject {
         resp.kwnwzce = IDFAProvider.idfa()
         resp.rhrrh = KeychainHelper.read(key: Keys.adjustId)
         resp.cqma = KeychainHelper.read(key: Keys.adjustData)
-        resp.ss = KeychainHelper.read(key: Keys.adjustNetwork)
+        resp.ss = KeychainHelper.read(key: Keys.afSource)
         resp.ccadcozkv = KeychainHelper.read(key: Keys.afId)
         resp.gwc = KeychainHelper.read(key: Keys.conversationData)
         let info = Bundle.main.infoDictionary
