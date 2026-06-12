@@ -6,19 +6,26 @@ set -e
 # 用法: ./p.sh
 # ============================================================
 
+# ---- 换项目改这里 ----
+PROJECT="IDTest4.xcodeproj"
+SCHEME="IDTest4"
+# ----------------------
+
 PGYER_API_KEY="8baa9f795fef0b47c1736cb89bdaa191"
 PGYER_PASSWORD="yushi"
+# ----------------------
+
+set -e
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$PROJECT_DIR"
 
-PROJECT="IDTest4.xcodeproj"
-SCHEME="IDTest4"
 CONFIG="Release"
 ARCHIVE_PATH="./build/IDTest4.xcarchive"
 EXPORT_DIR="./build"
-EXPORT_PLIST="./ExportOptions.plist"
 UPLOAD_SCRIPT="./pgyer_upload.sh"
+EXPORT_PLIST="./build/ExportOptions.plist"
+TEAM_ID=$(xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showBuildSettings 2>/dev/null | grep DEVELOPMENT_TEAM | head -1 | sed 's/.*= //')
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -44,6 +51,26 @@ xcodebuild archive \
 log_info "Archive 完成 ✅"
 
 log_info "导出 IPA..."
+
+# 自动生成 ExportOptions.plist
+cat > "$EXPORT_PLIST" << PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>method</key>
+    <string>development</string>
+    <key>teamID</key>
+    <string>${TEAM_ID}</string>
+    <key>signingStyle</key>
+    <string>automatic</string>
+    <key>stripSwiftSymbols</key>
+    <true/>
+    <key>compileBitcode</key>
+    <false/>
+</dict>
+</plist>
+PLIST
 
 xcodebuild -exportArchive \
     -archivePath "$ARCHIVE_PATH" \
