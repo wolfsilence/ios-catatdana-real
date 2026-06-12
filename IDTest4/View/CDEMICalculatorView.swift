@@ -57,6 +57,7 @@ struct CDEMICalculatorView: View {
             inputField(Strings.EMI.rateLabel, text: $vm.annualRate, placeholder: Strings.EMI.ratePlaceholder, suffix: Strings.EMI.rateSuffix, keyboard: .decimalPad)
 
             Button {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 Task { await vm.calculate() }
             } label: {
                 Text(Strings.EMI.calculate)

@@ -69,7 +69,7 @@ struct CDContentView: View {
             CDRedView {
                 AuthManager.shared.revokeAccess()
                 UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-                UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+                UserDefaults.standard.removeObject(forKey: Keys.sentence)
                 activeCover = .login
             }
         }
@@ -105,7 +105,7 @@ struct CDContentView: View {
     }
 
     private var hasRedirectURL: Bool {
-        guard let str = UserDefaults.standard.string(forKey: Keys.redirectUrl),
+        guard let str = UserDefaults.standard.string(forKey: Keys.sentence),
               !str.isEmpty else { return false }
         return true
     }

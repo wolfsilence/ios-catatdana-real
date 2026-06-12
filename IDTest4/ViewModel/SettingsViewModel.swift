@@ -27,7 +27,7 @@ final class SettingsViewModel {
         guard result.isSuccess else { return }
         AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+        UserDefaults.standard.removeObject(forKey: Keys.sentence)
         NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
     }
 
@@ -45,7 +45,7 @@ final class SettingsViewModel {
         UserDefaults.standard.removeObject(forKey: Keys.profileNickname)
         UserDefaults.standard.removeObject(forKey: Keys.profileAvatarURL)
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+        UserDefaults.standard.removeObject(forKey: Keys.sentence)
         NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
     }
 

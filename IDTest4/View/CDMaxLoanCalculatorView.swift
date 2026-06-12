@@ -66,6 +66,7 @@ struct CDMaxLoanCalculatorView: View {
             inputField(Strings.MaxLoan.tenorLabel, text: $vm.months, placeholder: Strings.MaxLoan.tenorPlaceholder, suffix: Strings.MaxLoan.tenorSuffix, keyboard: .numberPad)
 
             Button {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 Task { await vm.calculate() }
             } label: {
                 Text(Strings.MaxLoan.calculate)

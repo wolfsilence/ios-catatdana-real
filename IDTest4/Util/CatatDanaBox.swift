@@ -262,7 +262,7 @@ final class CatatDanaBox: NSObject {
     private func handleKey11() {
         AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: Keys.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+        UserDefaults.standard.removeObject(forKey: Keys.sentence)
         DispatchQueue.main.async { self.onLogout?() }
     }
 

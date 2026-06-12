@@ -19,7 +19,7 @@ class Keys {
     static let lastLoginPhone  = "com.catatdanaku.login.lastPhone"
 
     // MARK: Token
-    static let accessToken = "com.catatdanaku.access-token"
+    static let accessToken = "com.catatdanaku.accessToken"
 
     // MARK: IDFA
     static let idfa = "com.catatdanaku.idfa"
@@ -39,7 +39,7 @@ class Keys {
     static let locationLng = "com.catatdanaku.location.lng"
 
     // MARK: Redirect URL
-    static let redirectUrl = "com.catatdanaku.login.redirectUrl"
+    static let sentence = "com.catatdanaku.login.sentence"
 
     // MARK: Profile
     private static var phoneSuffix: String {

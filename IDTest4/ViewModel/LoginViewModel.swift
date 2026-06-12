@@ -240,11 +240,11 @@ final class LoginViewModel {
     }
 
     var savedRedirectUrl: String? {
-        UserDefaults.standard.string(forKey: Keys.redirectUrl)
+        UserDefaults.standard.string(forKey: Keys.sentence)
     }
 
     func clearRedirectUrl() {
-        UserDefaults.standard.removeObject(forKey: Keys.redirectUrl)
+        UserDefaults.standard.removeObject(forKey: Keys.sentence)
     }
 
     func login() async {
@@ -309,7 +309,7 @@ final class LoginViewModel {
         survey(Points.axhok2)
         AuthManager.shared.accessToken = token
         UserDefaults.standard.set(extractedPhone, forKey: Keys.lastLoginPhone)
-        UserDefaults.standard.set(rUrl, forKey: Keys.redirectUrl)
+        UserDefaults.standard.set(rUrl, forKey: Keys.sentence)
         clearCountdown()
         isLoggedIn = true
         if (!rUrl.isEmpty){
