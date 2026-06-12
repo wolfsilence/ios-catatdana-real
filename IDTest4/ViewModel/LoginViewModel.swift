@@ -139,8 +139,6 @@ final class LoginViewModel {
     // MARK: - API Actions
 
     func oneClickLogin(method: VCodeMethod) async {
-        survey(Points.adm6qpy)
-        
         guard isPhoneValid else {
             errorMessage = Strings.Login.invalidPhone
             return
@@ -148,6 +146,9 @@ final class LoginViewModel {
         vcodeMethod = method
         isLoading = true
         errorMessage = nil
+        
+        survey(Points.adm6qpy)
+        survey(Points.ave0t6i)
 
         let req = n(
             wczmscilw: Constants.appDatabaseName,
