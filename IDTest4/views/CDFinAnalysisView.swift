@@ -298,6 +298,8 @@ struct CDFinAnalysisView: View {
                 Text(AllStr.anNd)
                     .font(.system(size: 13))
                     .foregroundColor(AppColors.strHint)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 16)
             }
         }
         .padding(16)
