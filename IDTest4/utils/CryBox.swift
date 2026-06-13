@@ -13,11 +13,11 @@ class CryBox {
     // MARK: - 密钥 & 初始向量
 
     private static var aesKey: Data {
-        Consts.cryK.data(using: .utf8)!
+        "2857461309987612".data(using: .utf8)!
     }
 
     private static var aesIV: Data {
-        Consts.cryI.data(using: .utf8)!
+        "7391564820012345".data(using: .utf8)!
     }
 
     // MARK: - 核心加解密

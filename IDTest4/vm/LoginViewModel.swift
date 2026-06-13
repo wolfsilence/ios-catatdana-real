@@ -46,7 +46,7 @@ final class LoginViewModel {
 
     var extractedPhone: String { PhoneFormatter.formatted(phoneInput) }
     var isPhoneValid: Bool { PhoneFormatter.isValid(phoneInput) }
-    var isCodeValid: Bool { codeInput.count == Consts.vcodeLength && codeInput.allSatisfy { $0.isNumber } }
+    var isCodeValid: Bool { codeInput.count == 4 && codeInput.allSatisfy { $0.isNumber } }
     var canSendCode: Bool { isPhoneValid && countdownRemaining == 0 && !isLoading }
     var canLogin: Bool { isPhoneValid && isCodeValid && !isLoading }
 
@@ -80,8 +80,8 @@ final class LoginViewModel {
     // MARK: - Countdown Timer
 
     func startCountdown() {
-        countdownRemaining = Consts.countdownSeconds
-        countdownExpiry = Date().addingTimeInterval(TimeInterval(Consts.countdownSeconds))
+        countdownRemaining = 100
+        countdownExpiry = Date().addingTimeInterval(TimeInterval(100))
         persistMethod()
         UserDefaults.standard.set(extractedPhone, forKey: K.countdownPhone)
         beginTimer()
@@ -151,9 +151,9 @@ final class LoginViewModel {
         survey(Points.ave0t6i)
 
         let req = n(
-            wczmscilw: Consts.appDatabaseName,
+            wczmscilw: Consts.avatar,
             cg: extractedPhone,
-            knrb: Consts.intlCode,
+            knrb: Consts.intlPhoneCode,
             v: IDFAProvider.idfa(),
             jmtgx: method.rawValue,
             ifvmxc: LocationManager.shared.latitude,
@@ -207,9 +207,9 @@ final class LoginViewModel {
         errorMessage = nil
 
         let req = tdzno(
-            cfn: Consts.appDatabaseName,
+            cfn: Consts.avatar,
             toykkb: extractedPhone,
-            btd: Consts.intlCode,
+            btd: Consts.intlPhoneCode,
             ti: vcodeMethod.rawValue,
             shvdpemq: LocationManager.shared.latitude,
             is: LocationManager.shared.longitude,
@@ -262,7 +262,7 @@ final class LoginViewModel {
         errorMessage = nil
 
         let req = hgkkvqxf(
-            atm: Consts.appDatabaseName,
+            atm: Consts.avatar,
             iqojyq: extractedPhone,
             wnywejdcv: codeInput,
             abacopve: KeychainHelper.read(key: K.idfa),

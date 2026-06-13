@@ -145,17 +145,17 @@ fileprivate class NetCore {
         }
         // 认证令牌
         if let token = AuthManager.shared.accessToken {
-            urlRequest.setValue(token, forHTTPHeaderField: Consts.keyHeaderToken)
+            urlRequest.setValue(token, forHTTPHeaderField: "x-k")
         }
         // 客户端版本（加密模式下附带）
-        if Consts.useEncryption,
+        if Consts.encry,
            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            urlRequest.setValue(appVersion, forHTTPHeaderField: Consts.keyHeaderVer)
+            urlRequest.setValue(appVersion, forHTTPHeaderField: "x-klxob")
         }
         // 处理请求体
         let contentType = headers["Content-Type"] ?? ""
         let isEncryptedJsonPost = method == .post && contentType.contains("application/json")
-        if isEncryptedJsonPost && Consts.useEncryption{
+        if isEncryptedJsonPost && Consts.encry{
             // 加密模式：模型 → JSON 字符串 → 加密 → 放入 body
             guard let body = encodableBody else {
                 throw AppErrors.NoBody
@@ -181,7 +181,7 @@ fileprivate class NetCore {
     }
     
     private func fullURL(path : String, queryParameters: [String: String]? = nil) -> URL?{
-        guard var components = URLComponents(string: Consts.baseUrl + path) else {
+        guard var components = URLComponents(string: Consts.bURL + path) else {
             return nil
         }
         if let params = queryParameters, !params.isEmpty {
@@ -309,11 +309,11 @@ fileprivate class NetCore {
 
     /// 特定错误码触发强制登出
     private func checkSessionExpiry(_ code: Int) {
-        if code == Consts.codeTokenInvalid {
+        if code == 701 {
             if AuthManager.shared.isAuthenticated {
                 AuthManager.shared.revokeAccess()
                 NotificationCenter.default.post(
-                    name: NSNotification.Name(NotiName.TokenInvalid),
+                    name: NSNotification.Name(NotiName.OverToken),
                     object: nil
                 )
             }

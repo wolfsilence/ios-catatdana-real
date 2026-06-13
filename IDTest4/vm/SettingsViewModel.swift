@@ -28,7 +28,7 @@ final class SettingsViewModel {
         AuthManager.shared.revokeAccess()
         UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
         UserDefaults.standard.removeObject(forKey: K.sentence)
-        NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
     }
 
     // MARK: - Delete Account
@@ -46,7 +46,7 @@ final class SettingsViewModel {
         UserDefaults.standard.removeObject(forKey: K.profileAvatarURL)
         UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
         UserDefaults.standard.removeObject(forKey: K.sentence)
-        NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
     }
 
     // MARK: - Version Check

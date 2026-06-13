@@ -8,8 +8,8 @@ import Foundation
 //
 
 class NotiName {
-    static let TokenInvalid = "NotiTokenInvalid"
-    static let idfaPermissionResolved = "com.catatdanaku.idfaPermissionResolved"
-    static let pushDataReceived = "com.catatdanaku.pushDataReceived"
-    static let logout = "com.catatdanaku.logout"
+    static let OverToken = "com.cdk.OverToken"
+    static let RequestedIDFA = "com.cdk.RequestedIDFA"
+    static let ReceivedPush = "com.cdk.ReceivedPush"
+    static let Logout = "com.cdk.Logout"
 }

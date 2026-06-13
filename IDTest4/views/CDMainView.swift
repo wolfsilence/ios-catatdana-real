@@ -30,7 +30,7 @@ struct CDMainView: View {
                             onLogout: {
                                 AuthManager.shared.revokeAccess()
                                 UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
-                                NotificationCenter.default.post(name: NSNotification.Name(NotiName.logout), object: nil)
+                                NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
                             },
                             transactionsCount: vm.transactions.count,
                             cardsCount: vm.creditCards.count,
@@ -436,7 +436,7 @@ private struct CDPrivacySheetView: View {
 
     var body: some View {
         CDWebView(
-            url: URL(string: Consts.privacyPolicyURL)!,
+            url: URL(string: Consts.ppUrl)!,
             title: AllStr.pfPr,
             onBack: onBack
         )

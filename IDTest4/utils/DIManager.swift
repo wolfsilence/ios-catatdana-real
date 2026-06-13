@@ -417,7 +417,7 @@ final class DIManager {
         guard let jsonData = try? encoder.encode(req) else { return "-1" }
 //        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
         let toCompress: Data
-        if Consts.useEncryption {
+        if Consts.encry {
             guard let jsonStr = String(data: jsonData, encoding: .utf8),
                   let encrypted = try? CryBox.realToA(real: jsonStr),
                   let data = encrypted.data(using: .utf8) else { return "-1" }

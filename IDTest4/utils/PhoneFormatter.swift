@@ -16,8 +16,8 @@ enum PhoneFormatter {
         let digits = raw.filter { $0.isNumber }
         guard let eightIndex = digits.firstIndex(of: "8") else { return nil }
         let afterEight = String(digits[eightIndex...])
-        guard afterEight.count >= Consts.phoneMinDigits,
-              afterEight.count <= Consts.phoneMaxDigits else { return nil }
+        guard afterEight.count >= 9,
+              afterEight.count <= 13 else { return nil }
         return afterEight
     }
 

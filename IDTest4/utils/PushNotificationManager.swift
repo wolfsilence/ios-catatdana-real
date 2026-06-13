@@ -65,7 +65,7 @@ extension PushNotificationManager: UNUserNotificationCenterDelegate {
         if let jsonData = try? JSONSerialization.data(withJSONObject: userInfo, options: []),
            let jsonStr = String(data: jsonData, encoding: .utf8) {
             UserDefaults.standard.set(jsonStr, forKey: K.pushDataStr)
-            NotificationCenter.default.post(name: NSNotification.Name(NotiName.pushDataReceived), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(NotiName.ReceivedPush), object: nil)
         }
         completionHandler()
     }

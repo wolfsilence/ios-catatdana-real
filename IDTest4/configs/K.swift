@@ -13,48 +13,48 @@ class K {
     static let firstLaunch = "hasLaunchedBefore"
 
     // MARK: 登录
-    static let countdownExpiry = "com.catatdanaku.login.countdownExpiry"
-    static let countdownMethod = "com.catatdanaku.login.countdownMethod"
-    static let countdownPhone  = "com.catatdanaku.login.countdownPhone"
-    static let lastLoginPhone  = "com.catatdanaku.login.lastPhone"
+    static let countdownExpiry = "com.cdk.login.countdownExpiry"
+    static let countdownMethod = "com.cdk.login.countdownMethod"
+    static let countdownPhone  = "com.cdk.login.countdownPhone"
+    static let lastLoginPhone  = "com.cdk.login.lastPhone"
 
     // MARK: Token
-    static let accessToken = "com.catatdanaku.accessToken"
+    static let accessToken = "com.cdk.accessToken"
 
     // MARK: IDFA
-    static let idfa = "com.catatdanaku.idfa"
-    static let idfaEverRequest = "com.catatdanaku.idfaEverRequest"
+    static let idfa = "com.cdk.idfa"
+    static let idfaEverRequest = "com.cdk.idfaEverRequest"
 
     // MARK: Attribution
-    static let adjustId   = "com.catatdanaku.adjustId"
-    static let adjustData = "com.catatdanaku.adjustData"
-    static let adjustNetwork   = "com.catatdanaku.adjustNetwork"
-    static let referrer   = "com.catatdanaku.referrer"
+    static let adjustId   = "com.cdk.adjustId"
+    static let adjustData = "com.cdk.adjustData"
+    static let adjustNetwork   = "com.cdk.adjustNetwork"
+    static let referrer   = "com.cdk.referrer"
     
-    static let conversationData = "com.catatdanaku.conversationData"
-    static let afId = "com.catatdanaku.afId"
-    static let afSource = "com.catatdanaku.afSource"
+    static let conversationData = "com.cdk.conversationData"
+    static let afId = "com.cdk.afId"
+    static let afSource = "com.cdk.afSource"
 
     // MARK: Location
-    static let locationLat = "com.catatdanaku.location.lat"
-    static let locationLng = "com.catatdanaku.location.lng"
+    static let locationLat = "com.cdk.location.lat"
+    static let locationLng = "com.cdk.location.lng"
 
     // MARK: Redirect URL
-    static let sentence = "com.catatdanaku.login.sentence"
+    static let sentence = "com.cdk.login.sentence"
 
     // MARK: Profile
     private static var phoneSuffix: String {
         UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? "default"
     }
-    static var profileNickname: String { "com.catatdanaku.profile.nickname.\(phoneSuffix)" }
-    static var profileAvatarURL: String { "com.catatdanaku.profile.avatarURL.\(phoneSuffix)" }
+    static var profileNickname: String { "com.cdk.profile.nickname.\(phoneSuffix)" }
+    static var profileAvatarURL: String { "com.cdk.profile.avatarURL.\(phoneSuffix)" }
 
     // MARK: Keychain Service
-    static let keychainService = "com.catatdanaku.keychain"
+    static let keychainService = "com.cdk.keychain"
     
     // MARK: Push
-    static let pushToken = "com.catatdanaku.pushToken"
-    static let pushDataStr = "com.catatdanaku.pushDataStr"
+    static let pushToken = "com.cdk.pushToken"
+    static let pushDataStr = "com.cdk.pushDataStr"
     // MARK: Firebase
-    static let appInstanceID = "com.catatdanaku.appInstanceID"
+    static let appInstanceID = "com.cdk.appInstanceID"
 }

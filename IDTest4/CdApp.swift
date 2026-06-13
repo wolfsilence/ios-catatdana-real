@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(onIDFAPermissionResolved),
-            name: Notification.Name(NotiName.idfaPermissionResolved),
+            name: Notification.Name(NotiName.RequestedIDFA),
             object: nil
         )
         initAdjust()
@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
     
     private func initAdjust(){
         let adjustConfig = ADJConfig(
-            appToken: Consts.adjustToken,
+            appToken: Consts.adjToken,
             environment: ADJEnvironmentProduction,
             suppressLogLevel: false
         )
@@ -121,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         if UserDefaults.standard.bool(forKey: K.idfaEverRequest) {
             idfaEverRequest = true
         }
-        AppsFlyerLib.shared().initialize(devKey: Consts.appsFlyerDevKey, appId: Consts.appleAppID)
+        AppsFlyerLib.shared().initialize(devKey: Consts.afDevKey, appId: Consts.appStoreId)
         AppsFlyerLib.shared().registerSessionReadyListener {
             AppsFlyerLib.shared().unregisterSessionReadyListener()
             self.appsFlyerSdkReady = true

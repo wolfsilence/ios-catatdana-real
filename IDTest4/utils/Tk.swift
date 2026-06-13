@@ -50,8 +50,8 @@ final class Tk {
         log.vuuuda = code
         log.hxj = IDFAProvider.idfa()
         log.zsjkam = KeychainHelper.read(key: K.adjustNetwork) ?? ""
-        log.yty = Consts.appDatabaseName
-        log.pnft = Consts.appDatabaseName
+        log.yty = Consts.avatar
+        log.pnft = Consts.avatar
         log.ru = KeychainHelper.read(key: K.afSource)
 
         var req = okak()

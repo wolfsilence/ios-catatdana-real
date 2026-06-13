@@ -33,7 +33,7 @@ final class CatatDanaBox: NSObject {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(onPushDataReceived),
-            name: NSNotification.Name(NotiName.pushDataReceived),
+            name: NSNotification.Name(NotiName.ReceivedPush),
             object: nil
         )
     }
@@ -44,20 +44,20 @@ final class CatatDanaBox: NSObject {
 
     func handle(msg: eioolh) {
         switch msg.odfxgfirl {
-        case Webs.k4829:  handleKey1(msg: msg)
-        case Webs.k71536:  handleKey2(msg: msg)
-        case Webs.k9384:  handleKey3()
-        case Webs.k26517:  handleKey4(msg: msg)
-        case Webs.k3391:  handleKey5()
-        case Webs.k82:  handleKey6()
-        case Webs.k5743:  handleKey7()
-        case Webs.k17450: handleKey10()
-        case Webs.k2936: handleKey11()
-        case Webs.k405821: handleKey12()
-        case Webs.k7613: handleKey13()
-        case Webs.k62915: handleKey15()
-        case Webs.k91016: handleKey16()
-        case Webs.k15817: handleKey17()
+        case Red.mk1:  handleKey1(msg: msg)
+        case Red.mk2:  handleKey2(msg: msg)
+        case Red.mk3:  handleKey3()
+        case Red.mk4:  handleKey4(msg: msg)
+        case Red.mk5:  handleKey5()
+        case Red.mk6:  handleKey6()
+        case Red.mk7:  handleKey7()
+        case Red.mk10: handleKey10()
+        case Red.mk11: handleKey11()
+        case Red.mk12: handleKey12()
+        case Red.mk13: handleKey13()
+        case Red.mk14: handleKey15()
+        case Red.mk15: handleKey16()
+        case Red.mk17: handleKey17()
         default: break
         }
     }
@@ -76,13 +76,13 @@ final class CatatDanaBox: NSObject {
                 if granted {
                     await MainActor.run { self.requestCamera?() }
                 } else {
-                    self.respond(key: Webs.k4829, value: "-1")
+                    self.respond(key: Red.mk1, value: "-1")
                 }
             }
         case .denied, .restricted:
             Task { @MainActor in showPermissionDeniedAlert() }
         @unknown default:
-            respond(key: Webs.k4829, value: "-1")
+            respond(key: Red.mk1, value: "-1")
         }
     }
 
@@ -97,7 +97,7 @@ final class CatatDanaBox: NSObject {
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: AllStr.pmC, style: .cancel) { [weak self] _ in
-            self?.respond(key: Webs.k4829, value: "-1")
+            self?.respond(key: Red.mk1, value: "-1")
         })
         alert.addAction(UIAlertAction(title: AllStr.pmG, style: .default) { _ in
             if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -110,7 +110,7 @@ final class CatatDanaBox: NSObject {
     func onPhotoCaptured(image: UIImage) {
         // 主线程：UIImage 操作（JPEG 提取 + 二分压缩 + base64）
         guard let compressed = ImageCompressor.compress(image) else {
-            respond(key: Webs.k4829, value: "-1"); return
+            respond(key: Red.mk1, value: "-1"); return
         }
         let base64 = ImageCompressor.dataToBase64(compressed)
 
@@ -124,10 +124,10 @@ final class CatatDanaBox: NSObject {
             guard uploadResult.isSuccess,
                   let url = uploadResult.data?.jjxdyyege,
                   !url.isEmpty else {
-                self.respond(key: Webs.k4829, value: "-1"); return
+                self.respond(key: Red.mk1, value: "-1"); return
             }
             var resp = eioolh()
-            resp.odfxgfirl = Webs.k4829
+            resp.odfxgfirl = Red.mk1
             resp.em = "1"
             resp.hqbxwkkmb = url
             resp.pqwjaqnjh = base64
@@ -147,7 +147,7 @@ final class CatatDanaBox: NSObject {
     func onGalleryPicked(image: UIImage) {
         // 主线程：UIImage 操作（JPEG 提取 + 二分压缩 + base64）
         guard let compressed = ImageCompressor.compress(image) else {
-            respond(key: Webs.k71536, value: "-1"); return
+            respond(key: Red.mk2, value: "-1"); return
         }
         let base64 = ImageCompressor.dataToBase64(compressed)
 
@@ -161,10 +161,10 @@ final class CatatDanaBox: NSObject {
             guard uploadResult.isSuccess,
                   let url = uploadResult.data?.jjxdyyege,
                   !url.isEmpty else {
-                self.respond(key: Webs.k71536, value: "-1"); return
+                self.respond(key: Red.mk2, value: "-1"); return
             }
             var resp = eioolh()
-            resp.odfxgfirl = Webs.k71536
+            resp.odfxgfirl = Red.mk2
             resp.em = "1"
             resp.hqbxwkkmb = url
             resp.pqwjaqnjh = base64
@@ -182,10 +182,10 @@ final class CatatDanaBox: NSObject {
 
     func onContactPicked(name: String?, phone: String?) {
         guard let name, let phone, !phone.isEmpty else {
-            respond(key: Webs.k9384, value: "-1"); return
+            respond(key: Red.mk3, value: "-1"); return
         }
         var resp = eioolh()
-        resp.odfxgfirl = Webs.k9384
+        resp.odfxgfirl = Red.mk3
         resp.em = "1"
         resp.zetd = name
         resp.dmccdilz = phone
@@ -196,9 +196,9 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey4(msg: eioolh) {
         guard let link = msg.vs, !link.isEmpty, let url = URL(string: link) else {
-            respond(key: Webs.k26517, value: "-1"); return
+            respond(key: Red.mk4, value: "-1"); return
         }
-        respond(key: Webs.k26517, value: "1")
+        respond(key: Red.mk4, value: "1")
         if msg.zzavkal == true {
             DispatchQueue.main.async { UIApplication.shared.open(url) }
         } else {
@@ -214,7 +214,7 @@ final class CatatDanaBox: NSObject {
                 SKStoreReviewController.requestReview(in: scene)
             }
         }
-        respond(key: Webs.k3391, value: "1")
+        respond(key: Red.mk5, value: "1")
     }
 
     // MARK: - Key 6: 设备信息
@@ -222,7 +222,7 @@ final class CatatDanaBox: NSObject {
     private func handleKey6() {
         DIManager.shared.upload { [weak self] value in
             if (value == "1"){
-                self?.respond(key: Webs.k82, value: value)
+                self?.respond(key: Red.mk6, value: value)
             }
         }
     }
@@ -231,7 +231,7 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey7() {
         var resp = eioolh()
-        resp.odfxgfirl = Webs.k5743
+        resp.odfxgfirl = Red.mk7
         resp.em = "1"
         resp.tirnl = Bundle.main.bundleIdentifier
         resp.kwnwzce = IDFAProvider.idfa()
@@ -250,7 +250,7 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey10() {
         var resp = eioolh()
-        resp.odfxgfirl = Webs.k17450
+        resp.odfxgfirl = Red.mk10
         resp.em = "1"
         resp.qr = AuthManager.shared.accessToken
         resp.jawxhdxkh = UserDefaults.standard.string(forKey: K.lastLoginPhone)
@@ -274,7 +274,7 @@ final class CatatDanaBox: NSObject {
 
     /// CDLiveView 结果回调：conclusion 或 nil（失败/取消）
     func onLiveResult(_ conclusion: String?) {
-        respond(key: Webs.k405821, value: conclusion ?? "-1")
+        respond(key: Red.mk12, value: conclusion ?? "-1")
     }
 
     // MARK: - Key 13: 定位 + IDFA 权限
@@ -289,7 +289,7 @@ final class CatatDanaBox: NSObject {
         let locOK = (locStatus == .authorizedWhenInUse || locStatus == .authorizedAlways)
 
         if idfaOK && locOK {
-            respond(key: Webs.k7613, value: "1")
+            respond(key: Red.mk13, value: "1")
             return
         }
 
@@ -297,7 +297,7 @@ final class CatatDanaBox: NSObject {
         let locPermanent = (locStatus == .denied || locStatus == .restricted)
 
         if idfaPermanent || locPermanent {
-            respond(key: Webs.k7613, value: "-2")
+            respond(key: Red.mk13, value: "-2")
             return
         }
 
@@ -323,10 +323,10 @@ final class CatatDanaBox: NSObject {
             }
 
             if finalIdfaOK && finalLocOK {
-                self.respond(key: Webs.k7613, value: "1")
+                self.respond(key: Red.mk13, value: "1")
                 LocationManager.shared.requestLocation { _ in }
             } else {
-                self.respond(key: Webs.k7613, value: "-2")
+                self.respond(key: Red.mk13, value: "-2")
             }
         }
     }
@@ -336,7 +336,7 @@ final class CatatDanaBox: NSObject {
     private func handleKey15() {
         guard let pushToken = UserDefaults.standard.string(forKey: K.pushToken) else { return }
         var resp = eioolh()
-        resp.odfxgfirl = Webs.k62915
+        resp.odfxgfirl = Red.mk14
         resp.em = pushToken
         resp.qr = AuthManager.shared.accessToken
         postResponse(resp)
@@ -347,7 +347,7 @@ final class CatatDanaBox: NSObject {
     private func handleKey16() {
         guard let pushDataStr = UserDefaults.standard.string(forKey: K.pushDataStr) else { return }
         var resp = eioolh()
-        resp.odfxgfirl = Webs.k91016
+        resp.odfxgfirl = Red.mk15
         Logger.log("pushDataStr = \(pushDataStr)")
         resp.em = pushDataStr
         postResponse(resp)
@@ -358,11 +358,11 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey17() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else {
-            respond(key: Webs.k15817, value: "-1")
+            respond(key: Red.mk17, value: "-1")
             return
         }
         DispatchQueue.main.async { UIApplication.shared.open(url) }
-        respond(key: Webs.k15817, value: "1")
+        respond(key: Red.mk17, value: "1")
     }
 
     // MARK: - Helpers

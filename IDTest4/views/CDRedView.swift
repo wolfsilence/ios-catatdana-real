@@ -77,7 +77,7 @@ struct CDRedView: View {
             CDWebView(url: config.url, title: config.title)
         }
         .fullScreenCover(isPresented: $showLiveDetection) {
-            if let url = URL(string: Consts.realManUrl) {
+            if let url = URL(string: Consts.slUrl) {
                 CDLiveView(url: url) { conclusion in
                     handler.onLiveResult(conclusion)
                 }
@@ -107,12 +107,12 @@ struct CDRedView: View {
             let controller = WKUserContentController()
             
             // 注入 JS 桥接：H5 调用 window.Android.callAndroid(json) → WKWebView
-            let userScript = WKUserScript(source: Webs.bridgeScript,
+            let userScript = WKUserScript(source: Red.bridgeScript,
                                           injectionTime: .atDocumentStart,
                                           forMainFrameOnly: false)
             controller.addUserScript(userScript)
-            controller.add(context.coordinator, name: Webs.CatatDana)
-            controller.add(context.coordinator, name: Webs.consoleLog)
+            controller.add(context.coordinator, name: Red.bridgeName)
+            controller.add(context.coordinator, name: Red.consoleLog)
             config.userContentController = controller
             
             let webView = WKWebView(frame: .zero, configuration: config)
@@ -138,7 +138,7 @@ struct CDRedView: View {
                         .replacingOccurrences(of: "\\", with: "\\\\")
                         .replacingOccurrences(of: "\"", with: "\\\"")
                         .replacingOccurrences(of: "\n", with: "\\n")
-                    let script = "\(Webs.cdexec)(\"\(escaped)\")"
+                    let script = "\(Red.bridgeEnd)(\"\(escaped)\")"
                     DispatchQueue.main.async {
                         Logger.log(script)
                         webView?.evaluateJavaScript(script)
@@ -155,7 +155,7 @@ struct CDRedView: View {
             func userContentController(_ userContentController: WKUserContentController,
                                        didReceive message: WKScriptMessage) {
                 switch message.name {
-                case Webs.CatatDana:
+                case Red.bridgeName:
                     guard let body = message.body as? String,
                           let data = body.data(using: .utf8),
                           let msg = try? JSONDecoder().decode(eioolh.self, from: data)
@@ -179,7 +179,7 @@ struct CDRedView: View {
                 if parent.isFirstLoading {
                     parent.isFirstLoading = false
                 }
-                [Webs.k5743, Webs.k17450, Webs.k7613, Webs.k62915, Webs.k91016].forEach { key in
+                [Red.mk7, Red.mk10, Red.mk13, Red.mk14, Red.mk15].forEach { key in
                     var msg = eioolh()
                     msg.odfxgfirl = key
                     parent.handler.handle(msg: msg)

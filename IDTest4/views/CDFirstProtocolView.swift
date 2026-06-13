@@ -11,7 +11,7 @@ import AdjustSdk
 
 /// 首次启动隐私协议页
 struct CDFirstProtocolView: View {
-    private let url = URL(string: Consts.privacyPolicyURL)!
+    private let url = URL(string: Consts.ppUrl)!
     let onDecision: (Bool) -> Void
 
     @State private var isWebViewLoaded = false
@@ -72,7 +72,7 @@ struct CDFirstProtocolView: View {
                         if isWebViewLoaded {
                             LocationManager.shared.requestLocation { _ in }
                             IDFAProvider.requestPermission {
-                                NotificationCenter.default.post(name: Notification.Name(NotiName.idfaPermissionResolved), object: nil)
+                                NotificationCenter.default.post(name: Notification.Name(NotiName.RequestedIDFA), object: nil)
                             }
                             onDecision(true)
                         } else {

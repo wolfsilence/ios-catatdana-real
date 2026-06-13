@@ -196,7 +196,7 @@ struct CDLoginView: View {
             HStack(spacing: 8) {
                 CodeTextField(
                     text: $vm.codeInput,
-                    maxLength: Consts.vcodeLength,
+                    maxLength: 4,
                     placeholder: AllStr.lgCh
                 )
                 .frame(height: 22)
@@ -392,7 +392,7 @@ private struct CodeTextField: UIViewRepresentable {
 private struct PrivacyWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView { WKWebView() }
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        guard let url = URL(string: Consts.privacyPolicyURL) else { return }
+        guard let url = URL(string: Consts.ppUrl) else { return }
         uiView.load(URLRequest(url: url))
     }
 }
