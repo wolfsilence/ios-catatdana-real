@@ -22,12 +22,12 @@ private struct ToastModifier: ViewModifier {
                 VStack {
                     Spacer()
                     Text(message)
-                        .font(.system(size: 14))
+                        .font(.system(size: 15))
                         .foregroundColor(.white)
-                        .padding(.horizontal, 16)
                         .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
                         .background(Color.black.opacity(0.75))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: 9))
                         .padding(.bottom, 160)
                 }
                 .transition(.opacity)
@@ -40,7 +40,7 @@ private struct ToastModifier: ViewModifier {
                 }
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: isPresented)
+        .animation(.easeInOut(duration: 0.26), value: isPresented)
     }
 }
 

@@ -67,8 +67,8 @@ enum AllStr {
     static let hTp = NSLocalizedString("h.Tp", value: "Saya", comment: "")
     static let hFr = NSLocalizedString("h.Fr", value: "Input Transaksi", comment: "")
     static let hFmr = NSLocalizedString("h.Fmr", value: "Reminder Cicilan", comment: "")
-    static let hFcc = NSLocalizedString("h.Fcc", value: "Kartu Kredit 💳", comment: "")
-    static let hFem = NSLocalizedString("h.Fem", value: "Kalkulator EMI 📊", comment: "")
+    static let hFcc = NSLocalizedString("h.Fcc", value: "Kartu Kredit", comment: "")
+    static let hFem = NSLocalizedString("h.Fem", value: "Kalkulator EMI", comment: "")
     static let hFml = NSLocalizedString("h.Fml", value: "Batas Pinjaman", comment: "")
     static let hFex = NSLocalizedString("h.Fex", value: "Kurs Mata Uang", comment: "")
     static let hFan = NSLocalizedString("h.Fan", value: "Analisis Keuangan 📈", comment: "")
@@ -142,7 +142,7 @@ enum AllStr {
     static let rmNtp = NSLocalizedString("rm.Ntp", value: "Contoh: Bank BCA", comment: "")
 
     // MARK: - cc
-    static let ccT = NSLocalizedString("cc.T", value: "Kartu Kredit 💳", comment: "")
+    static let ccT = NSLocalizedString("cc.T", value: "Kartu Kredit", comment: "")
     static let ccEm = NSLocalizedString("cc.Em", value: "Belum ada kartu yang disimpan nih", comment: "")
     static let ccAt = NSLocalizedString("cc.At", value: "Buat Kartu Baru", comment: "")
     static let ccNl = NSLocalizedString("cc.Nl", value: "No. Kartu", comment: "")
@@ -157,7 +157,7 @@ enum AllStr {
     static let ccDf = NSLocalizedString("cc.Df", value: "Tgl %d", comment: "")
 
     // MARK: - em
-    static let emT = NSLocalizedString("em.T", value: "Kalkulator EMI 📊", comment: "")
+    static let emT = NSLocalizedString("em.T", value: "Kalkulator EMI", comment: "")
     static let emLl = NSLocalizedString("em.Ll", value: "Nominal Pinjaman (Rp)", comment: "")
     static let emTl = NSLocalizedString("em.Tl", value: "Lama Cicilan (Bulan)", comment: "")
     static let emRl = NSLocalizedString("em.Rl", value: "Bunga per Tahun", comment: "")
@@ -210,11 +210,11 @@ enum AllStr {
 
     // MARK: - pf
     static let pfTr = NSLocalizedString("pf.Tr", value: "Transaksi", comment: "")
-    static let pfCc = NSLocalizedString("pf.Cc", value: "Kartu Kredit 💳", comment: "")
+    static let pfCc = NSLocalizedString("pf.Cc", value: "Kartu Kredit", comment: "")
     static let pfRm = NSLocalizedString("pf.Rm", value: "Pengingat", comment: "")
     static let pfCu = NSLocalizedString("pf.Cu", value: "Kontak Kami", comment: "")
     static let pfPr = NSLocalizedString("pf.Pr", value: "Kebijakan Privasi", comment: "")
-    static let pfRa = NSLocalizedString("pf.Ra", value: "Kasih Rating ⭐", comment: "")
+    static let pfRa = NSLocalizedString("pf.Ra", value: "Kasih Rating", comment: "")
     static let pfSe = NSLocalizedString("pf.Se", value: "Setelan", comment: "")
     static let pfCn = NSLocalizedString("pf.Cn", value: "Ganti Nama", comment: "")
     static let pfNp = NSLocalizedString("pf.Np", value: "Nama Kamu", comment: "")

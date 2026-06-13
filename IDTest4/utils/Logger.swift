@@ -9,7 +9,7 @@ import OSLog
 //
 
 class Logger{
-    private static let logger = os.Logger(subsystem: "com.catatdanaku.ios", category: "general")
+    private static let logger = os.Logger(subsystem: "com.cdk.iosLogger", category: "general")
 
     static func log(_ message: String?) {
         // ✅ 空值或空字符串直接返回，不执行任何打印

@@ -10,7 +10,7 @@ import SwiftUI
 struct CDSettingsView: View {
     let onBack: () -> Void
 
-    @State private var vm = SettingsViewModel()
+    @State private var vm = CDSettingsViewModel()
 
     private var appVersion: String {
         let info = Bundle.main.infoDictionary

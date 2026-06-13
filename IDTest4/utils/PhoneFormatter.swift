@@ -20,14 +20,15 @@ enum PhoneFormatter {
               afterEight.count <= 13 else { return nil }
         return afterEight
     }
+    
+    /// 格式化后的手机号（用于提交和存储）
+    static func formatted(_ raw: String) -> String {
+        extract(raw) ?? raw
+    }
 
     /// 判断手机号是否合法
     static func isValid(_ raw: String) -> Bool {
         extract(raw) != nil
     }
 
-    /// 格式化后的手机号（用于提交和存储）
-    static func formatted(_ raw: String) -> String {
-        extract(raw) ?? raw
-    }
 }

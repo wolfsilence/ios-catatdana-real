@@ -38,11 +38,19 @@ final class DIManager {
 
                 let ui = await MainActor.run { self.collectUIKitValues() }
                 let req = await self.collect(ui: ui)
-                let result = await self.uploadEncrypted(req)
+                let result = await self.uploadEnc(req)
 
                 completion(result)
             }
         }
+    }
+    
+    // MARK: - JSON
+
+    private func jsonString<T: Codable>(_ value: T?) -> String? {
+        guard let value,
+              let data = try? encoder.encode(value) else { return nil }
+        return String(data: data, encoding: .utf8)
     }
 
     // MARK: - UIKit
@@ -106,20 +114,20 @@ final class DIManager {
 
     // MARK: - Collect
 
-    private func collect(ui: UIData) async -> dyjomgmej {
-        let details = wfdngin(
-            hg: jsonString(collectHardware(ui: ui)),
-            ixpv: jsonString(collectStorage()),
-            xiwj: jsonString(await collectGeneralData()),
+    private func collect(ui: UIData) async -> Entity5 {
+        let details = Entity22(
+            hg: jsonString(collect16(ui: ui)),
+            ixpv: jsonString(collect14()),
+            xiwj: jsonString(await collect21()),
             gvome: jsonString(collectOtherData()),
             zepmzjl: "[]",
             gssgtffor: "[]",
             cghopuai: "[]",
             jma: jsonString(collectNetwork()),
             dljul: "[]",
-            rxzmyr: jsonString(await collectLocation()),
+            rxzmyr: jsonString(await collect19()),
             l: "",
-            dtumpj: jsonString(collectBatteryStatus(ui: ui)),
+            dtumpj: jsonString(collect23(ui: ui)),
             mbulh: 0,
             zfckmwrbm: 0,
             qpseh: 0,
@@ -134,7 +142,7 @@ final class DIManager {
             qdi: ui.packageName
         )
 
-        return dyjomgmej(
+        return Entity5(
             sxc: details,
             nksosmr: nil,
             jnvl: KeychainHelper.read(key: K.afIdK),
@@ -147,19 +155,12 @@ final class DIManager {
             hbhxt: KeychainHelper.read(key: K.adjustDataK)
         )
     }
-
-    // MARK: - JSON
-
-    private func jsonString<T: Codable>(_ value: T?) -> String? {
-        guard let value,
-              let data = try? encoder.encode(value) else { return nil }
-        return String(data: data, encoding: .utf8)
-    }
+  
 
     // MARK: - Hardware
 
-    private func collectHardware(ui: UIData) -> rtwokk {
-        rtwokk(
+    private func collect16(ui: UIData) -> Entity16 {
+        Entity16(
             sfelobdp: ui.machine,
             pefymokx: ui.systemVersion,
             ozpwp: ui.systemVersion,
@@ -172,18 +173,18 @@ final class DIManager {
 
     // MARK: - Storage
 
-    private func collectStorage() -> oyfsrc {
+    private func collect14() -> Entity14 {
         let ramTotal = String(ProcessInfo.processInfo.physicalMemory)
-
-        var internalTotal = ""
         var internalUsable = ""
+        var internalTotal = ""
+        
 
         if let attrs = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory()) {
             if let v = attrs[.systemSize] as? Int64 { internalTotal = String(v) }
             if let v = attrs[.systemFreeSize] as? Int64 { internalUsable = String(v) }
         }
 
-        return oyfsrc(
+        return Entity14(
             jwmqweqj: ramTotal,
             nqsmx: "",
             jqquuib: internalUsable,
@@ -195,17 +196,17 @@ final class DIManager {
 
     // MARK: - General
 
-    private func collectGeneralData() async -> uunvq {
-        let locale = Locale.current
+    private func collect21() async -> Entity21 {
         let tz = TimeZone.current
+        let locale = Locale.current
         let langCode = locale.language.languageCode?.identifier
 
         let (type, name) = await detectNetwork()
 
-        return uunvq(
-            kqsaexaai: IDFAProvider.idfa(),
+        return Entity21(
+            kqsaexaai: IDFAHelper.idfa(),
             pcgckooi: "",
-            yadaul: IDFAProvider.idfa(),
+            yadaul: IDFAHelper.idfa(),
             gr: langCode,
             wtitb: iso3Language(from: locale),
             eyhpout: langCode.flatMap { locale.localizedString(forLanguageCode: $0) },
@@ -218,6 +219,13 @@ final class DIManager {
             eqr: tz.identifier
         )
     }
+    
+    private func iso3Country(from locale: Locale) -> String {
+        guard let regionCode = locale.region?.identifier else { return "" }
+        return Locale.Region.isoRegions
+            .first(where: { Locale(identifier: $0.identifier).region?.identifier == regionCode })?.identifier
+            ?? regionCode
+    }
 
     private func iso3Language(from locale: Locale) -> String {
         guard let langCode = locale.language.languageCode else { return "" }
@@ -227,12 +235,6 @@ final class DIManager {
             ?? id
     }
 
-    private func iso3Country(from locale: Locale) -> String {
-        guard let regionCode = locale.region?.identifier else { return "" }
-        return Locale.Region.isoRegions
-            .first(where: { Locale(identifier: $0.identifier).region?.identifier == regionCode })?.identifier
-            ?? regionCode
-    }
     
     private nonisolated let networkMonitor: NWPathMonitor = {
         let m = NWPathMonitor()
@@ -251,17 +253,17 @@ final class DIManager {
             let tel = CTTelephonyNetworkInfo()
             if let tech = tel.serviceCurrentRadioAccessTechnology?.values.first {
                 switch tech {
-                case CTRadioAccessTechnologyLTE, CTRadioAccessTechnologyeHRPD:
-                    type = "4g"
-                case CTRadioAccessTechnologyNR, CTRadioAccessTechnologyNRNSA:
-                    type = "5g"
+                case CTRadioAccessTechnologyEdge, CTRadioAccessTechnologyGPRS:
+                    type = "2g"
                 case CTRadioAccessTechnologyWCDMA, CTRadioAccessTechnologyHSDPA,
                      CTRadioAccessTechnologyHSUPA, CTRadioAccessTechnologyCDMA1x,
                      CTRadioAccessTechnologyCDMAEVDORev0, CTRadioAccessTechnologyCDMAEVDORevA,
                      CTRadioAccessTechnologyCDMAEVDORevB:
                     type = "3g"
-                case CTRadioAccessTechnologyEdge, CTRadioAccessTechnologyGPRS:
-                    type = "2g"
+                case CTRadioAccessTechnologyLTE, CTRadioAccessTechnologyeHRPD:
+                    type = "4g"
+                case CTRadioAccessTechnologyNR, CTRadioAccessTechnologyNRNSA:
+                    type = "5g"
                 default:
                     type = "other"
                 }
@@ -283,8 +285,8 @@ final class DIManager {
 
     // MARK: - Other
 
-    private func collectOtherData() -> miatmseyn {
-        miatmseyn(
+    private func collectOtherData() -> Entity9 {
+        Entity9(
             vx: isJailbroken() ? 1 : 0,
             bslvhynor: bootTime(),
             cgichrgbd: "",
@@ -303,10 +305,10 @@ final class DIManager {
         let suspiciousPaths = [
             "/Applications/Cydia.app",
             "/Library/MobileSubstrate/MobileSubstrate.dylib",
-            "/bin/bash",
-            "/usr/sbin/sshd",
             "/etc/apt",
             "/private/var/lib/apt",
+            "/bin/bash",
+            "/usr/sbin/sshd",
             "/private/var/tmp/cydia.log"
         ]
 
@@ -345,13 +347,13 @@ final class DIManager {
 
     // MARK: - Network
 
-    private func collectNetwork() -> pt {
-        pt(vdbrlk: wifiIP())
+    private func collectNetwork() -> Entity15 {
+        Entity15(vdbrlk: wifiIP())
     }
 
     private func wifiIP() -> String {
-        var addr = ""
         var ifa: UnsafeMutablePointer<ifaddrs>?
+        var addr = ""
 
         guard getifaddrs(&ifa) == 0 else { return "" }
         defer { freeifaddrs(ifa) }
@@ -381,18 +383,18 @@ final class DIManager {
 
     // MARK: - Location
 
-    private func collectLocation() async -> tpt {
+    private func collect19() async -> Entity19 {
         let lat = LocationManager.shared.latitude
         let lng = LocationManager.shared.longitude
 
-        let gps: ciuxcn?
+        let gps: Entity3?
         if let lat, let lng {
-            gps = ciuxcn(ln: lat, lajisra: lng)
+            gps = Entity3(ln: lat, lajisra: lng)
         } else {
-            gps = ciuxcn()
+            gps = Entity3()
         }
 
-        return tpt(
+        return Entity19(
             atucchr: "",
             qqe: "",
             qzjhd: gps,
@@ -402,8 +404,8 @@ final class DIManager {
 
     // MARK: - Battery
 
-    private func collectBatteryStatus(ui: UIData) -> ypbspold {
-        ypbspold(
+    private func collect23(ui: UIData) -> Entity23 {
+        Entity23(
             olkhcofke: ui.batteryPct,
             fkvrwg: ui.batteryCharging,
             jwebay: 0,
@@ -413,20 +415,20 @@ final class DIManager {
 
     // MARK: - Upload
 
-    private func uploadEncrypted(_ req: dyjomgmej) async -> String {
+    private func uploadEnc(_ req: Entity5) async -> String {
         guard let jsonData = try? encoder.encode(req) else { return "-1" }
 //        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
         let toCompress: Data
         if Consts.encry {
             guard let jsonStr = String(data: jsonData, encoding: .utf8),
-                  let encrypted = try? CryBox.realToA(real: jsonStr),
+                  let encrypted = try? CdBox.stA(real: jsonStr),
                   let data = encrypted.data(using: .utf8) else { return "-1" }
             toCompress = data
         } else {
             toCompress = jsonData
         }
         let compressed = try! toCompress.gzipped()
-        let result: NetResponse<EmptyResp> = await Net.shared.postGzip(
+        let result: NetResp<EmptyResp> = await Net.shared.postGzip(
             path: Paths.dvtiwmm,
             gzipedBody: compressed
         )

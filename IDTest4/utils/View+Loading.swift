@@ -18,16 +18,16 @@ private struct LoadingModifier: ViewModifier {
                 .allowsHitTesting(!isPresented)
 
             if isPresented {
-                Color.black.opacity(0.15)
+                Color.black.opacity(0.16)
                     .ignoresSafeArea()
                     .transition(.opacity)
 
                 ProgressView()
-                    .scaleEffect(1.2)
+                    .scaleEffect(1.3)
                     .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: isPresented)
+        .animation(.easeInOut(duration: 0.25), value: isPresented)
     }
 }
 

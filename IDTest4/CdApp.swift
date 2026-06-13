@@ -19,7 +19,7 @@ struct CdApp : App {
     
     var body: some Scene {
         WindowGroup {
-            CDContentView()
+            CDRootView()
         }
     }
 }
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         FirebaseApp.configure()
         saveAppInstanceID()
         // FCM
-        PushNotificationManager.shared.configure()
+        PushManager.shared.initSelf()
         
         // 检查是否是由远程推送唤醒的
         if let remoteNotification = launchOptions?[.remoteNotification] as? [String: AnyObject] {

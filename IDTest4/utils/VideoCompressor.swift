@@ -30,9 +30,12 @@ enum VideoCompressor {
         // 清理残留文件
         try? FileManager.default.removeItem(at: outputURL)
 
-        export.outputURL = outputURL
-        export.outputFileType = .mp4
+        
         export.shouldOptimizeForNetworkUse = true
+        export.outputFileType = .mp4
+        export.outputURL = outputURL
+        
+        
 
         await export.export()
 
@@ -46,8 +49,8 @@ enum VideoCompressor {
     static func generateThumbnail(url: URL) -> UIImage? {
         let asset = AVAsset(url: url)
         let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
         generator.maximumSize = CGSize(width: 480, height: 480)
+        generator.appliesPreferredTrackTransform = true
 
         let time = CMTime(seconds: 1, preferredTimescale: 600)
         guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else {

@@ -36,7 +36,7 @@ final class Tk {
     func track(page: String, act: String, id: String? = nil, code: String? = nil, m: String? = nil) {
         Logger.log("track: page=\(page) act=\(act) id=\(id ?? "") code=\(code ?? "") m=\(m ?? "")")
         
-        var log = enfpzts()
+        var log = Entity7()
         let now = Date()
         log.uzekwal = String(Int64(now.timeIntervalSince1970 * 1000))
         log.nlzyjsr = Self.dateFormatter.string(from: now)
@@ -48,19 +48,19 @@ final class Tk {
         log.lljletl = act
         log.httfxskg = id
         log.vuuuda = code
-        log.hxj = IDFAProvider.idfa()
+        log.hxj = IDFAHelper.idfa()
         log.zsjkam = KeychainHelper.read(key: K.adjustNetworkK) ?? ""
         log.yty = Consts.avatar
         log.pnft = Consts.avatar
         log.ru = KeychainHelper.read(key: K.afSourceK)
 
-        var req = okak()
+        var req = Entity13()
         req.gkykpehpn = KeychainHelper.read(key: K.adjustIdK) ?? ""
         req.sxe = KeychainHelper.read(key: K.afIdK) ?? ""
         req.nvoclmw = [log]
         
         Task.detached {
-            let _: NetResponse<EmptyResp> = await Net.shared.post(
+            let _: NetResp<EmptyResp> = await Net.shared.post(
                 path: Paths.ncqmpcg,
                 encodableBody: req
             )

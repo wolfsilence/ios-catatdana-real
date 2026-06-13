@@ -16,12 +16,12 @@ class Net {
     /// 发起一次完整的 HTTP 请求（最底层入口）
     func request<T: Codable>(
         path: String,
-        method: HttpRequestMethod,
+        method: HttpMethods,
         headerFields: [String: String]? = nil,
         queryParameters: [String: String]? = nil,
         encodableBody: Codable? = nil,
         rawBody: Data? = nil
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         return await core.execute(
             path: path,
             method: method,
@@ -39,7 +39,7 @@ class Net {
         path: String,
         encodableBody: Codable,
         headerFields: [String: String]? = nil
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         return await request(
             path: path,
             method: .post,
@@ -53,7 +53,7 @@ class Net {
         path: String,
         queryParameters: [String: String]? = nil,
         headerFields: [String: String]? = nil
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         return await request(
             path: path,
             method: .get,
@@ -66,7 +66,7 @@ class Net {
     func uploadImage<T: Codable>(
         path: String,
         rawBody: Data
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         let headers = ["Content-Type": "application/octet-stream"]
         return await request(
             path: path,
@@ -80,7 +80,7 @@ class Net {
     func postGzip<T: Codable>(
         path: String,
         gzipedBody: Data
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         let headers = ["Content-Encoding":"gzip","Content-Type":"application/octet-stream"]
         return await request(
             path: path,
@@ -98,8 +98,8 @@ fileprivate class NetCore {
     // MARK: - 私有属性
 
     private let urlSession: URLSession
-    private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
+    private let jsonDecoder: JSONDecoder
     
     // MARK: - 请求头合并
     private let defaultHeaderFields: [String: String] = [
@@ -110,14 +110,15 @@ fileprivate class NetCore {
 
     init() {
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest  = 15
-        config.timeoutIntervalForResource = 30
+        config.timeoutIntervalForResource = 45
+        config.timeoutIntervalForRequest  = 10
         config.httpAdditionalHeaders = [
             "Accept": "*/*",
         ]
-        self.urlSession  = URLSession(configuration: config)
+      
         self.jsonDecoder = JSONDecoder()
         self.jsonEncoder = JSONEncoder()
+        self.urlSession  = URLSession(configuration: config)
     }
 
     // MARK: - 请求构建
@@ -125,7 +126,7 @@ fileprivate class NetCore {
     /// 根据 NetRequestPack 组装 URLRequest
     private func composeURLRequest(
         path: String,
-        method: HttpRequestMethod,
+        method: HttpMethods,
         headerFields: [String: String]?,
         queryParameters: [String: String]?,
         encodableBody: Codable?,
@@ -136,15 +137,15 @@ fileprivate class NetCore {
             throw AppErrors.URL
         }
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod       = method.rawValue
         urlRequest.timeoutInterval  = 15
+        urlRequest.httpMethod       = method.rawValue
         let headers = combineHeaders(with: headerFields)
         // 写入请求头
         for (key, value) in headers {
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }
         // 认证令牌
-        if let token = AuthManager.shared.accessToken {
+        if let token = AuthHelper.shared.accessToken {
             urlRequest.setValue(token, forHTTPHeaderField: "x-k")
         }
         // 客户端版本（加密模式下附带）
@@ -165,7 +166,7 @@ fileprivate class NetCore {
                 throw AppErrors.JsonParse
             }
             Logger.log("Real Request: \(bodyStr)")
-            let encryptedString = try CryBox.realToA(real: bodyStr)
+            let encryptedString = try CdBox.stA(real: bodyStr)
             urlRequest.httpBody = encryptedString.data(using: .utf8)
         } else {
             // 普通模式：优先使用 rawBody，其次 JSON 编码 encodableBody
@@ -176,8 +177,15 @@ fileprivate class NetCore {
             }
         }
 
-        traceOutgoing(urlRequest)
+        logOutgoing(urlRequest)
         return urlRequest
+    }
+    
+    /// 将调用方传入的自定义头与默认头合并
+    private func combineHeaders(with customFields: [String: String]?) -> [String: String] {
+        var combined = defaultHeaderFields
+        customFields?.forEach { combined[$0.key] = $0.value }
+        return combined
     }
     
     private func fullURL(path : String, queryParameters: [String: String]? = nil) -> URL?{
@@ -190,24 +198,18 @@ fileprivate class NetCore {
         return components.url
     }
     
-    /// 将调用方传入的自定义头与默认头合并
-    private func combineHeaders(with customFields: [String: String]?) -> [String: String] {
-        var combined = defaultHeaderFields
-        customFields?.forEach { combined[$0.key] = $0.value }
-        return combined
-    }
 
     // MARK: - 公开方法
 
     /// 执行一次网络请求
     func execute<T: Codable>(
         path: String,
-        method: HttpRequestMethod,
+        method: HttpMethods,
         headerFields: [String: String]?,
         queryParameters: [String: String]?,
         encodableBody: Codable?,
         rawBody: Data?
-    ) async -> NetResponse<T> {
+    ) async -> NetResp<T> {
         do {
             let urlRequest = try composeURLRequest(
                 path: path,
@@ -218,16 +220,16 @@ fileprivate class NetCore {
                 rawBody: rawBody
             )
             let (data, response) = try await urlSession.data(for: urlRequest)
-            traceIncoming(response, data: data)
+            logIncoming(response, data: data)
 
-            let resp = try jsonDecoder.decode(qxiucygf<T>.self, from: data)
-            let code = resp.code
+            let resp = try jsonDecoder.decode(Resp<T>.self, from: data)
             let msg  = resp.msg
+            let code = resp.code
 
             checkSessionExpiry(code)
 
             if (code == 200) {
-                return NetResponse(
+                return NetResp(
                     isSuccess:  true,
                     data:       resp.data,
                     statusCode: code,
@@ -235,7 +237,7 @@ fileprivate class NetCore {
                 )
             } else {
                 let errorMsg = resolveMessage(msg)
-                return NetResponse(
+                return NetResp(
                     isSuccess:  false,
                     data:    nil,
                     statusCode: code,
@@ -244,7 +246,7 @@ fileprivate class NetCore {
             }
         } catch {
             Logger.log("Error: \(error.localizedDescription)")
-            return NetResponse(
+            return NetResp(
                 isSuccess:  false,
                 data:    nil,
                 statusCode: 502,
@@ -252,11 +254,33 @@ fileprivate class NetCore {
             )
         }
     }
+
+    // MARK: - 错误消息兜底
+
+    private func resolveMessage(_ msg: String?) -> String {
+        if let msg, !msg.isEmpty { return msg }
+        return AllStr.eSu
+    }
+
+    // MARK: - 会话过期
+
+    /// 特定错误码触发强制登出
+    private func checkSessionExpiry(_ code: Int) {
+        if code == 701 {
+            if AuthHelper.shared.isAuthenticated {
+                AuthHelper.shared.clearToken()
+                NotificationCenter.default.post(
+                    name: NSNotification.Name(NotiName.OverToken),
+                    object: nil
+                )
+            }
+        }
+    }
     
     // MARK: - 日志
 
     /// 记录发出的请求
-    private func traceOutgoing(_ request: URLRequest) {
+    private func logOutgoing(_ request: URLRequest) {
         var entry = "Request: "
         if let method = request.httpMethod, let url = request.url {
             entry += "\(method) \(url.absoluteString)"
@@ -279,7 +303,7 @@ fileprivate class NetCore {
     }
 
     /// 记录收到的响应
-    private func traceIncoming(_ response: URLResponse?, data: Data) {
+    private func logIncoming(_ response: URLResponse?, data: Data) {
         var entry = "Response: "
         if let httpResponse = response as? HTTPURLResponse, let url = httpResponse.url {
             entry += "\(httpResponse.statusCode) \(url.absoluteString)"
@@ -296,27 +320,5 @@ fileprivate class NetCore {
         }
 
         Logger.log(entry)
-    }
-
-    // MARK: - 错误消息兜底
-
-    private func resolveMessage(_ msg: String?) -> String {
-        if let msg, !msg.isEmpty { return msg }
-        return AllStr.eSu
-    }
-
-    // MARK: - 会话过期
-
-    /// 特定错误码触发强制登出
-    private func checkSessionExpiry(_ code: Int) {
-        if code == 701 {
-            if AuthManager.shared.isAuthenticated {
-                AuthManager.shared.revokeAccess()
-                NotificationCenter.default.post(
-                    name: NSNotification.Name(NotiName.OverToken),
-                    object: nil
-                )
-            }
-        }
     }
 }

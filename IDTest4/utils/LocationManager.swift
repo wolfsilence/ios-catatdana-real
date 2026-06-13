@@ -11,8 +11,9 @@ import CoreLocation
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
 
-    private let manager = CLLocationManager()
     private var completion: ((CLLocation?) -> Void)?
+    private let manager = CLLocationManager()
+  
 
     private override init() {
         super.init()
@@ -62,6 +63,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             break
         }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        Logger.log("LocationManager error: \(error.localizedDescription)")
+        completion?(nil)
+        completion = nil
+    }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else {
@@ -75,9 +82,4 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         completion = nil
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        Logger.log("LocationManager error: \(error.localizedDescription)")
-        completion?(nil)
-        completion = nil
-    }
 }
