@@ -64,7 +64,7 @@ extension PushNotificationManager: UNUserNotificationCenterDelegate {
         // 将推送数据转 JSON 存本地，通知 JS 处理
         if let jsonData = try? JSONSerialization.data(withJSONObject: userInfo, options: []),
            let jsonStr = String(data: jsonData, encoding: .utf8) {
-            UserDefaults.standard.set(jsonStr, forKey: K.pushDataStr)
+            UserDefaults.standard.set(jsonStr, forKey: K.pushDataStrK)
             NotificationCenter.default.post(name: NSNotification.Name(NotiName.ReceivedPush), object: nil)
         }
         completionHandler()
@@ -77,6 +77,6 @@ extension PushNotificationManager: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let token = fcmToken else { return }
         Logger.log("✅ FCM Token refresh: \(token)")
-        UserDefaults.standard.set(token, forKey: K.pushToken)
+        UserDefaults.standard.set(token, forKey: K.pushTokenK)
     }
 }

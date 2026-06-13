@@ -10,51 +10,51 @@ import Foundation
 /// UserDefaults / Keychain 存储键
 class K {
     // MARK: 通用
-    static let firstLaunch = "hasLaunchedBefore"
+    static let firstLaunchK = "hasLaunchedBeforeK"
 
     // MARK: 登录
-    static let countdownExpiry = "com.cdk.login.countdownExpiry"
-    static let countdownMethod = "com.cdk.login.countdownMethod"
-    static let countdownPhone  = "com.cdk.login.countdownPhone"
-    static let lastLoginPhone  = "com.cdk.login.lastPhone"
+    static let countdownExpiryK = "com.cdk.login.countdownExpiryK"
+    static let countdownMethodK = "com.cdk.login.countdownMethodK"
+    static let countdownPhoneK  = "com.cdk.login.countdownPhoneK"
+    static let lastLoginPhoneK  = "com.cdk.login.lastPhoneK"
 
     // MARK: Token
-    static let accessToken = "com.cdk.accessToken"
+    static let accessTokenK = "com.cdk.accessTokenK"
 
     // MARK: IDFA
-    static let idfa = "com.cdk.idfa"
-    static let idfaEverRequest = "com.cdk.idfaEverRequest"
+    static let idfaK = "com.cdk.idfaK"
+    static let idfaEverRequestK = "com.cdk.idfaEverRequestK"
 
     // MARK: Attribution
-    static let adjustId   = "com.cdk.adjustId"
-    static let adjustData = "com.cdk.adjustData"
-    static let adjustNetwork   = "com.cdk.adjustNetwork"
-    static let referrer   = "com.cdk.referrer"
-    
-    static let conversationData = "com.cdk.conversationData"
-    static let afId = "com.cdk.afId"
-    static let afSource = "com.cdk.afSource"
+    static let adjustIdK   = "com.cdk.adjustIdK"
+    static let adjustDataK = "com.cdk.adjustDataK"
+    static let adjustNetworkK   = "com.cdk.adjustNetworkK"
+    static let referrerK   = "com.cdk.referrerK"
+
+    static let conversationDataK = "com.cdk.conversationDataK"
+    static let afIdK = "com.cdk.afIdK"
+    static let afSourceK = "com.cdk.afSourceK"
 
     // MARK: Location
-    static let locationLat = "com.cdk.location.lat"
-    static let locationLng = "com.cdk.location.lng"
+    static let locationLatK = "com.cdk.location.latK"
+    static let locationLngK = "com.cdk.location.lngK"
 
     // MARK: Redirect URL
-    static let sentence = "com.cdk.login.sentence"
+    static let sentenceK = "com.cdk.login.sentenceK"
 
     // MARK: Profile
-    private static var phoneSuffix: String {
-        UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? "default"
+    private static var phoneSuffixK: String {
+        UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? "default"
     }
-    static var profileNickname: String { "com.cdk.profile.nickname.\(phoneSuffix)" }
-    static var profileAvatarURL: String { "com.cdk.profile.avatarURL.\(phoneSuffix)" }
+    static var profileNicknameK: String { "com.cdk.profile.nickname.\(phoneSuffixK)K" }
+    static var profileAvatarURLK: String { "com.cdk.profile.avatarURL.\(phoneSuffixK)K" }
 
     // MARK: Keychain Service
-    static let keychainService = "com.cdk.keychain"
-    
+    static let keychainServiceK = "com.cdk.keychainK"
+
     // MARK: Push
-    static let pushToken = "com.cdk.pushToken"
-    static let pushDataStr = "com.cdk.pushDataStr"
+    static let pushTokenK = "com.cdk.pushTokenK"
+    static let pushDataStrK = "com.cdk.pushDataStrK"
     // MARK: Firebase
-    static let appInstanceID = "com.cdk.appInstanceID"
+    static let appInstanceIDK = "com.cdk.appInstanceIDK"
 }

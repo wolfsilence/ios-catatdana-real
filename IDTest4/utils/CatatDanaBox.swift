@@ -235,11 +235,11 @@ final class CatatDanaBox: NSObject {
         resp.em = "1"
         resp.tirnl = Bundle.main.bundleIdentifier
         resp.kwnwzce = IDFAProvider.idfa()
-        resp.rhrrh = KeychainHelper.read(key: K.adjustId)
-        resp.cqma = KeychainHelper.read(key: K.adjustData)
-        resp.ss = KeychainHelper.read(key: K.afSource)
-        resp.ccadcozkv = KeychainHelper.read(key: K.afId)
-        resp.gwc = KeychainHelper.read(key: K.conversationData)
+        resp.rhrrh = KeychainHelper.read(key: K.adjustIdK)
+        resp.cqma = KeychainHelper.read(key: K.adjustDataK)
+        resp.ss = KeychainHelper.read(key: K.afSourceK)
+        resp.ccadcozkv = KeychainHelper.read(key: K.afIdK)
+        resp.gwc = KeychainHelper.read(key: K.conversationDataK)
         let info = Bundle.main.infoDictionary
         resp.pguqm = info?["CFBundleShortVersionString"] as? String
         resp.ibnpbcd = (info?["CFBundleVersion"] as? String)
@@ -253,7 +253,7 @@ final class CatatDanaBox: NSObject {
         resp.odfxgfirl = Red.mk10
         resp.em = "1"
         resp.qr = AuthManager.shared.accessToken
-        resp.jawxhdxkh = UserDefaults.standard.string(forKey: K.lastLoginPhone)
+        resp.jawxhdxkh = UserDefaults.standard.string(forKey: K.lastLoginPhoneK)
         postResponse(resp)
     }
 
@@ -261,8 +261,8 @@ final class CatatDanaBox: NSObject {
 
     private func handleKey11() {
         AuthManager.shared.revokeAccess()
-        UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: K.sentence)
+        UserDefaults.standard.removeObject(forKey: K.lastLoginPhoneK)
+        UserDefaults.standard.removeObject(forKey: K.sentenceK)
         DispatchQueue.main.async { self.onLogout?() }
     }
 
@@ -334,7 +334,7 @@ final class CatatDanaBox: NSObject {
     // MARK: - Key 15: Push Token
 
     private func handleKey15() {
-        guard let pushToken = UserDefaults.standard.string(forKey: K.pushToken) else { return }
+        guard let pushToken = UserDefaults.standard.string(forKey: K.pushTokenK) else { return }
         var resp = eioolh()
         resp.odfxgfirl = Red.mk14
         resp.em = pushToken
@@ -345,13 +345,13 @@ final class CatatDanaBox: NSObject {
     // MARK: - Key 16: Push Data
 
     private func handleKey16() {
-        guard let pushDataStr = UserDefaults.standard.string(forKey: K.pushDataStr) else { return }
+        guard let pushDataStr = UserDefaults.standard.string(forKey: K.pushDataStrK) else { return }
         var resp = eioolh()
         resp.odfxgfirl = Red.mk15
         Logger.log("pushDataStr = \(pushDataStr)")
         resp.em = pushDataStr
         postResponse(resp)
-        UserDefaults.standard.removeObject(forKey: K.pushDataStr)
+        UserDefaults.standard.removeObject(forKey: K.pushDataStrK)
     }
 
     // MARK: - Key 17: 打开设置

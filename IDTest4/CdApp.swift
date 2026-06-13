@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
             if let jsonData = try? JSONSerialization.data(withJSONObject: remoteNotification, options: []),
                let json = String(data: jsonData, encoding: .utf8) {
                 Logger.log("👉 App launcher by push, push = \(json)")
-                UserDefaults.standard.set(json, forKey: K.pushDataStr)
+                UserDefaults.standard.set(json, forKey: K.pushDataStrK)
             }
         }
         return true
@@ -64,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         guard let instanceId = Analytics.appInstanceID(), !instanceId.isEmpty else {
             return
         }
-        KeychainHelper.write(key: K.appInstanceID, value: instanceId)
+        KeychainHelper.write(key: K.appInstanceIDK, value: instanceId)
     }
     
     func adjustAttributionChanged(_ attribution: ADJAttribution?) {
@@ -84,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         Adjust.adid(withTimeout: 30_000) { adid in
             guard let adid, !adid.isEmpty else { return }
             Logger.log("Adjust adid: \(adid)")
-            KeychainHelper.write(key: K.adjustId, value: adid)
+            KeychainHelper.write(key: K.adjustIdK, value: adid)
         }
         Adjust.attribution(withTimeout: 30_000) { attribution in
             self.saveAdjustAttr(attribution)
@@ -98,18 +98,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
            let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: []),
            let json = String(data: jsonData, encoding: .utf8) {
             Logger.log("Adjust attribution: \(json)")
-            KeychainHelper.write(key: K.adjustData, value: json)
+            KeychainHelper.write(key: K.adjustDataK, value: json)
         }
         // network 单独存储
         if let network = attribution.network, !network.isEmpty {
-            KeychainHelper.write(key: K.adjustNetwork, value: network)
+            KeychainHelper.write(key: K.adjustNetworkK, value: network)
         }
     }
     
     /// 供 CDFirstProtocolView 权限申请完成后调用，持久化标记并尝试 start
     @objc func onIDFAPermissionResolved() {
         // af start
-        UserDefaults.standard.set(true, forKey: K.idfaEverRequest)
+        UserDefaults.standard.set(true, forKey: K.idfaEverRequestK)
         idfaEverRequest = true
         appsflyerStartIfReady()
         // adjust
@@ -118,7 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
 
     private func initAppsflyer(){
         // 恢复本地标记：上次启动已申请过权限
-        if UserDefaults.standard.bool(forKey: K.idfaEverRequest) {
+        if UserDefaults.standard.bool(forKey: K.idfaEverRequestK) {
             idfaEverRequest = true
         }
         AppsFlyerLib.shared().initialize(devKey: Consts.afDevKey, appId: Consts.appStoreId)
@@ -140,7 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         let afId = AppsFlyerLib.shared().getAppsFlyerUID()
         if !afId.isEmpty {
             Logger.log("AppsFlyer id: \(afId)")
-            KeychainHelper.write(key: K.afId, value: afId)
+            KeychainHelper.write(key: K.afIdK, value: afId)
         }
      }
     
@@ -148,9 +148,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AdjustDelegate, AppsFlyer
         if let jsonData = try? JSONSerialization.data(withJSONObject: installData, options: []),
            let json = String(data: jsonData, encoding: .utf8) {
             Logger.log("AppsFlyer conversion data: \(json)")
-            KeychainHelper.write(key: K.conversationData, value: json)
+            KeychainHelper.write(key: K.conversationDataK, value: json)
             let mediaSource = installData["media_source"] as? String ?? ""
-            KeychainHelper.write(key: K.afSource, value: mediaSource)
+            KeychainHelper.write(key: K.afSourceK, value: mediaSource)
         }
     }
 

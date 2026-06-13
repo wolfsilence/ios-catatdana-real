@@ -67,6 +67,6 @@ struct CDLauncherView: View {
     }
 
     private func isFirstLaunch() -> Bool {
-        !UserDefaults.standard.bool(forKey: K.firstLaunch)
+        !UserDefaults.standard.bool(forKey: K.firstLaunchK)
     }
 }

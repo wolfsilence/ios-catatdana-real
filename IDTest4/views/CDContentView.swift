@@ -68,8 +68,8 @@ struct CDContentView: View {
         case .redirect:
             CDRedView {
                 AuthManager.shared.revokeAccess()
-                UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
-                UserDefaults.standard.removeObject(forKey: K.sentence)
+                UserDefaults.standard.removeObject(forKey: K.lastLoginPhoneK)
+                UserDefaults.standard.removeObject(forKey: K.sentenceK)
                 activeCover = .login
             }
         }
@@ -105,7 +105,7 @@ struct CDContentView: View {
     }
 
     private var hasRedirectURL: Bool {
-        guard let str = UserDefaults.standard.string(forKey: K.sentence),
+        guard let str = UserDefaults.standard.string(forKey: K.sentenceK),
               !str.isEmpty else { return false }
         return true
     }
@@ -115,7 +115,7 @@ struct CDContentView: View {
     }
 
     private func markLaunched() {
-        UserDefaults.standard.set(true, forKey: K.firstLaunch)
+        UserDefaults.standard.set(true, forKey: K.firstLaunchK)
     }
 }
 

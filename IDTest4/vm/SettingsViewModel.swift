@@ -26,8 +26,8 @@ final class SettingsViewModel {
         )
         guard result.isSuccess else { return }
         AuthManager.shared.revokeAccess()
-        UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: K.sentence)
+        UserDefaults.standard.removeObject(forKey: K.lastLoginPhoneK)
+        UserDefaults.standard.removeObject(forKey: K.sentenceK)
         NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
     }
 
@@ -42,10 +42,10 @@ final class SettingsViewModel {
         guard result.isSuccess else { return }
         DatabaseManager.shared.clearAll()
         AuthManager.shared.revokeAccess()
-        UserDefaults.standard.removeObject(forKey: K.profileNickname)
-        UserDefaults.standard.removeObject(forKey: K.profileAvatarURL)
-        UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
-        UserDefaults.standard.removeObject(forKey: K.sentence)
+        UserDefaults.standard.removeObject(forKey: K.profileNicknameK)
+        UserDefaults.standard.removeObject(forKey: K.profileAvatarURLK)
+        UserDefaults.standard.removeObject(forKey: K.lastLoginPhoneK)
+        UserDefaults.standard.removeObject(forKey: K.sentenceK)
         NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
     }
 

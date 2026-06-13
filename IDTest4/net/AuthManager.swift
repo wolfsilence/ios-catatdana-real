@@ -4,7 +4,7 @@ import Foundation
 class AuthManager {
     static let shared = AuthManager()
 
-    private let tokenKey = K.accessToken
+    private let tokenKey = K.accessTokenK
 
     private init() {}
 

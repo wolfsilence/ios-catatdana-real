@@ -12,7 +12,7 @@ import AppTrackingTransparency
 /// IDFA 获取工具 —— 优先取 Keychain 缓存，无授权时返回全零 UUID（不存 Keychain）
 enum IDFAProvider {
 
-    private static let keychainKey = K.idfa
+    private static let keychainKey = K.idfaK
 
     /// 全零 UUID（未授权兜底）
     static let zeroUUID = "00000000-0000-0000-0000-000000000000"

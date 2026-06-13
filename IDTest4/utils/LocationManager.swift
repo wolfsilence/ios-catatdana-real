@@ -23,12 +23,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
 
     /// 已存储的纬度（字符串，与后端字段一致）
     var latitude: String? {
-        UserDefaults.standard.string(forKey: K.locationLat)
+        UserDefaults.standard.string(forKey: K.locationLatK)
     }
 
     /// 已存储的经度（字符串，与后端字段一致）
     var longitude: String? {
-        UserDefaults.standard.string(forKey: K.locationLng)
+        UserDefaults.standard.string(forKey: K.locationLngK)
     }
 
     /// 请求定位权限并获取坐标，完成后回调
@@ -69,8 +69,8 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
             completion = nil
             return
         }
-        UserDefaults.standard.set(String(location.coordinate.latitude), forKey: K.locationLat)
-        UserDefaults.standard.set(String(location.coordinate.longitude), forKey: K.locationLng)
+        UserDefaults.standard.set(String(location.coordinate.latitude), forKey: K.locationLatK)
+        UserDefaults.standard.set(String(location.coordinate.longitude), forKey: K.locationLngK)
         completion?(location)
         completion = nil
     }

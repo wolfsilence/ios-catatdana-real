@@ -20,19 +20,19 @@ final class MainViewModel {
     var userInitial: String { userName.first.map(String.init) ?? "U" }
 
     var displayName: String {
-        if let nick = UserDefaults.standard.string(forKey: K.profileNickname), !nick.isEmpty {
+        if let nick = UserDefaults.standard.string(forKey: K.profileNicknameK), !nick.isEmpty {
             return nick
         }
         return userName
     }
 
     func updateNickname(_ name: String) {
-        UserDefaults.standard.set(name, forKey: K.profileNickname)
+        UserDefaults.standard.set(name, forKey: K.profileNicknameK)
     }
 
     func updateAvatarURL(_ url: String) {
         avatarURL = url
-        UserDefaults.standard.set(url, forKey: K.profileAvatarURL)
+        UserDefaults.standard.set(url, forKey: K.profileAvatarURLK)
     }
 
     // MARK: - Financial Summary
@@ -66,7 +66,7 @@ final class MainViewModel {
     // MARK: - Load
 
     func refreshData() {
-        avatarURL = UserDefaults.standard.string(forKey: K.profileAvatarURL) ?? ""
+        avatarURL = UserDefaults.standard.string(forKey: K.profileAvatarURLK) ?? ""
         transactions = DatabaseManager.shared.loadTransactions()
         reminders = DatabaseManager.shared.loadReminders()
         creditCards = DatabaseManager.shared.loadCreditCards()
@@ -74,9 +74,9 @@ final class MainViewModel {
     }
 
     private func loadUserInfo() {
-        let phone = UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? ""
+        let phone = UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? ""
         userPhone = phone
-        avatarURL = UserDefaults.standard.string(forKey: K.profileAvatarURL) ?? ""
+        avatarURL = UserDefaults.standard.string(forKey: K.profileAvatarURLK) ?? ""
         if !phone.isEmpty {
             let suffix = String(phone.suffix(4))
             userName = "Pengguna \(suffix)"

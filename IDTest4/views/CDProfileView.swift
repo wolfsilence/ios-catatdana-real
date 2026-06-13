@@ -46,7 +46,7 @@ struct CDProfileView: View {
         }
         .padding(.top, 8)
         .onAppear {
-            localNickname = UserDefaults.standard.string(forKey: K.profileNickname) ?? ""
+            localNickname = UserDefaults.standard.string(forKey: K.profileNicknameK) ?? ""
         }
         // Camera
         .fullScreenCover(isPresented: $showCamera) {

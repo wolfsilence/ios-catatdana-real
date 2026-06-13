@@ -26,7 +26,7 @@ class DatabaseManager {
     }
 
     private var phonePrefix: String {
-        UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? "default"
+        UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? "default"
     }
 
     private func url(for collection: String) -> URL {

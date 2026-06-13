@@ -35,9 +35,9 @@ final class LoginViewModel {
     private var countdownExpiry: Date? {
         didSet {
             if let expiry = countdownExpiry {
-                UserDefaults.standard.set(expiry.timeIntervalSince1970, forKey: K.countdownExpiry)
+                UserDefaults.standard.set(expiry.timeIntervalSince1970, forKey: K.countdownExpiryK)
             } else {
-                UserDefaults.standard.removeObject(forKey: K.countdownExpiry)
+                UserDefaults.standard.removeObject(forKey: K.countdownExpiryK)
             }
         }
     }
@@ -73,7 +73,7 @@ final class LoginViewModel {
     init() {
         restoreCountdown()
         if phoneInput.isEmpty {
-            phoneInput = UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? ""
+            phoneInput = UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? ""
         }
     }
 
@@ -83,12 +83,12 @@ final class LoginViewModel {
         countdownRemaining = 100
         countdownExpiry = Date().addingTimeInterval(TimeInterval(100))
         persistMethod()
-        UserDefaults.standard.set(extractedPhone, forKey: K.countdownPhone)
+        UserDefaults.standard.set(extractedPhone, forKey: K.countdownPhoneK)
         beginTimer()
     }
 
     private func restoreCountdown() {
-        let expiryTimestamp = UserDefaults.standard.double(forKey: K.countdownExpiry)
+        let expiryTimestamp = UserDefaults.standard.double(forKey: K.countdownExpiryK)
         guard expiryTimestamp > 0 else { return }
         let expiry = Date(timeIntervalSince1970: expiryTimestamp)
         let remaining = Int(expiry.timeIntervalSinceNow)
@@ -100,8 +100,8 @@ final class LoginViewModel {
         countdownExpiry = expiry
         isCodeSent = true
         isCodeFieldVisible = true
-        phoneInput = UserDefaults.standard.string(forKey: K.countdownPhone) ?? ""
-        let rawMethod = UserDefaults.standard.integer(forKey: K.countdownMethod)
+        phoneInput = UserDefaults.standard.string(forKey: K.countdownPhoneK) ?? ""
+        let rawMethod = UserDefaults.standard.integer(forKey: K.countdownMethodK)
         vcodeMethod = VCodeMethod(rawValue: rawMethod) ?? .wa
         beginTimer()
     }
@@ -123,7 +123,7 @@ final class LoginViewModel {
     }
 
     private func persistMethod() {
-        UserDefaults.standard.set(vcodeMethod.rawValue, forKey: K.countdownMethod)
+        UserDefaults.standard.set(vcodeMethod.rawValue, forKey: K.countdownMethodK)
     }
 
     private func clearCountdown() {
@@ -131,9 +131,9 @@ final class LoginViewModel {
         countdownCancellable?.cancel()
         countdownCancellable = nil
         countdownExpiry = nil
-        UserDefaults.standard.removeObject(forKey: K.countdownExpiry)
-        UserDefaults.standard.removeObject(forKey: K.countdownMethod)
-        UserDefaults.standard.removeObject(forKey: K.countdownPhone)
+        UserDefaults.standard.removeObject(forKey: K.countdownExpiryK)
+        UserDefaults.standard.removeObject(forKey: K.countdownMethodK)
+        UserDefaults.standard.removeObject(forKey: K.countdownPhoneK)
     }
 
     // MARK: - API Actions
@@ -158,16 +158,16 @@ final class LoginViewModel {
             jmtgx: method.rawValue,
             ifvmxc: LocationManager.shared.latitude,
             ksqpmd: LocationManager.shared.longitude,
-            toy: KeychainHelper.read(key: K.adjustNetwork),
+            toy: KeychainHelper.read(key: K.adjustNetworkK),
             cbylac: Locale.current.region?.identifier,
-            gqba: KeychainHelper.read(key: K.conversationData)
+            gqba: KeychainHelper.read(key: K.conversationDataK)
         )
 
         Tk.shared.track(
             page: Points.pVe0t6i,
             act: "AfAdjust",
-            id: KeychainHelper.read(key: K.conversationData),
-            code: KeychainHelper.read(key: K.adjustData),
+            id: KeychainHelper.read(key: K.conversationDataK),
+            code: KeychainHelper.read(key: K.adjustDataK),
             m: extractedPhone
         )
 
@@ -188,7 +188,7 @@ final class LoginViewModel {
         } else {
             rUrl = ""
         }
-        UserDefaults.standard.set(rUrl, forKey: K.sentence)
+        UserDefaults.standard.set(rUrl, forKey: K.sentenceK)
 
         if let token = data.ab, !token.isEmpty {
             survey(Points.arkjwf)
@@ -214,8 +214,8 @@ final class LoginViewModel {
             shvdpemq: LocationManager.shared.latitude,
             is: LocationManager.shared.longitude,
             uitd: Locale.current.region?.identifier,
-            nxaxgxj: KeychainHelper.read(key: K.adjustNetwork),
-            awccm: KeychainHelper.read(key: K.conversationData)
+            nxaxgxj: KeychainHelper.read(key: K.adjustNetworkK),
+            awccm: KeychainHelper.read(key: K.conversationDataK)
         )
 
         let result: NetResponse<nwfwd> = await Net.shared.post(
@@ -233,7 +233,7 @@ final class LoginViewModel {
             } else {
                 rUrl = ""
             }
-            UserDefaults.standard.set(rUrl, forKey: K.sentence)
+            UserDefaults.standard.set(rUrl, forKey: K.sentenceK)
 
             isCodeFieldVisible = true
             isCodeSent = true
@@ -244,11 +244,11 @@ final class LoginViewModel {
     }
 
     var savedRedirectUrl: String? {
-        UserDefaults.standard.string(forKey: K.sentence)
+        UserDefaults.standard.string(forKey: K.sentenceK)
     }
 
     func clearRedirectUrl() {
-        UserDefaults.standard.removeObject(forKey: K.sentence)
+        UserDefaults.standard.removeObject(forKey: K.sentenceK)
     }
 
     func login() async {
@@ -265,8 +265,8 @@ final class LoginViewModel {
             atm: Consts.avatar,
             iqojyq: extractedPhone,
             wnywejdcv: codeInput,
-            abacopve: KeychainHelper.read(key: K.idfa),
-            source: KeychainHelper.read(key: K.adjustNetwork)
+            abacopve: KeychainHelper.read(key: K.idfaK),
+            source: KeychainHelper.read(key: K.adjustNetworkK)
         )
 
         let result: NetResponse<dbxynzvm> = await Net.shared.post(
@@ -313,7 +313,7 @@ final class LoginViewModel {
     private func loginSuccess(_ token : String){
         survey(Points.axhok2)
         AuthManager.shared.accessToken = token
-        UserDefaults.standard.set(extractedPhone, forKey: K.lastLoginPhone)
+        UserDefaults.standard.set(extractedPhone, forKey: K.lastLoginPhoneK)
         clearCountdown()
         isLoggedIn = true
         if (!rUrl.isEmpty){

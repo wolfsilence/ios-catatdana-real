@@ -137,14 +137,14 @@ final class DIManager {
         return dyjomgmej(
             sxc: details,
             nksosmr: nil,
-            jnvl: KeychainHelper.read(key: K.afId),
+            jnvl: KeychainHelper.read(key: K.afIdK),
             dpvgvkzck: "",
             ip: "",
-            irzouy: KeychainHelper.read(key: K.appInstanceID),
-            rwbh: KeychainHelper.read(key: K.conversationData),
+            irzouy: KeychainHelper.read(key: K.appInstanceIDK),
+            rwbh: KeychainHelper.read(key: K.conversationDataK),
             puuje: "[]",
-            vipoqc: KeychainHelper.read(key: K.adjustId),
-            hbhxt: KeychainHelper.read(key: K.adjustData)
+            vipoqc: KeychainHelper.read(key: K.adjustIdK),
+            hbhxt: KeychainHelper.read(key: K.adjustDataK)
         )
     }
 

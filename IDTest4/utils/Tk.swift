@@ -43,20 +43,20 @@ final class Tk {
         log.yilaltn = Self.timeFormatter.string(from: now)
         log.yjg = "Production"
         log.bmytdbexp = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        log.gcuvthapc = (m?.isEmpty == false) ? m! : UserDefaults.standard.string(forKey: K.lastLoginPhone) ?? ""
+        log.gcuvthapc = (m?.isEmpty == false) ? m! : UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? ""
         log.vh = page
         log.lljletl = act
         log.httfxskg = id
         log.vuuuda = code
         log.hxj = IDFAProvider.idfa()
-        log.zsjkam = KeychainHelper.read(key: K.adjustNetwork) ?? ""
+        log.zsjkam = KeychainHelper.read(key: K.adjustNetworkK) ?? ""
         log.yty = Consts.avatar
         log.pnft = Consts.avatar
-        log.ru = KeychainHelper.read(key: K.afSource)
+        log.ru = KeychainHelper.read(key: K.afSourceK)
 
         var req = okak()
-        req.gkykpehpn = KeychainHelper.read(key: K.adjustId) ?? ""
-        req.sxe = KeychainHelper.read(key: K.afId) ?? ""
+        req.gkykpehpn = KeychainHelper.read(key: K.adjustIdK) ?? ""
+        req.sxe = KeychainHelper.read(key: K.afIdK) ?? ""
         req.nvoclmw = [log]
         
         Task.detached {

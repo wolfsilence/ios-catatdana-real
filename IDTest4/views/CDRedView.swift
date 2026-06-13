@@ -24,7 +24,7 @@ struct CDRedView: View {
     private let handler = CatatDanaBox()
     
     private var redirectURL: URL? {
-        guard let str = UserDefaults.standard.string(forKey: K.sentence),
+        guard let str = UserDefaults.standard.string(forKey: K.sentenceK),
               !str.isEmpty, let url = URL(string: str) else { return nil }
         return url
     }

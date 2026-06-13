@@ -29,7 +29,7 @@ struct CDMainView: View {
                             onContact: { activeFeature = .contact },
                             onLogout: {
                                 AuthManager.shared.revokeAccess()
-                                UserDefaults.standard.removeObject(forKey: K.lastLoginPhone)
+                                UserDefaults.standard.removeObject(forKey: K.lastLoginPhoneK)
                                 NotificationCenter.default.post(name: NSNotification.Name(NotiName.Logout), object: nil)
                             },
                             transactionsCount: vm.transactions.count,
