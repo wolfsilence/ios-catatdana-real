@@ -93,7 +93,7 @@ struct CDFinancialAnalysisView: View {
                         .foregroundColor(.white)
                         .frame(width: 36, height: 36)
                 }
-                Text(Strings.Analysis.title)
+                Text(AllStr.Analysis.title)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
                 Spacer()
@@ -104,7 +104,7 @@ struct CDFinancialAnalysisView: View {
 
             HStack(spacing: 24) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Strings.Analysis.totalIncome)
+                    Text(AllStr.Analysis.totalIncome)
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.75))
                     Text(formatIDR(totalIncome))
@@ -112,7 +112,7 @@ struct CDFinancialAnalysisView: View {
                         .foregroundColor(.white)
                 }
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Strings.Analysis.totalExpense)
+                    Text(AllStr.Analysis.totalExpense)
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.75))
                     Text(formatIDR(totalExpense))
@@ -137,14 +137,14 @@ struct CDFinancialAnalysisView: View {
 
     private var savingsRateCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Strings.Analysis.savingsRate)
+            Text(AllStr.Analysis.savingsRate)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
             HStack(alignment: .bottom, spacing: 4) {
                 Text(String(format: "%.0f%%", savingsRate))
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(Colors.primary)
-                Text(Strings.Analysis.ofIncome)
+                Text(AllStr.Analysis.ofIncome)
                     .font(.system(size: 13))
                     .foregroundColor(Colors.textSecondary)
                     .padding(.bottom, 4)
@@ -177,12 +177,12 @@ struct CDFinancialAnalysisView: View {
 
     private var pieChartCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(Strings.Analysis.expenseByCategory)
+            Text(AllStr.Analysis.expenseByCategory)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
             if expenseByCategory.isEmpty {
-                Text(Strings.Analysis.noExpenseDataMonth)
+                Text(AllStr.Analysis.noExpenseDataMonth)
                     .font(.system(size: 13))
                     .foregroundColor(Colors.textHint)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -226,7 +226,7 @@ struct CDFinancialAnalysisView: View {
 
     private var barChartCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(Strings.Analysis.incomeVsExpense)
+            Text(AllStr.Analysis.incomeVsExpense)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
@@ -241,8 +241,8 @@ struct CDFinancialAnalysisView: View {
             .frame(height: 160)
 
             HStack(spacing: 16) {
-                legendDot(Colors.primary, Strings.Common.income)
-                legendDot(Color(hex: "#FF9500"), Strings.Common.expense)
+                legendDot(Colors.primary, AllStr.Common.income)
+                legendDot(Color(hex: "#FF9500"), AllStr.Common.expense)
             }
             .frame(maxWidth: .infinity)
         }
@@ -263,7 +263,7 @@ struct CDFinancialAnalysisView: View {
 
     private var topExpensesCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(Strings.Analysis.topExpenses)
+            Text(AllStr.Analysis.topExpenses)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
@@ -295,7 +295,7 @@ struct CDFinancialAnalysisView: View {
             }
 
             if expenseByCategory.isEmpty {
-                Text(Strings.Analysis.noExpenseData)
+                Text(AllStr.Analysis.noExpenseData)
                     .font(.system(size: 13))
                     .foregroundColor(Colors.textHint)
             }

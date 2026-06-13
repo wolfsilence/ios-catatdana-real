@@ -69,10 +69,10 @@ struct CDProfileView: View {
             }
         ), matching: .images)
         // Name alert
-        .alert(Strings.Profile.changeNameTitle, isPresented: $showNameAlert) {
-            TextField(Strings.Profile.namePlaceholder, text: $nameInput)
-            Button(Strings.Common.cancel, role: .cancel) { }
-            Button(Strings.Common.save) {
+        .alert(AllStr.Profile.changeNameTitle, isPresented: $showNameAlert) {
+            TextField(AllStr.Profile.namePlaceholder, text: $nameInput)
+            Button(AllStr.Common.cancel, role: .cancel) { }
+            Button(AllStr.Common.save) {
                 let trimmed = nameInput.trimmingCharacters(in: .whitespaces)
                 if !trimmed.isEmpty {
                     localNickname = trimmed
@@ -80,7 +80,7 @@ struct CDProfileView: View {
                 }
             }
         } message: {
-            Text(Strings.Profile.nameMessage)
+            Text(AllStr.Profile.nameMessage)
         }
     }
 
@@ -166,10 +166,10 @@ struct CDProfileView: View {
             }
             .offset(y: -32)
             .padding(.bottom, -32)
-            .confirmationDialog(Strings.Profile.avatarTitle, isPresented: $showAvatarSheet) {
-                Button(Strings.Profile.takePhoto) { showCamera = true }
-                Button(Strings.Profile.pickGallery) { showGallery = true }
-                Button(Strings.Common.cancel, role: .cancel) { }
+            .confirmationDialog(AllStr.Profile.avatarTitle, isPresented: $showAvatarSheet) {
+                Button(AllStr.Profile.takePhoto) { showCamera = true }
+                Button(AllStr.Profile.pickGallery) { showGallery = true }
+                Button(AllStr.Common.cancel, role: .cancel) { }
             }
 
             // Name — clickable to edit
@@ -224,11 +224,11 @@ struct CDProfileView: View {
 
     private var statsBar: some View {
         HStack(spacing: 0) {
-            statItem("\(transactionsCount)", Strings.Profile.transactions)
+            statItem("\(transactionsCount)", AllStr.Profile.transactions)
             Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
-            statItem("\(cardsCount)", Strings.Profile.creditCards)
+            statItem("\(cardsCount)", AllStr.Profile.creditCards)
             Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
-            statItem("\(remindersCount)", Strings.Profile.reminders)
+            statItem("\(remindersCount)", AllStr.Profile.reminders)
         }
         .padding(16)
         .background(Color.white)
@@ -255,7 +255,7 @@ struct CDProfileView: View {
     private var menuSection: some View {
         VStack(spacing: 0) {
             menuItem(
-                label: Strings.Profile.contactUs,
+                label: AllStr.Profile.contactUs,
                 icon: "bubble.left.fill",
                 iconBg: Color(hex: "#EFF6FF"),
                 iconColor: Color(hex: "#3B82F6"),
@@ -263,7 +263,7 @@ struct CDProfileView: View {
             )
             Divider().padding(.leading, 56)
             menuItem(
-                label: Strings.Profile.privacy,
+                label: AllStr.Profile.privacy,
                 icon: "lock.shield.fill",
                 iconBg: Color(hex: "#E8F8EE"),
                 iconColor: Colors.primary,
@@ -271,7 +271,7 @@ struct CDProfileView: View {
             )
             Divider().padding(.leading, 56)
             menuItem(
-                label: Strings.Profile.rateApp,
+                label: AllStr.Profile.rateApp,
                 icon: "star.fill",
                 iconBg: Color(hex: "#FEF3C7"),
                 iconColor: Color(hex: "#F59E0B"),
@@ -283,7 +283,7 @@ struct CDProfileView: View {
             )
             Divider().padding(.leading, 56)
             menuItem(
-                label: Strings.Profile.settings,
+                label: AllStr.Profile.settings,
                 icon: "gearshape.fill",
                 iconBg: Color(hex: "#EDE9FE"),
                 iconColor: Color(hex: "#8B5CF6"),

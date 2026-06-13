@@ -1,7 +1,7 @@
 import Foundation
 
 /// 文案
-enum Strings {
+enum AllStr {
     enum Error {
         static let serverUnavailable = NSLocalizedString(
             "error.serverUnavailable",

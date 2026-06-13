@@ -35,7 +35,7 @@ struct CDLauncherView: View {
                 Colors.launchBackground.ignoresSafeArea()
 
                 // 中心图 —— 距顶部 30%，230x230pt
-                Image("pic_launcher_center")
+                Image("p_launcher_icon")
                     .resizable()
                     .frame(width: 230, height: 230)
                     .position(x: geo.size.width / 2,
@@ -48,7 +48,7 @@ struct CDLauncherView: View {
                         .frame(width: 48, height: 48)
                         .clipShape(RoundedRectangle(cornerRadius: 4))
 
-                    Text(Strings.Launch.appName)
+                    Text(AllStr.Launch.appName)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Colors.textPrimary)

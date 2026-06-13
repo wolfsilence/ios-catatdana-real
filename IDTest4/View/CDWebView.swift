@@ -36,7 +36,7 @@ struct CDWebView: View {
                     dismiss()
                 }
             } label: {
-                Image("ic_back_black")
+                Image("icon_bb")
                     .resizable()
                     .frame(width: 24, height: 24)
             }

@@ -14,7 +14,7 @@ struct CDMaxLoanCalculatorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader(Strings.MaxLoan.title)
+            pageHeader(AllStr.MaxLoan.title)
             ScrollView {
                 VStack(spacing: 16) {
                     infoTip
@@ -50,7 +50,7 @@ struct CDMaxLoanCalculatorView: View {
     private var infoTip: some View {
         HStack(spacing: 8) {
             Text("💡")
-            Text(Strings.MaxLoan.infoTip)
+            Text(AllStr.MaxLoan.infoTip)
                 .font(.system(size: 12))
                 .foregroundColor(Colors.primary)
         }
@@ -61,15 +61,15 @@ struct CDMaxLoanCalculatorView: View {
 
     private var inputCard: some View {
         VStack(spacing: 16) {
-            inputField(Strings.MaxLoan.paymentLabel, text: $vm.monthlyPayment, placeholder: Strings.MaxLoan.paymentPlaceholder, prefix: "Rp", keyboard: .numberPad)
-            inputField(Strings.MaxLoan.rateLabel, text: $vm.annualRate, placeholder: Strings.MaxLoan.ratePlaceholder, suffix: Strings.MaxLoan.rateSuffix, keyboard: .decimalPad)
-            inputField(Strings.MaxLoan.tenorLabel, text: $vm.months, placeholder: Strings.MaxLoan.tenorPlaceholder, suffix: Strings.MaxLoan.tenorSuffix, keyboard: .numberPad)
+            inputField(AllStr.MaxLoan.paymentLabel, text: $vm.monthlyPayment, placeholder: AllStr.MaxLoan.paymentPlaceholder, prefix: "Rp", keyboard: .numberPad)
+            inputField(AllStr.MaxLoan.rateLabel, text: $vm.annualRate, placeholder: AllStr.MaxLoan.ratePlaceholder, suffix: AllStr.MaxLoan.rateSuffix, keyboard: .decimalPad)
+            inputField(AllStr.MaxLoan.tenorLabel, text: $vm.months, placeholder: AllStr.MaxLoan.tenorPlaceholder, suffix: AllStr.MaxLoan.tenorSuffix, keyboard: .numberPad)
 
             Button {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 Task { await vm.calculate() }
             } label: {
-                Text(Strings.MaxLoan.calculate)
+                Text(AllStr.MaxLoan.calculate)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity).frame(height: 52)
@@ -87,7 +87,7 @@ struct CDMaxLoanCalculatorView: View {
 
     private var resultCard: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(Strings.MaxLoan.resultLabel)
+            Text(AllStr.MaxLoan.resultLabel)
                 .font(.system(size: 13))
                 .foregroundColor(.white.opacity(0.85))
             Text(formatIDR(vm.maxLoan ?? 0))
@@ -96,7 +96,7 @@ struct CDMaxLoanCalculatorView: View {
                 .padding(.bottom, 16)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(String(format: Strings.MaxLoan.resultSummary, formatIDR(vm.parsedPayment), "\(Int(vm.parsedMonths))", vm.annualRate))
+                Text(String(format: AllStr.MaxLoan.resultSummary, formatIDR(vm.parsedPayment), "\(Int(vm.parsedMonths))", vm.annualRate))
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.85))
                     .lineSpacing(3)
@@ -119,10 +119,10 @@ struct CDMaxLoanCalculatorView: View {
 
     private var noteCard: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(Strings.MaxLoan.note)
+            Text(AllStr.MaxLoan.note)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(Color(hex: "#F59E0B"))
-            Text(Strings.MaxLoan.disclaimer)
+            Text(AllStr.MaxLoan.disclaimer)
                 .font(.system(size: 12))
                 .foregroundColor(Colors.textSecondary)
                 .lineSpacing(3)

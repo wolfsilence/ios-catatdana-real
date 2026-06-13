@@ -248,7 +248,7 @@ fileprivate class NetCore {
                 isSuccess:  false,
                 data:    nil,
                 statusCode: 502,
-                message:    Strings.Error.serverUnavailable
+                message:    AllStr.Error.serverUnavailable
             )
         }
     }
@@ -302,7 +302,7 @@ fileprivate class NetCore {
 
     private func resolveMessage(_ msg: String?) -> String {
         if let msg, !msg.isEmpty { return msg }
-        return Strings.Error.serverUnavailable
+        return AllStr.Error.serverUnavailable
     }
 
     // MARK: - 会话过期

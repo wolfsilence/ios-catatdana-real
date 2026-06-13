@@ -44,7 +44,7 @@ struct CDLoginView: View {
 
                 // ── Layer 1: 顶部大图 ──
                 VStack(spacing: 0) {
-                    Image("pic_login_top_bg")
+                    Image("p_login_bg")
                         .resizable()
                         .scaledToFill()
                         .frame(width: geo.size.width, height: bgHeight)
@@ -66,7 +66,7 @@ struct CDLoginView: View {
                 }
 
                 // ── Layer 3: 覆盖图片 183×197 ──
-                Image("pic_login_top_tip")
+                Image("p_login_top")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 183, height: 197)
@@ -77,7 +77,7 @@ struct CDLoginView: View {
                 Button {
                     exit(0)
                 } label: {
-                    Image("ic_back_white")
+                    Image("icon_bw")
                         .resizable()
                         .frame(width: 24, height: 24)
                 }
@@ -116,7 +116,7 @@ struct CDLoginView: View {
     private var contentBody: some View {
         VStack(spacing: 0) {
             // 登录title
-            Text(Strings.Login.title)
+            Text(AllStr.Login.title)
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(Colors.primary)
                 .padding(.top, 36)
@@ -133,7 +133,7 @@ struct CDLoginView: View {
                 Button {
                     Task { await vm.login() }
                 } label: {
-                    Text(Strings.Login.loginButton)
+                    Text(AllStr.Login.loginButton)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                         .frame(height: 48)
@@ -165,13 +165,13 @@ struct CDLoginView: View {
 
     private var phoneField: some View {
         HStack(spacing: 0) {
-            Text(Strings.Login.countryCode)
+            Text(AllStr.Login.countryCode)
                 .font(.system(size: 16))
                 .foregroundColor(vm.phoneInput.isEmpty ? Colors.textHint : Colors.textPrimary)
 
             ZStack(alignment: .leading) {
                 if vm.phoneInput.isEmpty {
-                    Text(Strings.Login.phoneHint)
+                    Text(AllStr.Login.phoneHint)
                         .font(.system(size: 16))
                         .foregroundColor(Colors.textHint)
                         .allowsHitTesting(false)
@@ -197,7 +197,7 @@ struct CDLoginView: View {
                 CodeTextField(
                     text: $vm.codeInput,
                     maxLength: Constants.vcodeLength,
-                    placeholder: Strings.Login.codeHint
+                    placeholder: AllStr.Login.codeHint
                 )
                 .frame(height: 22)
 
@@ -251,19 +251,19 @@ struct CDLoginView: View {
         VStack(spacing: 0) {
             // WA 一键登录按钮
             oneClickButton(
-                title: Strings.Login.waLogin,
-                color: Color.waOrange,
+                title: AllStr.Login.waLogin,
+                color: Colors.waOrange,
                 method: .wa
             )
 
-            Text(Strings.Login.waHint)
+            Text(AllStr.Login.waHint)
                 .font(.system(size: 11))
                 .foregroundColor(Colors.textPrimary)
                 .padding(.top, 5)
 
             // SMS 一键登录按钮
             oneClickButton(
-                title: Strings.Login.smsLogin,
+                title: AllStr.Login.smsLogin,
                 color: Colors.primary,
                 method: .sms
             )
@@ -292,17 +292,17 @@ struct CDLoginView: View {
 
     private var privacyText: some View {
         HStack(spacing: 0) {
-            Text(Strings.Login.privacyPrefix)
+            Text(AllStr.Login.privacyPrefix)
                 .font(.system(size: 14))
                 .foregroundColor(Colors.textPrimary)
             Button {
                 showPrivacy = true
             } label: {
-                Text(Strings.Login.privacyLink)
+                Text(AllStr.Login.privacyLink)
                     .font(.system(size: 14))
                     .foregroundColor(Colors.primary)
             }
-            Text(Strings.Login.privacySuffix)
+            Text(AllStr.Login.privacySuffix)
                 .font(.system(size: 14))
                 .foregroundColor(Colors.textPrimary)
         }
@@ -313,11 +313,11 @@ struct CDLoginView: View {
     private var privacySheet: some View {
         NavigationStack {
             PrivacyWebView()
-                .navigationTitle(Strings.Login.privacySheetTitle)
+                .navigationTitle(AllStr.Login.privacySheetTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button(Strings.Login.close) { showPrivacy = false }
+                        Button(AllStr.Login.close) { showPrivacy = false }
                     }
                 }
         }

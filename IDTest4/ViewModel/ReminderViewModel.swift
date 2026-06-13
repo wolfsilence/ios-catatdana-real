@@ -98,7 +98,7 @@ final class ReminderViewModel {
     private func scheduleNotification(for reminder: Reminder) {
         let content = UNMutableNotificationContent()
         content.title = reminder.name
-        content.body = "Rp \(formatIDR(reminder.amount)) — \(Strings.Reminder.dueDateLabel)"
+        content.body = "Rp \(formatIDR(reminder.amount)) — \(AllStr.Reminder.dueDateLabel)"
         content.sound = .default
 
         var components = Calendar.current.dateComponents([.year, .month, .day], from: reminder.dueDate)

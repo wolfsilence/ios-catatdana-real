@@ -64,7 +64,7 @@ struct CDTransactionDetailView: View {
                         .foregroundColor(Colors.textPrimary)
                 }
             }
-            Text(Strings.TransactionDetail.title)
+            Text(AllStr.TransactionDetail.title)
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Colors.textPrimary)
             Spacer()
@@ -80,7 +80,7 @@ struct CDTransactionDetailView: View {
     private var amountSection: some View {
         VStack(spacing: 12) {
             // Type badge
-            Text(transaction.type == .income ? Strings.Common.income : Strings.Common.expense)
+            Text(transaction.type == .income ? AllStr.Common.income : AllStr.Common.expense)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(transaction.type == .income ? Colors.primary : .white)
                 .padding(.horizontal, 12)
@@ -109,7 +109,7 @@ struct CDTransactionDetailView: View {
             // Category
             infoRow(
                 icon: "square.grid.2x2.fill",
-                title: Strings.TransactionDetail.category,
+                title: AllStr.TransactionDetail.category,
                 value: category?.label ?? transaction.category,
                 valueIcon: category?.icon
             )
@@ -119,7 +119,7 @@ struct CDTransactionDetailView: View {
             // Date
             infoRow(
                 icon: "calendar",
-                title: Strings.TransactionDetail.date,
+                title: AllStr.TransactionDetail.date,
                 value: fullDate(transaction.date)
             )
 
@@ -128,7 +128,7 @@ struct CDTransactionDetailView: View {
                 Divider().padding(.leading, 44)
                 infoRow(
                     icon: "location.fill",
-                    title: Strings.TransactionDetail.location,
+                    title: AllStr.TransactionDetail.location,
                     value: transaction.location
                 )
             }
@@ -138,7 +138,7 @@ struct CDTransactionDetailView: View {
                 Divider().padding(.leading, 44)
                 infoRow(
                     icon: "doc.text.fill",
-                    title: Strings.TransactionDetail.note,
+                    title: AllStr.TransactionDetail.note,
                     value: transaction.note
                 )
             }
@@ -153,7 +153,7 @@ struct CDTransactionDetailView: View {
 
     private var photoSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(Strings.TransactionDetail.photo)
+            Text(AllStr.TransactionDetail.photo)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
 

@@ -38,7 +38,7 @@ struct CDRecordTransactionView: View {
             }
         }
         .background(Colors.launchBackground)
-        .toast(isPresented: $showSavedToast, message: Strings.RecordTransaction.savedToast)
+        .toast(isPresented: $showSavedToast, message: AllStr.RecordTransaction.savedToast)
         .onAppear { detectLocation() }
         .fullScreenCover(isPresented: $showCamera) {
             RecordCameraView { image in
@@ -62,10 +62,10 @@ struct CDRecordTransactionView: View {
                 }
             }
         ), matching: .images)
-        .confirmationDialog(Strings.RecordTransaction.photoTitle, isPresented: $showPhotoAction) {
-            Button(Strings.Profile.takePhoto) { showCamera = true }
-            Button(Strings.Profile.pickGallery) { showGallery = true }
-            Button(Strings.Common.cancel, role: .cancel) { }
+        .confirmationDialog(AllStr.RecordTransaction.photoTitle, isPresented: $showPhotoAction) {
+            Button(AllStr.Profile.takePhoto) { showCamera = true }
+            Button(AllStr.Profile.pickGallery) { showGallery = true }
+            Button(AllStr.Common.cancel, role: .cancel) { }
         }
     }
 
@@ -81,7 +81,7 @@ struct CDRecordTransactionView: View {
                         .foregroundColor(Colors.textPrimary)
                 }
             }
-            Text(Strings.RecordTransaction.title)
+            Text(AllStr.RecordTransaction.title)
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Colors.textPrimary)
             Spacer()
@@ -100,7 +100,7 @@ struct CDRecordTransactionView: View {
                 Button {
                     vm.type = t
                 } label: {
-                    Text(t == .expense ? Strings.Common.expense : Strings.Common.income)
+                    Text(t == .expense ? AllStr.Common.expense : AllStr.Common.income)
                         .font(.system(size: 14, weight: vm.type == t ? .semibold : .regular))
                         .foregroundColor(vm.type == t ? .white : Colors.textSecondary)
                         .frame(maxWidth: .infinity)
@@ -123,7 +123,7 @@ struct CDRecordTransactionView: View {
 
     private var amountInput: some View {
         VStack(spacing: 8) {
-            Text(Strings.Common.amount)
+            Text(AllStr.Common.amount)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
             HStack(spacing: 8) {
@@ -147,7 +147,7 @@ struct CDRecordTransactionView: View {
 
     private var categoryGrid: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(Strings.RecordTransaction.category)
+            Text(AllStr.RecordTransaction.category)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
@@ -185,7 +185,7 @@ struct CDRecordTransactionView: View {
         VStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text(Strings.Common.location)
+                    Text(AllStr.Common.location)
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(Colors.textSecondary)
                     Spacer()
@@ -205,7 +205,7 @@ struct CDRecordTransactionView: View {
                     Image(systemName: "location.fill")
                         .font(.system(size: 14))
                         .foregroundColor(Colors.primary)
-                    TextField(Strings.RecordTransaction.locationPlaceholder, text: $vm.location)
+                    TextField(AllStr.RecordTransaction.locationPlaceholder, text: $vm.location)
                         .font(.system(size: 14))
                 }
                 .padding(12)
@@ -214,10 +214,10 @@ struct CDRecordTransactionView: View {
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(Strings.Common.note)
+                Text(AllStr.Common.note)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(Colors.textSecondary)
-                TextField(Strings.RecordTransaction.notePlaceholder, text: $vm.note, axis: .vertical)
+                TextField(AllStr.RecordTransaction.notePlaceholder, text: $vm.note, axis: .vertical)
                     .font(.system(size: 14))
                     .padding(12)
                     .background(Colors.launchBackground)
@@ -235,7 +235,7 @@ struct CDRecordTransactionView: View {
 
     private var photoSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(Strings.RecordTransaction.photoTitle)
+            Text(AllStr.RecordTransaction.photoTitle)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
 
@@ -261,7 +261,7 @@ struct CDRecordTransactionView: View {
                 HStack {
                     Image(systemName: "photo.fill")
                         .foregroundColor(Colors.primary)
-                    Text(Strings.RecordTransaction.photoAttached)
+                    Text(AllStr.RecordTransaction.photoAttached)
                         .font(.system(size: 13))
                         .foregroundColor(Colors.textPrimary)
                     Spacer()
@@ -281,7 +281,7 @@ struct CDRecordTransactionView: View {
                         Image(systemName: "camera.fill")
                             .font(.system(size: 24))
                             .foregroundColor(Colors.primary)
-                        Text(Strings.RecordTransaction.takePhoto)
+                        Text(AllStr.RecordTransaction.takePhoto)
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(Colors.primary)
                     }
@@ -309,7 +309,7 @@ struct CDRecordTransactionView: View {
         Button {
             Task { await vm.save() }
         } label: {
-            Text(vm.saved ? "✓ \(Strings.Common.saved)" : Strings.RecordTransaction.save)
+            Text(vm.saved ? "✓ \(AllStr.Common.saved)" : AllStr.RecordTransaction.save)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)

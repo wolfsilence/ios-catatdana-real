@@ -39,7 +39,7 @@ struct CDPaymentReminderView: View {
                         .foregroundColor(Colors.textPrimary)
                 }
             }
-            Text(Strings.Reminder.title)
+            Text(AllStr.Reminder.title)
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Colors.textPrimary)
             Spacer()
@@ -60,13 +60,13 @@ struct CDPaymentReminderView: View {
 
     private var summaryCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(Strings.Reminder.monthlyTotal)
+            Text(AllStr.Reminder.monthlyTotal)
                 .font(.system(size: 13))
                 .foregroundColor(.white.opacity(0.8))
             Text(formatIDR(vm.totalAmount))
                 .font(.system(size: 26, weight: .bold))
                 .foregroundColor(.white)
-            Text("\(vm.reminders.count) \(Strings.Reminder.activeCount)")
+            Text("\(vm.reminders.count) \(AllStr.Reminder.activeCount)")
                 .font(.system(size: 12))
                 .foregroundColor(.white.opacity(0.75))
         }
@@ -95,7 +95,7 @@ struct CDPaymentReminderView: View {
                     Image(systemName: "bell.slash")
                         .font(.system(size: 28))
                         .foregroundColor(Colors.textHint)
-                    Text(Strings.Reminder.noReminders)
+                    Text(AllStr.Reminder.noReminders)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textSecondary)
                 }
@@ -113,7 +113,7 @@ struct CDPaymentReminderView: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Colors.textPrimary)
                     if r.isUrgent {
-                        Text(Strings.Reminder.urgent)
+                        Text(AllStr.Reminder.urgent)
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundColor(Color(hex: "#FF9500"))
                             .padding(.horizontal, 8).padding(.vertical, 2)
@@ -121,7 +121,7 @@ struct CDPaymentReminderView: View {
                             .clipShape(Capsule())
                     }
                     if r.isPastDue {
-                        Text(Strings.Reminder.pastDue)
+                        Text(AllStr.Reminder.pastDue)
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundColor(Color(hex: "#FF4444"))
                             .padding(.horizontal, 8).padding(.vertical, 2)
@@ -156,22 +156,22 @@ struct CDPaymentReminderView: View {
 
     private var addForm: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(Strings.Reminder.addTitle)
+            Text(AllStr.Reminder.addTitle)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
-            formField(Strings.Reminder.nameLabel, placeholder: Strings.Reminder.namePlaceholder, text: $vm.name)
-            formField(Strings.Reminder.amountLabel, placeholder: Strings.Reminder.amountPlaceholder, text: $vm.amount, keyboard: .numberPad)
-            DatePicker(Strings.Reminder.dueDateLabel, selection: $vm.dueDate, in: Date()..., displayedComponents: .date)
+            formField(AllStr.Reminder.nameLabel, placeholder: AllStr.Reminder.namePlaceholder, text: $vm.name)
+            formField(AllStr.Reminder.amountLabel, placeholder: AllStr.Reminder.amountPlaceholder, text: $vm.amount, keyboard: .numberPad)
+            DatePicker(AllStr.Reminder.dueDateLabel, selection: $vm.dueDate, in: Date()..., displayedComponents: .date)
                 .font(.system(size: 13))
                 .foregroundColor(Colors.textSecondary)
-            formField(Strings.Reminder.noteLabel, placeholder: Strings.Reminder.notePlaceholder, text: $vm.note)
+            formField(AllStr.Reminder.noteLabel, placeholder: AllStr.Reminder.notePlaceholder, text: $vm.note)
 
             HStack(spacing: 12) {
                 Button {
                     vm.resetForm()
                 } label: {
-                    Text(Strings.Common.cancel)
+                    Text(AllStr.Common.cancel)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Colors.textSecondary)
                         .frame(maxWidth: .infinity).frame(height: 44)
@@ -181,7 +181,7 @@ struct CDPaymentReminderView: View {
                 Button {
                     Task { await vm.save() }
                 } label: {
-                    Text(vm.saved ? "✓ \(Strings.Common.saved)" : Strings.Common.save)
+                    Text(vm.saved ? "✓ \(AllStr.Common.saved)" : AllStr.Common.save)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity).frame(height: 44)
