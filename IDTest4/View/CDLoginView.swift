@@ -116,7 +116,7 @@ struct CDLoginView: View {
     private var contentBody: some View {
         VStack(spacing: 0) {
             // 登录title
-            Text(AllStr.Login.title)
+            Text(AllStr.loginTitle)
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(Colors.primary)
                 .padding(.top, 36)
@@ -133,7 +133,7 @@ struct CDLoginView: View {
                 Button {
                     Task { await vm.login() }
                 } label: {
-                    Text(AllStr.Login.loginButton)
+                    Text(AllStr.loginLoginButton)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                         .frame(height: 48)
@@ -165,13 +165,13 @@ struct CDLoginView: View {
 
     private var phoneField: some View {
         HStack(spacing: 0) {
-            Text(AllStr.Login.countryCode)
+            Text(AllStr.loginCountryCode)
                 .font(.system(size: 16))
                 .foregroundColor(vm.phoneInput.isEmpty ? Colors.textHint : Colors.textPrimary)
 
             ZStack(alignment: .leading) {
                 if vm.phoneInput.isEmpty {
-                    Text(AllStr.Login.phoneHint)
+                    Text(AllStr.loginPhoneHint)
                         .font(.system(size: 16))
                         .foregroundColor(Colors.textHint)
                         .allowsHitTesting(false)
@@ -197,7 +197,7 @@ struct CDLoginView: View {
                 CodeTextField(
                     text: $vm.codeInput,
                     maxLength: Constants.vcodeLength,
-                    placeholder: AllStr.Login.codeHint
+                    placeholder: AllStr.loginCodeHint
                 )
                 .frame(height: 22)
 
@@ -251,19 +251,19 @@ struct CDLoginView: View {
         VStack(spacing: 0) {
             // WA 一键登录按钮
             oneClickButton(
-                title: AllStr.Login.waLogin,
+                title: AllStr.loginWaLogin,
                 color: Colors.waOrange,
                 method: .wa
             )
 
-            Text(AllStr.Login.waHint)
+            Text(AllStr.loginWaHint)
                 .font(.system(size: 11))
                 .foregroundColor(Colors.textPrimary)
                 .padding(.top, 5)
 
             // SMS 一键登录按钮
             oneClickButton(
-                title: AllStr.Login.smsLogin,
+                title: AllStr.loginSmsLogin,
                 color: Colors.primary,
                 method: .sms
             )
@@ -292,17 +292,17 @@ struct CDLoginView: View {
 
     private var privacyText: some View {
         HStack(spacing: 0) {
-            Text(AllStr.Login.privacyPrefix)
+            Text(AllStr.loginPrivacyPrefix)
                 .font(.system(size: 14))
                 .foregroundColor(Colors.textPrimary)
             Button {
                 showPrivacy = true
             } label: {
-                Text(AllStr.Login.privacyLink)
+                Text(AllStr.loginPrivacyLink)
                     .font(.system(size: 14))
                     .foregroundColor(Colors.primary)
             }
-            Text(AllStr.Login.privacySuffix)
+            Text(AllStr.loginPrivacySuffix)
                 .font(.system(size: 14))
                 .foregroundColor(Colors.textPrimary)
         }
@@ -313,11 +313,11 @@ struct CDLoginView: View {
     private var privacySheet: some View {
         NavigationStack {
             PrivacyWebView()
-                .navigationTitle(AllStr.Login.privacySheetTitle)
+                .navigationTitle(AllStr.loginPrivacySheetTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button(AllStr.Login.close) { showPrivacy = false }
+                        Button(AllStr.loginClose) { showPrivacy = false }
                     }
                 }
         }

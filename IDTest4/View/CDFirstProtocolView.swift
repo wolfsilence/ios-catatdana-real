@@ -35,11 +35,11 @@ struct CDFirstProtocolView: View {
             VStack(spacing: 0) {
                 // 标题 + 说明文字
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(AllStr.Launch.appName)
+                    Text(AllStr.launchAppName)
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.white)
 
-                    Text(AllStr.Privacy.description)
+                    Text(AllStr.privacyDescription)
                         .font(.system(size: 16))
                         .foregroundColor(.white)
                 }
@@ -79,7 +79,7 @@ struct CDFirstProtocolView: View {
                             showToast = true
                         }
                     } label: {
-                        Text(AllStr.Privacy.agree)
+                        Text(AllStr.privacyAgree)
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(Colors.textOnPrimary)
                             .frame(height: 48)
@@ -93,7 +93,7 @@ struct CDFirstProtocolView: View {
                     Button {
                         exit(0)
                     } label: {
-                        Text(AllStr.Privacy.disagree)
+                        Text(AllStr.privacyDisagree)
                             .font(.system(size: 13))
                             .foregroundColor(Colors.textSecondary)
                     }
@@ -105,7 +105,7 @@ struct CDFirstProtocolView: View {
             }
         }
         .toast(isPresented: $showToast,
-               message: AllStr.Privacy.toastWait)
+               message: AllStr.privacyToastWait)
     }
 }
 

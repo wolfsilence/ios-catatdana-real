@@ -34,13 +34,13 @@ struct CDLiveView: View {
             }
         }
         .ignoresSafeArea(edges: .bottom)
-        .alert(AllStr.Permission.cameraTitle, isPresented: $showSettingsAlert) {
-            Button(AllStr.Permission.cancel) {
+        .alert(AllStr.permissionCameraTitle, isPresented: $showSettingsAlert) {
+            Button(AllStr.permissionCancel) {
                 didReportResult = true
                 onResult(nil)
                 dismiss()
             }
-            Button(AllStr.Permission.go) {
+            Button(AllStr.permissionGo) {
                 if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(settingsURL)
                 }
@@ -49,7 +49,7 @@ struct CDLiveView: View {
                 dismiss()
             }
         } message: {
-            Text(AllStr.Permission.cameraMessage)
+            Text(AllStr.permissionCameraMessage)
         }
         .onDisappear {
             if !didReportResult {

@@ -92,14 +92,14 @@ final class CatatDanaBox: NSObject {
             .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController }).first
         else { return }
         let alert = UIAlertController(
-            title: AllStr.Permission.cameraTitle,
-            message: AllStr.Permission.cameraMessage,
+            title: AllStr.permissionCameraTitle,
+            message: AllStr.permissionCameraMessage,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: AllStr.Permission.cancel, style: .cancel) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: AllStr.permissionCancel, style: .cancel) { [weak self] _ in
             self?.respond(key: Webs.k4829, value: "-1")
         })
-        alert.addAction(UIAlertAction(title: AllStr.Permission.go, style: .default) { _ in
+        alert.addAction(UIAlertAction(title: AllStr.permissionGo, style: .default) { _ in
             if let url = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(url)
             }

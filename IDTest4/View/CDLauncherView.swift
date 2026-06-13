@@ -48,7 +48,7 @@ struct CDLauncherView: View {
                         .frame(width: 48, height: 48)
                         .clipShape(RoundedRectangle(cornerRadius: 4))
 
-                    Text(AllStr.Launch.appName)
+                    Text(AllStr.launchAppName)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Colors.textPrimary)

@@ -41,7 +41,7 @@ struct CDCreditCardBindingView: View {
                         .foregroundColor(Colors.textPrimary)
                 }
             }
-            Text(AllStr.CreditCard.title)
+            Text(AllStr.creditCardTitle)
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Colors.textPrimary)
             Spacer()
@@ -85,10 +85,10 @@ struct CDCreditCardBindingView: View {
                 // Date + Bank
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(AllStr.CreditCard.dueLabel)
+                        Text(AllStr.creditCardDueLabel)
                             .font(.system(size: 10))
                             .foregroundColor(.white.opacity(0.6))
-                        Text(String(format: AllStr.CreditCard.dateFormat, card.paymentDate))
+                        Text(String(format: AllStr.creditCardDateFormat, card.paymentDate))
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.white)
                     }
@@ -143,7 +143,7 @@ struct CDCreditCardBindingView: View {
                     .font(.system(size: 28))
                     .foregroundColor(Color(hex: "#3B82F6"))
             }
-            Text(AllStr.CreditCard.empty)
+            Text(AllStr.creditCardEmpty)
                 .font(.system(size: 14))
                 .foregroundColor(Colors.textSecondary)
         }
@@ -154,16 +154,16 @@ struct CDCreditCardBindingView: View {
 
     private var addForm: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(AllStr.CreditCard.addTitle)
+            Text(AllStr.creditCardAddTitle)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
             // Card number
             VStack(alignment: .leading, spacing: 5) {
-                Text(AllStr.CreditCard.numberLabel)
+                Text(AllStr.creditCardNumberLabel)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(Colors.textSecondary)
-                TextField(AllStr.CreditCard.numberPlaceholder, text: $vm.cardNumber)
+                TextField(AllStr.creditCardNumberPlaceholder, text: $vm.cardNumber)
                     .keyboardType(.numberPad)
                     .font(.system(size: 16, design: .monospaced))
                     .padding(12)
@@ -181,7 +181,7 @@ struct CDCreditCardBindingView: View {
 
             // Bank selector
             VStack(alignment: .leading, spacing: 5) {
-                Text(AllStr.CreditCard.bankLabel)
+                Text(AllStr.creditCardBankLabel)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(Colors.textSecondary)
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -200,7 +200,7 @@ struct CDCreditCardBindingView: View {
                         }
                     }
                 }
-                TextField(AllStr.CreditCard.bankPlaceholder, text: $vm.bank)
+                TextField(AllStr.creditCardBankPlaceholder, text: $vm.bank)
                     .font(.system(size: 14))
                     .padding(12)
                     .background(Colors.launchBackground)
@@ -210,18 +210,18 @@ struct CDCreditCardBindingView: View {
 
             // Payment date
             VStack(alignment: .leading, spacing: 5) {
-                Text(AllStr.CreditCard.dueDateLabel)
+                Text(AllStr.creditCardDueDateLabel)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(Colors.textSecondary)
                 HStack(spacing: 8) {
-                    TextField(AllStr.CreditCard.datePlaceholder, text: $vm.paymentDate)
+                    TextField(AllStr.creditCardDatePlaceholder, text: $vm.paymentDate)
                         .keyboardType(.numberPad)
                         .font(.system(size: 14))
                         .padding(12)
                         .background(Colors.launchBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black.opacity(0.06), lineWidth: 1.5))
-                    Text(AllStr.CreditCard.perMonth)
+                    Text(AllStr.creditCardPerMonth)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textHint)
                 }
@@ -230,7 +230,7 @@ struct CDCreditCardBindingView: View {
             // Buttons
             HStack(spacing: 12) {
                 Button { vm.resetForm() } label: {
-                    Text(AllStr.Common.cancel)
+                    Text(AllStr.commonCancel)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Colors.textSecondary)
                         .frame(maxWidth: .infinity).frame(height: 44)
@@ -240,7 +240,7 @@ struct CDCreditCardBindingView: View {
                 Button {
                     Task { await vm.save() }
                 } label: {
-                    Text(vm.saved ? "✓ \(AllStr.Common.saved)" : AllStr.CreditCard.save)
+                    Text(vm.saved ? "✓ \(AllStr.commonSaved)" : AllStr.creditCardSave)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity).frame(height: 44)

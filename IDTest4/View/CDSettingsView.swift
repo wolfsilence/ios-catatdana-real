@@ -39,7 +39,7 @@ struct CDSettingsView: View {
         .animation(.easeInOut(duration: 0.2), value: vm.showLogoutConfirm)
         .animation(.easeInOut(duration: 0.2), value: vm.showDeleteConfirm)
         .animation(.easeInOut(duration: 0.2), value: vm.showDeleteSecondConfirm)
-        .toast(isPresented: $vm.showVersionToast, message: AllStr.Settings.alreadyLatest)
+        .toast(isPresented: $vm.showVersionToast, message: AllStr.settingsAlreadyLatest)
     }
 
     // MARK: - Header
@@ -54,7 +54,7 @@ struct CDSettingsView: View {
                         .foregroundColor(Colors.textPrimary)
                 }
             }
-            Text(AllStr.Settings.title)
+            Text(AllStr.settingsTitle)
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Colors.textPrimary)
             Spacer()
@@ -69,13 +69,13 @@ struct CDSettingsView: View {
 
     private var appInfoSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            sectionHeader(AllStr.Settings.appInfo)
+            sectionHeader(AllStr.settingsAppInfo)
 
             VStack(spacing: 0) {
                 Button {
                     Task { await vm.checkVersion() }
                 } label: {
-                    infoRow(AllStr.Settings.version, appVersion)
+                    infoRow(AllStr.settingsVersion, appVersion)
                 }
                 .buttonStyle(.plain)
             }
@@ -103,14 +103,14 @@ struct CDSettingsView: View {
 
     private var dangerZone: some View {
         VStack(alignment: .leading, spacing: 0) {
-            sectionHeader(AllStr.Settings.dangerZone)
+            sectionHeader(AllStr.settingsDangerZone)
 
             VStack(spacing: 0) {
                 dangerButton(
                     icon: "arrow.right.square.fill",
                     iconBg: Color(hex: "#FFF3E0"),
                     iconColor: Color(hex: "#FF9500"),
-                    label: AllStr.Settings.logout,
+                    label: AllStr.settingsLogout,
                     labelColor: Color(hex: "#FF9500")
                 ) {
                     vm.showLogoutConfirm = true
@@ -122,7 +122,7 @@ struct CDSettingsView: View {
                     icon: "trash.fill",
                     iconBg: Color(hex: "#FFE8E8"),
                     iconColor: Color(hex: "#FF4444"),
-                    label: AllStr.Settings.deleteData,
+                    label: AllStr.settingsDeleteData,
                     labelColor: Color(hex: "#FF4444")
                 ) {
                     vm.showDeleteConfirm = true
@@ -174,11 +174,11 @@ struct CDSettingsView: View {
             VStack(spacing: 0) {
                 Spacer()
                 VStack(spacing: 0) {
-                    Text(AllStr.Settings.logoutTitle)
+                    Text(AllStr.settingsLogoutTitle)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Colors.textPrimary)
                         .padding(.bottom, 8)
-                    Text(AllStr.Settings.logoutMessage)
+                    Text(AllStr.settingsLogoutMessage)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textSecondary)
                         .multilineTextAlignment(.center)
@@ -186,7 +186,7 @@ struct CDSettingsView: View {
 
                     HStack(spacing: 12) {
                         Button { vm.showLogoutConfirm = false } label: {
-                            Text(AllStr.Common.cancel)
+                            Text(AllStr.commonCancel)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)
@@ -200,7 +200,7 @@ struct CDSettingsView: View {
                                 onBack()
                             }
                         } label: {
-                            Text(AllStr.Settings.logoutConfirm)
+                            Text(AllStr.settingsLogoutConfirm)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)
@@ -228,11 +228,11 @@ struct CDSettingsView: View {
             VStack(spacing: 0) {
                 Spacer()
                 VStack(spacing: 0) {
-                    Text(AllStr.Settings.deleteTitle)
+                    Text(AllStr.settingsDeleteTitle)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Color(hex: "#FF4444"))
                         .padding(.bottom, 8)
-                    Text(AllStr.Settings.deleteMessage)
+                    Text(AllStr.settingsDeleteMessage)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textSecondary)
                         .multilineTextAlignment(.center)
@@ -240,7 +240,7 @@ struct CDSettingsView: View {
 
                     HStack(spacing: 12) {
                         Button { vm.showDeleteConfirm = false } label: {
-                            Text(AllStr.Common.cancel)
+                            Text(AllStr.commonCancel)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)
@@ -251,7 +251,7 @@ struct CDSettingsView: View {
                             vm.showDeleteConfirm = false
                             vm.showDeleteSecondConfirm = true
                         } label: {
-                            Text(AllStr.Settings.deleteConfirm)
+                            Text(AllStr.settingsDeleteConfirm)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)
@@ -279,11 +279,11 @@ struct CDSettingsView: View {
             VStack(spacing: 0) {
                 Spacer()
                 VStack(spacing: 0) {
-                    Text(AllStr.Settings.deleteSecondTitle)
+                    Text(AllStr.settingsDeleteSecondTitle)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Color(hex: "#FF4444"))
                         .padding(.bottom, 8)
-                    Text(AllStr.Settings.deleteSecondMessage)
+                    Text(AllStr.settingsDeleteSecondMessage)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textPrimary)
                         .multilineTextAlignment(.center)
@@ -291,7 +291,7 @@ struct CDSettingsView: View {
 
                     HStack(spacing: 12) {
                         Button { vm.showDeleteSecondConfirm = false } label: {
-                            Text(AllStr.Common.cancel)
+                            Text(AllStr.commonCancel)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)
@@ -305,7 +305,7 @@ struct CDSettingsView: View {
                                 onBack()
                             }
                         } label: {
-                            Text(AllStr.Settings.deleteSecondConfirm)
+                            Text(AllStr.settingsDeleteSecondConfirm)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Colors.textPrimary)
                                 .frame(maxWidth: .infinity).frame(height: 48)

@@ -42,7 +42,7 @@ struct CDContactView: View {
                             .foregroundColor(Colors.textPrimary)
                     }
                 }
-                Text(AllStr.Contact.title)
+                Text(AllStr.contactTitle)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(Colors.textPrimary)
                 Spacer()
@@ -56,7 +56,7 @@ struct CDContactView: View {
                 VStack(spacing: 20) {
                     // Large message input
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(AllStr.Contact.messageLabel)
+                        Text(AllStr.contactMessageLabel)
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(Colors.textSecondary)
                         TextEditor(text: $message)
@@ -74,7 +74,7 @@ struct CDContactView: View {
 
                     // Image section
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(AllStr.Contact.attachmentLabel)
+                        Text(AllStr.contactAttachmentLabel)
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(Colors.textSecondary)
 
@@ -101,7 +101,7 @@ struct CDContactView: View {
                                     Image(systemName: "photo.badge.plus")
                                         .font(.system(size: 24))
                                         .foregroundColor(Colors.primary)
-                                    Text(AllStr.Contact.addImage)
+                                    Text(AllStr.contactAddImage)
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(Colors.primary)
                                 }
@@ -120,7 +120,7 @@ struct CDContactView: View {
 
                     // Video section
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(AllStr.Contact.videoLabel)
+                        Text(AllStr.contactVideoLabel)
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(Colors.textSecondary)
 
@@ -167,7 +167,7 @@ struct CDContactView: View {
                                     Image(systemName: "video.badge.plus")
                                         .font(.system(size: 24))
                                         .foregroundColor(Colors.primary)
-                                    Text(AllStr.Contact.addVideo)
+                                    Text(AllStr.contactAddVideo)
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(Colors.primary)
                                 }
@@ -187,14 +187,14 @@ struct CDContactView: View {
                     // Contact info input (required)
                     VStack(alignment: .leading, spacing: 6) {
                         HStack(spacing: 2) {
-                            Text(AllStr.Contact.contactLabel)
+                            Text(AllStr.contactContactLabel)
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(Colors.textSecondary)
                             Text("*")
                                 .font(.system(size: 13, weight: .medium))
                                 .foregroundColor(.red)
                         }
-                        TextField(AllStr.Contact.contactPlaceholder, text: $contactInfo)
+                        TextField(AllStr.contactContactPlaceholder, text: $contactInfo)
                             .keyboardType(.emailAddress)
                             .font(.system(size: 14))
                             .padding(12)
@@ -215,7 +215,7 @@ struct CDContactView: View {
                             if isSubmitting {
                                 ProgressView().tint(.white)
                             }
-                            Text(isSubmitting ? AllStr.Contact.submitting : AllStr.Contact.submit)
+                            Text(isSubmitting ? AllStr.contactSubmitting : AllStr.contactSubmit)
                                 .font(.system(size: 15, weight: .semibold))
                         }
                         .foregroundColor(.white)
@@ -230,10 +230,10 @@ struct CDContactView: View {
             }
         }
         .background(Colors.launchBackground)
-        .confirmationDialog(AllStr.Contact.attachmentSheet, isPresented: $showImageSheet) {
-            Button(AllStr.Profile.takePhoto) { showCamera = true }
-            Button(AllStr.Profile.pickGallery) { showGallery = true }
-            Button(AllStr.Common.cancel, role: .cancel) { }
+        .confirmationDialog(AllStr.contactAttachmentSheet, isPresented: $showImageSheet) {
+            Button(AllStr.profileTakePhoto) { showCamera = true }
+            Button(AllStr.profilePickGallery) { showGallery = true }
+            Button(AllStr.commonCancel, role: .cancel) { }
         }
         .fullScreenCover(isPresented: $showCamera) {
             ContactCameraView { image in
@@ -259,10 +259,10 @@ struct CDContactView: View {
                 }
             }
         ), matching: .images)
-        .confirmationDialog(AllStr.Contact.videoSheet, isPresented: $showVideoSheet) {
-            Button(AllStr.Contact.recordVideo) { showVideoCamera = true }
-            Button(AllStr.Contact.pickVideo) { showVideoGallery = true }
-            Button(AllStr.Common.cancel, role: .cancel) { }
+        .confirmationDialog(AllStr.contactVideoSheet, isPresented: $showVideoSheet) {
+            Button(AllStr.contactRecordVideo) { showVideoCamera = true }
+            Button(AllStr.contactPickVideo) { showVideoGallery = true }
+            Button(AllStr.commonCancel, role: .cancel) { }
         }
         .photosPicker(isPresented: $showVideoGallery, selection: $videoPickerItem, matching: .videos)
         .onChange(of: videoPickerItem) { _, item in
@@ -373,7 +373,7 @@ struct CDContactView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 40))
                 .foregroundColor(Colors.primary)
-            Text(AllStr.Contact.successMessage)
+            Text(AllStr.contactSuccessMessage)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(Colors.textPrimary)
                 .multilineTextAlignment(.center)

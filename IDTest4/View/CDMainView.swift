@@ -103,7 +103,7 @@ struct CDMainView: View {
             }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(AllStr.Home.welcome)
+                Text(AllStr.homeWelcome)
                     .font(.system(size: 13))
                     .foregroundColor(Colors.textSecondary)
                 Text("\(vm.displayName) 👋")
@@ -139,12 +139,12 @@ struct CDMainView: View {
         } label: {
             VStack(spacing: 0) {
                 HStack {
-                    Text(AllStr.Home.monthlyBalance)
+                    Text(AllStr.homeMonthlyBalance)
                         .font(.system(size: 13))
                         .foregroundColor(.white.opacity(0.8))
                     Spacer()
                     HStack(spacing: 4) {
-                        Text(AllStr.Home.viewAnalysis)
+                        Text(AllStr.homeViewAnalysis)
                             .font(.system(size: 12))
                             .foregroundColor(.white.opacity(0.8))
                         Image(systemName: "chevron.right")
@@ -160,8 +160,8 @@ struct CDMainView: View {
                     .padding(.bottom, 16)
 
                 HStack(spacing: 24) {
-                    summaryItem(icon: "arrow.up", label: AllStr.Common.income, amount: vm.totalIncome)
-                    summaryItem(icon: "arrow.down", label: AllStr.Common.expense, amount: vm.totalExpense)
+                    summaryItem(icon: "arrow.up", label: AllStr.commonIncome, amount: vm.totalIncome)
+                    summaryItem(icon: "arrow.down", label: AllStr.commonExpense, amount: vm.totalExpense)
                 }
                 .padding(.bottom, 12)
 
@@ -224,7 +224,7 @@ struct CDMainView: View {
 
     private var featureGrid: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(AllStr.Home.mainFeatures)
+            Text(AllStr.homeMainFeatures)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
                 .padding(.horizontal, 20)
@@ -274,11 +274,11 @@ struct CDMainView: View {
     private var recentTransactionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(AllStr.Home.recentTransactions)
+                Text(AllStr.homeRecentTransactions)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(Colors.textPrimary)
                 Spacer()
-                Text(AllStr.Home.viewAll)
+                Text(AllStr.homeViewAll)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(Colors.primary)
             }
@@ -289,7 +289,7 @@ struct CDMainView: View {
                     Image(systemName: "tray")
                         .font(.system(size: 32))
                         .foregroundColor(Colors.textHint)
-                    Text(AllStr.Home.noTransactions)
+                    Text(AllStr.homeNoTransactions)
                         .font(.system(size: 14))
                         .foregroundColor(Colors.textSecondary)
                 }
@@ -331,7 +331,7 @@ struct CDMainView: View {
                         Text(categoryLabel(for: tx.category))
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(Colors.textPrimary)
-                        Text(tx.type == .income ? AllStr.Common.income : AllStr.Common.expense)
+                        Text(tx.type == .income ? AllStr.commonIncome : AllStr.commonExpense)
                             .font(.system(size: 12))
                             .foregroundColor(Colors.textHint)
                     }
@@ -437,7 +437,7 @@ private struct CDPrivacySheetView: View {
     var body: some View {
         CDWebView(
             url: URL(string: Constants.privacyPolicyURL)!,
-            title: AllStr.Profile.privacy,
+            title: AllStr.profilePrivacy,
             onBack: onBack
         )
     }

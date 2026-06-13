@@ -120,8 +120,8 @@ enum MainTab: String, CaseIterable {
 
     var label: String {
         switch self {
-        case .home: return AllStr.Home.tabHome
-        case .profile: return AllStr.Home.tabProfile
+        case .home: return AllStr.homeTabHome
+        case .profile: return AllStr.homeTabProfile
         }
     }
 
@@ -149,16 +149,16 @@ enum MainFeature: String, Identifiable, CaseIterable {
 
     var label: String {
         switch self {
-        case .record:       return AllStr.Home.featureRecord
-        case .reminder:     return AllStr.Home.featureReminder
-        case .creditcard:   return AllStr.Home.featureCreditCard
-        case .emi:          return AllStr.Home.featureEMI
-        case .maxloan:      return AllStr.Home.featureMaxLoan
-        case .exchange:     return AllStr.Home.featureExchange
-        case .analysis:     return AllStr.Home.featureAnalysis
-        case .settings:     return AllStr.Profile.settings
-        case .privacyView:  return AllStr.Profile.privacy
-        case .contact:      return AllStr.Profile.contactUs
+        case .record:       return AllStr.homeFeatureRecord
+        case .reminder:     return AllStr.homeFeatureReminder
+        case .creditcard:   return AllStr.homeFeatureCreditCard
+        case .emi:          return AllStr.homeFeatureEMI
+        case .maxloan:      return AllStr.homeFeatureMaxLoan
+        case .exchange:     return AllStr.homeFeatureExchange
+        case .analysis:     return AllStr.homeFeatureAnalysis
+        case .settings:     return AllStr.profileSettings
+        case .privacyView:  return AllStr.profilePrivacy
+        case .contact:      return AllStr.profileContactUs
         }
     }
 

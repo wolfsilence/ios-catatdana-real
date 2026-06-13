@@ -14,7 +14,7 @@ struct CDExchangeRateView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader(AllStr.ExchangeRate.title)
+            pageHeader(AllStr.exchangeRateTitle)
             ScrollView {
                 VStack(spacing: 16) {
                     idrInput
@@ -52,7 +52,7 @@ struct CDExchangeRateView: View {
 
     private var idrInput: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(AllStr.ExchangeRate.idrLabel).font(.system(size: 13)).foregroundColor(Colors.textSecondary)
+            Text(AllStr.exchangeRateIdrLabel).font(.system(size: 13)).foregroundColor(Colors.textSecondary)
             HStack(spacing: 8) {
                 HStack(spacing: 4) {
                     Text("🇮🇩").font(.system(size: 18))
@@ -82,7 +82,7 @@ struct CDExchangeRateView: View {
 
     private var resultsList: some View {
         VStack(spacing: 0) {
-            Text(AllStr.ExchangeRate.resultTitle)
+            Text(AllStr.exchangeRateResultTitle)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -123,7 +123,7 @@ struct CDExchangeRateView: View {
 
     private var currencySelector: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(AllStr.ExchangeRate.selectCurrency)
+            Text(AllStr.exchangeRateSelectCurrency)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(Colors.textPrimary)
 
@@ -166,7 +166,7 @@ struct CDExchangeRateView: View {
     }
 
     private var disclaimer: some View {
-        Text(AllStr.ExchangeRate.disclaimer)
+        Text(AllStr.exchangeRateDisclaimer)
             .font(.system(size: 11))
             .foregroundColor(Colors.textHint)
             .multilineTextAlignment(.center)

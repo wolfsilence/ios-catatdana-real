@@ -51,15 +51,15 @@ final class LoginViewModel {
     var canLogin: Bool { isPhoneValid && isCodeValid && !isLoading }
 
     var countdownText: String {
-        countdownRemaining > 0 ? "\(countdownRemaining)s" : AllStr.Login.sendCode
+        countdownRemaining > 0 ? "\(countdownRemaining)s" : AllStr.loginSendCode
     }
 
     var statusText: String? {
         guard isCodeSent else { return nil }
         if countdownRemaining > 0 {
-            return vcodeMethod == .sms ? AllStr.Login.sentToSms : AllStr.Login.sentToWa
+            return vcodeMethod == .sms ? AllStr.loginSentToSms : AllStr.loginSentToWa
         } else {
-            return vcodeMethod == .sms ? AllStr.Login.resendViaWa : AllStr.Login.resendViaSms
+            return vcodeMethod == .sms ? AllStr.loginResendViaWa : AllStr.loginResendViaSms
         }
     }
 
@@ -140,7 +140,7 @@ final class LoginViewModel {
 
     func oneClickLogin(method: VCodeMethod) async {
         guard isPhoneValid else {
-            errorMessage = AllStr.Login.invalidPhone
+            errorMessage = AllStr.loginInvalidPhone
             return
         }
         vcodeMethod = method
@@ -179,7 +179,7 @@ final class LoginViewModel {
         isLoading = false
 
         guard result.isSuccess, let data = result.data else {
-            errorMessage = result.message ?? AllStr.Error.serverUnavailable
+            errorMessage = result.message ?? AllStr.errorServerUnavailable
             return
         }
         
@@ -239,7 +239,7 @@ final class LoginViewModel {
             isCodeSent = true
             startCountdown()
         } else {
-            errorMessage = result.message ?? AllStr.Error.serverUnavailable
+            errorMessage = result.message ?? AllStr.errorServerUnavailable
         }
     }
 
@@ -255,7 +255,7 @@ final class LoginViewModel {
         survey(Points.ave0t6i)
         
         guard canLogin else {
-            errorMessage = AllStr.Login.invalidCode
+            errorMessage = AllStr.loginInvalidCode
             return
         }
         isLoading = true
@@ -284,7 +284,7 @@ final class LoginViewModel {
             }
             loginSuccess(token)
         } else {
-            errorMessage = result.message ?? AllStr.Error.serverUnavailable
+            errorMessage = result.message ?? AllStr.errorServerUnavailable
         }
     }
 

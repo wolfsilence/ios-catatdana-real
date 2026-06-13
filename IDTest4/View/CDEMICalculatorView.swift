@@ -14,7 +14,7 @@ struct CDEMICalculatorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader(AllStr.EMI.title)
+            pageHeader(AllStr.emiTitle)
             ScrollView {
                 VStack(spacing: 16) {
                     inputCard
@@ -52,15 +52,15 @@ struct CDEMICalculatorView: View {
 
     private var inputCard: some View {
         VStack(spacing: 16) {
-            inputField(AllStr.EMI.loanLabel, text: $vm.loanAmount, placeholder: AllStr.EMI.loanPlaceholder, prefix: "Rp", keyboard: .numberPad)
-            inputField(AllStr.EMI.tenorLabel, text: $vm.months, placeholder: AllStr.EMI.tenorPlaceholder, suffix: AllStr.EMI.tenorSuffix, keyboard: .numberPad)
-            inputField(AllStr.EMI.rateLabel, text: $vm.annualRate, placeholder: AllStr.EMI.ratePlaceholder, suffix: AllStr.EMI.rateSuffix, keyboard: .decimalPad)
+            inputField(AllStr.emiLoanLabel, text: $vm.loanAmount, placeholder: AllStr.emiLoanPlaceholder, prefix: "Rp", keyboard: .numberPad)
+            inputField(AllStr.emiTenorLabel, text: $vm.months, placeholder: AllStr.emiTenorPlaceholder, suffix: AllStr.emiTenorSuffix, keyboard: .numberPad)
+            inputField(AllStr.emiRateLabel, text: $vm.annualRate, placeholder: AllStr.emiRatePlaceholder, suffix: AllStr.emiRateSuffix, keyboard: .decimalPad)
 
             Button {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 Task { await vm.calculate() }
             } label: {
-                Text(AllStr.EMI.calculate)
+                Text(AllStr.emiCalculate)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity).frame(height: 52)
@@ -80,7 +80,7 @@ struct CDEMICalculatorView: View {
 
     private var resultCard: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(AllStr.EMI.monthlyEMI)
+            Text(AllStr.emiMonthlyEMI)
                 .font(.system(size: 13))
                 .foregroundColor(.white.opacity(0.8))
             Text(formatIDR(vm.monthlyEMI ?? 0))
@@ -89,8 +89,8 @@ struct CDEMICalculatorView: View {
                 .padding(.bottom, 20)
 
             HStack(spacing: 12) {
-                miniStat(AllStr.EMI.totalPayment, formatIDR(vm.totalPayment))
-                miniStat(AllStr.EMI.totalInterest, formatIDR(vm.totalInterest))
+                miniStat(AllStr.emiTotalPayment, formatIDR(vm.totalPayment))
+                miniStat(AllStr.emiTotalInterest, formatIDR(vm.totalInterest))
             }
         }
         .padding(20)
@@ -120,7 +120,7 @@ struct CDEMICalculatorView: View {
 
     private var formulaCard: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(AllStr.EMI.formula)
+            Text(AllStr.emiFormula)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(Colors.primary)
             Text("EMI = [P × r × (1+r)ⁿ] / [(1+r)ⁿ - 1]\nP = Pokok pinjaman, r = Suku bunga per bulan, n = Tenor")
