@@ -19,17 +19,33 @@ struct CDWebView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            barView
-            progressBar
+            barViewCdk
+            progressBarCdk
             WebViewWithProgress(url: url, progress: $progress)
+        }
+    }
+
+    // MARK: - Progress Bar
+
+    @ViewBuilder
+    private var progressBarCdk: some View {
+        if progress > 0, progress < 1.0 {
+            GeometryReader { geo in
+                Rectangle()
+                    .fill(AppColors.primary)
+                    .frame(width: geo.size.width * progress, height: 2)
+            }
+            .frame(height: 2)
+            .animation(.linear(duration: 0.15), value: progress)
         }
     }
 
     // MARK: - Bar
 
-    private var barView: some View {
+    private var barViewCdk: some View {
         HStack(spacing: 0) {
             Button {
+                CdkDICleaner.shared.cdkObj()
                 if let onBack {
                     onBack()
                 } else {
@@ -53,21 +69,6 @@ struct CDWebView: View {
         .padding(.horizontal, 16)
         .background(Color.white)
     }
-
-    // MARK: - Progress Bar
-
-    @ViewBuilder
-    private var progressBar: some View {
-        if progress > 0, progress < 1.0 {
-            GeometryReader { geo in
-                Rectangle()
-                    .fill(AppColors.primary)
-                    .frame(width: geo.size.width * progress, height: 2)
-            }
-            .frame(height: 2)
-            .animation(.linear(duration: 0.15), value: progress)
-        }
-    }
 }
 
 // MARK: - WKWebView Wrapper
@@ -79,7 +80,7 @@ private struct WebViewWithProgress: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
-        context.coordinator.observeProgress(webView)
+        context.coordinator.observeProgressCdk(webView)
         webView.load(URLRequest(url: url))
         return webView
     }
@@ -98,7 +99,8 @@ private struct WebViewWithProgress: UIViewRepresentable {
             self._progress = progress
         }
 
-        func observeProgress(_ webView: WKWebView) {
+        func observeProgressCdk(_ webView: WKWebView) {
+            CdkDICleaner.shared.cdkStack()
             progressObservation = webView.observe(\.estimatedProgress, options: .new) { [weak self] _, change in
                 guard let self, let p = change.newValue else { return }
                 DispatchQueue.main.async {

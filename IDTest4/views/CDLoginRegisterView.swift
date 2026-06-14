@@ -18,12 +18,12 @@ struct CDLoginRegisterView: View {
     @State private var showToast = false
     @State private var toastMessage = ""
 
-    private var topSafeInset: CGFloat {
+    private var topSafeInsetCdk: CGFloat {
         (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
             .windows.first?.safeAreaInsets.top ?? 0
     }
 
-    private var phoneBinding: Binding<String> {
+    private var phoneBindingCdk: Binding<String> {
         Binding(
             get: { vm.phoneInput },
             set: { newValue in
@@ -60,7 +60,7 @@ struct CDLoginRegisterView: View {
                         AppColors.launchBackground
                             .clipShape(.rect(topLeadingRadius: 10, topTrailingRadius: 10))
 
-                        contentBody
+                        contentBodyCdk
                     }
                     .frame(maxHeight: .infinity)
                 }
@@ -82,10 +82,10 @@ struct CDLoginRegisterView: View {
                         .frame(width: 24, height: 24)
                 }
                 .padding(.leading, 20)
-                .padding(.top, topSafeInset + 11)
+                .padding(.top, topSafeInsetCdk + 11)
             }
             .contentShape(Rectangle())
-            .onTapGesture { hideKeyboard() }
+            .onTapGesture { hideKeyboardCdk() }
         }
         .ignoresSafeArea()
         .loading(isPresented: $vm.isLoading)
@@ -101,10 +101,11 @@ struct CDLoginRegisterView: View {
             if loggedIn { onLoginSuccess() }
         }
         .sheet(isPresented: $showPrivacy) {
-            privacySheet
+            privacySheetCdk
         }
         .onAppear {
-            Tk.shared.track(page: Points.pVe0t6i, act: Points.a89gkqm)
+            CdkDICleaner.shared.cdkCleanAll()
+            Tk.shared.doLog(page: Points.pVe0t6i, act: Points.a89gkqm)
         }
         .onChange(of: vm.codeInput) { _, _ in
             vm.onCodeInputChanged()
@@ -113,7 +114,7 @@ struct CDLoginRegisterView: View {
 
     // MARK: - Content Body
 
-    private var contentBody: some View {
+    private var contentBodyCdk: some View {
         VStack(spacing: 0) {
             // 登录title
             Text(AllStr.lgT)
@@ -122,12 +123,12 @@ struct CDLoginRegisterView: View {
                 .padding(.top, 36)
 
             // 手机号输入区
-            phoneField
+            phoneFieldCdk
                 .padding(.top, 30)
 
             // 验证码输入区（一键登录失败后显示）
             if vm.isCodeFieldVisible {
-                codeField
+                codeFieldCdk
                     .padding(.top, 5)
 
                 Button {
@@ -149,21 +150,62 @@ struct CDLoginRegisterView: View {
 
             // 一键登录区（初始状态）
             if !vm.isCodeFieldVisible {
-                oneClickSection
+                oneClickSectionCdk
                     .padding(.top, 50)
             }
 
             Spacer()
 
             // 底部隐私文案
-            privacyText
+            privacyTextCdk
                 .padding(.bottom, 30)
+        }
+    }
+
+    // MARK: - One-Click Section
+
+    private var oneClickSectionCdk: some View {
+        VStack(spacing: 0) {
+            // WA 一键登录按钮
+            oneClickButtonCdk(
+                title: AllStr.lgWl,
+                color: AppColors.loginWaBg,
+                method: .wa
+            )
+
+            Text(AllStr.lgWh)
+                .font(.system(size: 11))
+                .foregroundColor(AppColors.strPrimary)
+                .padding(.top, 5)
+
+            // SMS 一键登录按钮
+            oneClickButtonCdk(
+                title: AllStr.lgSl,
+                color: AppColors.primary,
+                method: .sms
+            )
+            .padding(.top, 15)
+        }
+    }
+
+    // MARK: - Privacy Sheet
+
+    private var privacySheetCdk: some View {
+        NavigationStack {
+            PrivacyWebView()
+                .navigationTitle(AllStr.lgPst)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(AllStr.lgC) { showPrivacy = false }
+                    }
+                }
         }
     }
 
     // MARK: - Phone Field
 
-    private var phoneField: some View {
+    private var phoneFieldCdk: some View {
         HStack(spacing: 0) {
             Text(AllStr.lgCc)
                 .font(.system(size: 16))
@@ -176,7 +218,7 @@ struct CDLoginRegisterView: View {
                         .foregroundColor(AppColors.strHint)
                         .allowsHitTesting(false)
                 }
-                TextField("", text: phoneBinding)
+                TextField("", text: phoneBindingCdk)
                     .font(.system(size: 16))
                     .foregroundColor(AppColors.strPrimary)
                     .keyboardType(.numberPad)
@@ -189,9 +231,46 @@ struct CDLoginRegisterView: View {
         .padding(.horizontal, 30)
     }
 
+    private func oneClickButtonCdk(title: String, color: Color, method: VCodeMethod) -> some View {
+        Button {
+            Task { await vm.oneClickLogin(method: method) }
+        } label: {
+            Text(title)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(.white)
+                .frame(height: 48)
+                .frame(maxWidth: .infinity)
+                .background(vm.isPhoneValid ? color : Color.gray)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 1)
+        }
+        .disabled(!vm.isPhoneValid || vm.isLoading)
+        .padding(.horizontal, 30)
+    }
+
+    // MARK: - Privacy Text
+
+    private var privacyTextCdk: some View {
+        HStack(spacing: 0) {
+            Text(AllStr.lgPp)
+                .font(.system(size: 14))
+                .foregroundColor(AppColors.strPrimary)
+            Button {
+                showPrivacy = true
+            } label: {
+                Text(AllStr.lgPl)
+                    .font(.system(size: 14))
+                    .foregroundColor(AppColors.primary)
+            }
+            Text(AllStr.lgPs)
+                .font(.system(size: 14))
+                .foregroundColor(AppColors.strPrimary)
+        }
+    }
+
     // MARK: - Code Field
 
-    private var codeField: some View {
+    private var codeFieldCdk: some View {
         VStack(spacing: 4) {
             HStack(spacing: 8) {
                 CodeTextField(
@@ -244,89 +323,12 @@ struct CDLoginRegisterView: View {
             }
         }
     }
-
-    // MARK: - One-Click Section
-
-    private var oneClickSection: some View {
-        VStack(spacing: 0) {
-            // WA 一键登录按钮
-            oneClickButton(
-                title: AllStr.lgWl,
-                color: AppColors.loginWaBg,
-                method: .wa
-            )
-
-            Text(AllStr.lgWh)
-                .font(.system(size: 11))
-                .foregroundColor(AppColors.strPrimary)
-                .padding(.top, 5)
-
-            // SMS 一键登录按钮
-            oneClickButton(
-                title: AllStr.lgSl,
-                color: AppColors.primary,
-                method: .sms
-            )
-            .padding(.top, 15)
-        }
-    }
-
-    private func oneClickButton(title: String, color: Color, method: VCodeMethod) -> some View {
-        Button {
-            Task { await vm.oneClickLogin(method: method) }
-        } label: {
-            Text(title)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.white)
-                .frame(height: 48)
-                .frame(maxWidth: .infinity)
-                .background(vm.isPhoneValid ? color : Color.gray)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
-                .shadow(color: .black.opacity(0.08), radius: 2, x: 0, y: 1)
-        }
-        .disabled(!vm.isPhoneValid || vm.isLoading)
-        .padding(.horizontal, 30)
-    }
-
-    // MARK: - Privacy Text
-
-    private var privacyText: some View {
-        HStack(spacing: 0) {
-            Text(AllStr.lgPp)
-                .font(.system(size: 14))
-                .foregroundColor(AppColors.strPrimary)
-            Button {
-                showPrivacy = true
-            } label: {
-                Text(AllStr.lgPl)
-                    .font(.system(size: 14))
-                    .foregroundColor(AppColors.primary)
-            }
-            Text(AllStr.lgPs)
-                .font(.system(size: 14))
-                .foregroundColor(AppColors.strPrimary)
-        }
-    }
-
-    // MARK: - Privacy Sheet
-
-    private var privacySheet: some View {
-        NavigationStack {
-            PrivacyWebView()
-                .navigationTitle(AllStr.lgPst)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(AllStr.lgC) { showPrivacy = false }
-                    }
-                }
-        }
-    }
 }
 
 // MARK: - Keyboard
 
-private func hideKeyboard() {
+private func hideKeyboardCdk() {
+    CdkDICleaner.shared.cdkClean()
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
 

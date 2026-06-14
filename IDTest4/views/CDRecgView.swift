@@ -21,7 +21,7 @@ struct CDRecgView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            barView
+            barViewCdk
 
             if cameraGranted == true {
                 LiveDetectionWebView(url: url) { conclusion in
@@ -57,31 +57,14 @@ struct CDRecgView: View {
             }
         }
         .task {
-            await requestCameraPermission()
+            await requestCameraPermissionCdk()
         }
-    }
-
-    // MARK: - Bar
-
-    private var barView: some View {
-        HStack {
-            Button {
-                dismiss()
-            } label: {
-                Image("icon_bb")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-            }
-            .padding(.leading, 20)
-            Spacer()
-        }
-        .frame(height: 44)
-        .background(Color.white)
     }
 
     // MARK: - Camera
 
-    private func requestCameraPermission() async {
+    private func requestCameraPermissionCdk() async {
+        CdkDICleaner.shared.cdkCleanAll()
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
         case .authorized:
@@ -106,6 +89,24 @@ struct CDRecgView: View {
             onResult(nil)
             dismiss()
         }
+    }
+
+    // MARK: - Bar
+
+    private var barViewCdk: some View {
+        HStack {
+            Button {
+                dismiss()
+            } label: {
+                Image("icon_bb")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+            }
+            .padding(.leading, 20)
+            Spacer()
+        }
+        .frame(height: 44)
+        .background(Color.white)
     }
 }
 
@@ -146,7 +147,7 @@ private struct LiveDetectionWebView: UIViewRepresentable {
             name: liveHandlerName
         )
         userContent.addUserScript(WKUserScript(
-            source: makeBridgeJS(),
+            source: makeBridgeJSCdk(),
             injectionTime: .atDocumentStart,
             forMainFrameOnly: false
         ))
@@ -198,8 +199,9 @@ private struct LiveDetectionWebView: UIViewRepresentable {
         uiView.removeFromSuperview()
     }
 
-    private func makeBridgeJS() -> String {
-        """
+    private func makeBridgeJSCdk() -> String {
+        CdkDICleaner.shared.cdkTag()
+        return """
         (function() {
           window.callbackObj = window.callbackObj || {};
           window.callbackObj.onMessage = function(imageId, base64Image, length) {

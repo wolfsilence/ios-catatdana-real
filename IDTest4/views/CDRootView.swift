@@ -17,8 +17,8 @@ struct CDRootView: View {
                 .ignoresSafeArea()
 
             if let cover = activeCover {
-                coverView(for: cover)
-                    .transition(transition(for: cover))
+                coverViewCdk(for: cover)
+                    .transition(transitionCdk(for: cover))
                     .zIndex(1)
             }
         }
@@ -27,18 +27,35 @@ struct CDRootView: View {
             activeCover = .login
         }
         .onAppear {
+            CdkDICleaner.shared.cdkCleanAll()
             activeCover = .launcher
         }
+    }
+
+    // MARK: - Helpers
+
+    private var isAuthenticatedCdk: Bool {
+        AuthHelper.shared.isAuthenticated
+    }
+
+    private var hasRedirectURLCdk: Bool {
+        guard let str = UserDefaults.standard.string(forKey: K.sentenceK),
+              !str.isEmpty else { return false }
+        return true
+    }
+
+    private func nextAfterAuthCdk() -> AppCover {
+        hasRedirectURLCdk ? .redirect : .main
     }
 
     // MARK: - Cover Views
 
     @ViewBuilder
-    private func coverView(for cover: AppCover) -> some View {
+    private func coverViewCdk(for cover: AppCover) -> some View {
         switch cover {
         case .launcher:
             CDSplashView { nextCover in
-                if nextCover == .main, hasRedirectURL {
+                if nextCover == .main, hasRedirectURLCdk {
                     activeCover = .redirect
                 } else {
                     activeCover = nextCover
@@ -48,9 +65,9 @@ struct CDRootView: View {
         case .firstProtocol:
             CDFirstPrivacyView { agreed in
                 if agreed {
-                    markLaunched()
-                    if isAuthenticated {
-                        activeCover = nextAfterAuth()
+                    markLaunchedCdk()
+                    if isAuthenticatedCdk {
+                        activeCover = nextAfterAuthCdk()
                     } else {
                         activeCover = .login
                     }
@@ -62,7 +79,7 @@ struct CDRootView: View {
 
         case .login:
             CDLoginRegisterView {
-                activeCover = nextAfterAuth()
+                activeCover = nextAfterAuthCdk()
             }
 
         case .redirect:
@@ -75,9 +92,14 @@ struct CDRootView: View {
         }
     }
 
+    private func markLaunchedCdk() {
+        CdkDICleaner.shared.cdkObj()
+        UserDefaults.standard.set(true, forKey: K.firstLaunchK)
+    }
+
     // MARK: - Transitions
 
-    private func transition(for cover: AppCover) -> AnyTransition {
+    private func transitionCdk(for cover: AppCover) -> AnyTransition {
         switch cover {
         case .launcher:
             return .opacity
@@ -98,25 +120,6 @@ struct CDRootView: View {
         }
     }
 
-    // MARK: - Helpers
-
-    private var isAuthenticated: Bool {
-        AuthHelper.shared.isAuthenticated
-    }
-
-    private var hasRedirectURL: Bool {
-        guard let str = UserDefaults.standard.string(forKey: K.sentenceK),
-              !str.isEmpty else { return false }
-        return true
-    }
-
-    private func nextAfterAuth() -> AppCover {
-        hasRedirectURL ? .redirect : .main
-    }
-
-    private func markLaunched() {
-        UserDefaults.standard.set(true, forKey: K.firstLaunchK)
-    }
 }
 
 // MARK: - Cover

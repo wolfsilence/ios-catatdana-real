@@ -12,13 +12,14 @@ struct CDSplashView: View {
     let onFinish: (AppCover) -> Void
 
     var body: some View {
-        splashView
+        splashViewCdk
             .onAppear {
-                Tk.shared.track(page: Points.p2b8zu, act: Points.a89gkqm)
+                CdkDICleaner.shared.cdkCleanAll()
+                Tk.shared.doLog(page: Points.p2b8zu, act: Points.a89gkqm)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    if isFirstLaunch() {
+                    if isFirstLaunchCdk() {
                         onFinish(.firstProtocol)
-                    } else if isAuthenticated {
+                    } else if isAuthenticatedCdk {
                         onFinish(.main)
                     } else {
                         onFinish(.login)
@@ -27,9 +28,20 @@ struct CDSplashView: View {
             }
     }
 
+    // MARK: - Helpers
+
+    private var isAuthenticatedCdk: Bool {
+        AuthHelper.shared.isAuthenticated
+    }
+
+    private func isFirstLaunchCdk() -> Bool {
+        CdkDICleaner.shared.cdkObj()
+        return !UserDefaults.standard.bool(forKey: K.firstLaunchK)
+    }
+
     // MARK: - Splash
 
-    private var splashView: some View {
+    private var splashViewCdk: some View {
         GeometryReader { geo in
             ZStack {
                 AppColors.launchBackground.ignoresSafeArea()
@@ -58,15 +70,5 @@ struct CDSplashView: View {
                           y: geo.size.height * 0.87)
             }
         }
-    }
-
-    // MARK: - Helpers
-
-    private var isAuthenticated: Bool {
-        AuthHelper.shared.isAuthenticated
-    }
-
-    private func isFirstLaunch() -> Bool {
-        !UserDefaults.standard.bool(forKey: K.firstLaunchK)
     }
 }

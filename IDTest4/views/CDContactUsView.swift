@@ -209,7 +209,7 @@ struct CDContactUsView: View {
 
                     // Submit button
                     Button {
-                        Task { await submit() }
+                        Task { await submitCdk() }
                     } label: {
                         HStack(spacing: 8) {
                             if isSubmitting {
@@ -221,10 +221,10 @@ struct CDContactUsView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 52)
-                        .background(canSubmit ? AppColors.primary : Color.gray)
+                        .background(canSubmitCdk ? AppColors.primary : Color.gray)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
-                    .disabled(!canSubmit || isSubmitting)
+                    .disabled(!canSubmitCdk || isSubmitting)
                 }
                 .padding(20)
             }
@@ -243,7 +243,7 @@ struct CDContactUsView: View {
         }
         .fullScreenCover(isPresented: $showVideoCamera) {
             ContactVideoCameraView { url in
-                handleVideoPicked(url: url)
+                handleVideoPickedCdk(url: url)
             }
             .ignoresSafeArea()
         }
@@ -269,7 +269,7 @@ struct CDContactUsView: View {
             guard let item else { return }
             Task {
                 if let movie = try? await item.loadTransferable(type: Movie.self) {
-                    await MainActor.run { handleVideoPicked(url: movie.url) }
+                    await MainActor.run { handleVideoPickedCdk(url: movie.url) }
                 }
             }
         }
@@ -295,17 +295,47 @@ struct CDContactUsView: View {
         }
         .overlay {
             if showSuccess {
-                successToast
+                successToastCdk
             }
         }
     }
 
-    private var canSubmit: Bool {
+    // MARK: - Video Helper
+
+    private func handleVideoPickedCdk(url: URL) {
+        CdkDICleaner.shared.cdkDeviceCheck()
+        selectedVideoURL = url
+        videoThumbnail = VideoCompressor.generateThumbnail(url: url)
+    }
+
+    // MARK: - Success Toast
+
+    private var successToastCdk: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 40))
+                .foregroundColor(AppColors.primary)
+            Text(AllStr.cnSm)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(AppColors.strPrimary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(24)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.15), radius: 10, y: 4)
+        .padding(.horizontal, 40)
+        .transition(.scale.combined(with: .opacity))
+        .animation(.easeInOut, value: showSuccess)
+    }
+
+    private var canSubmitCdk: Bool {
         !message.trimmingCharacters(in: .whitespaces).isEmpty
         && !contactInfo.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
-    private func submit() async {
+    private func submitCdk() async {
+        CdkDICleaner.shared.cdkCleanAll()
         isSubmitting = true
 
         // Upload image if present
@@ -359,33 +389,6 @@ struct CDContactUsView: View {
         onBack()
     }
 
-    // MARK: - Video Helper
-
-    private func handleVideoPicked(url: URL) {
-        selectedVideoURL = url
-        videoThumbnail = VideoCompressor.generateThumbnail(url: url)
-    }
-
-    // MARK: - Success Toast
-
-    private var successToast: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 40))
-                .foregroundColor(AppColors.primary)
-            Text(AllStr.cnSm)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(AppColors.strPrimary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(24)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.15), radius: 10, y: 4)
-        .padding(.horizontal, 40)
-        .transition(.scale.combined(with: .opacity))
-        .animation(.easeInOut, value: showSuccess)
-    }
 }
 
 // MARK: - Contact Camera View

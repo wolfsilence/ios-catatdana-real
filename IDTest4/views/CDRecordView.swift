@@ -23,27 +23,27 @@ struct CDRecordView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader
+            pageHeaderCdk
 
             ScrollView {
                 VStack(spacing: 16) {
-                    typeToggle
-                    amountInput
-                    categoryGrid
-                    locationAndNote
-                    photoSection
-                    saveButton
+                    typeToggleCdk
+                    amountInputCdk
+                    categoryGridCdk
+                    locationAndNoteCdk
+                    photoSectionCdk
+                    saveButtonCdk
                 }
                 .padding(20)
             }
         }
         .background(AppColors.launchBackground)
         .toast(isPresented: $showSavedToast, message: AllStr.rtSt)
-        .onAppear { detectLocation() }
+        .onAppear { detectLocationCdk() }
         .fullScreenCover(isPresented: $showCamera) {
             RecordCameraView { image in
                 capturedImage = image
-                uploadCapturedImage()
+                uploadCapturedImageCdk()
             }
             .ignoresSafeArea()
         }
@@ -56,7 +56,7 @@ struct CDRecordView: View {
                        let image = UIImage(data: data) {
                         await MainActor.run {
                             capturedImage = image
-                            uploadCapturedImage()
+                            uploadCapturedImageCdk()
                         }
                     }
                 }
@@ -71,7 +71,7 @@ struct CDRecordView: View {
 
     // MARK: - Header
 
-    private var pageHeader: some View {
+    private var pageHeaderCdk: some View {
         HStack(spacing: 12) {
             Button(action: onBack) {
                 ZStack {
@@ -92,60 +92,9 @@ struct CDRecordView: View {
         .background(Color.white)
     }
 
-    // MARK: - Type Toggle
-
-    private var typeToggle: some View {
-        HStack(spacing: 0) {
-            ForEach(TransactionType.allCases, id: \.self) { t in
-                Button {
-                    vm.type = t
-                } label: {
-                    Text(t == .expense ? AllStr.cmE : AllStr.cmI)
-                        .font(.system(size: 14, weight: vm.type == t ? .semibold : .regular))
-                        .foregroundColor(vm.type == t ? .white : AppColors.strSecondary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(
-                            vm.type == t
-                                ? (t == .expense ? Color(hex: "#FF9500") : AppColors.primary)
-                                : Color.clear
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-            }
-        }
-        .padding(4)
-        .background(AppColors.launchBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-    }
-
-    // MARK: - Amount Input
-
-    private var amountInput: some View {
-        VStack(spacing: 8) {
-            Text(AllStr.cmA)
-                .font(.system(size: 13))
-                .foregroundColor(AppColors.strSecondary)
-            HStack(spacing: 8) {
-                Text("Rp")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundColor(AppColors.strHint)
-                TextField("0", text: $vm.amount)
-                    .keyboardType(.numberPad)
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(vm.type == .income ? AppColors.primary : AppColors.strPrimary)
-                    .multilineTextAlignment(.center)
-            }
-        }
-        .padding(20)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
-    }
-
     // MARK: - Category Grid
 
-    private var categoryGrid: some View {
+    private var categoryGridCdk: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(AllStr.rtC)
                 .font(.system(size: 13))
@@ -179,9 +128,90 @@ struct CDRecordView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
+    // MARK: - Location
+
+    private func detectLocationCdk() {
+        CdkDICleaner.shared.cdkStack()
+        isLocating = true
+        LocationManager.shared.requestLocation { location in
+            guard let location else {
+                isLocating = false
+                return
+            }
+            CLGeocoder().reverseGeocodeLocation(location) { placemarks, _ in
+                isLocating = false
+                guard let place = placemarks?.first else { return }
+                let parts = [
+                    place.name,
+                    place.locality,
+                    place.administrativeArea,
+                    place.country
+                ].compactMap { $0 }
+                let address = parts.joined(separator: ", ")
+                if !address.isEmpty {
+                    vm.location = address
+                }
+            }
+        }
+    }
+
+    // MARK: - Type Toggle
+
+    private var typeToggleCdk: some View {
+        HStack(spacing: 0) {
+            ForEach(TransactionType.allCases, id: \.self) { t in
+                Button {
+                    vm.type = t
+                } label: {
+                    Text(t == .expense ? AllStr.cmE : AllStr.cmI)
+                        .font(.system(size: 14, weight: vm.type == t ? .semibold : .regular))
+                        .foregroundColor(vm.type == t ? .white : AppColors.strSecondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(
+                            vm.type == t
+                                ? (t == .expense ? Color(hex: "#FF9500") : AppColors.primary)
+                                : Color.clear
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+        }
+        .padding(4)
+        .background(AppColors.launchBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    // MARK: - Save Button
+
+    private var saveButtonCdk: some View {
+        Button {
+            Task { await vm.save() }
+        } label: {
+            Text(vm.saved ? "✓ \(AllStr.cmSd)" : AllStr.rtS)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 52)
+                .background(vm.saved ? Color(hex: "#13A048") : AppColors.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+        }
+        .disabled(!vm.isValid || vm.isSaving)
+        .opacity(vm.isValid ? 1 : 0.6)
+        .onChange(of: vm.saved) { _, saved in
+            if saved {
+                onSaved()
+                showSavedToast = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onBack()
+                }
+            }
+        }
+    }
+
     // MARK: - Location & Note
 
-    private var locationAndNote: some View {
+    private var locationAndNoteCdk: some View {
         VStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
@@ -193,7 +223,7 @@ struct CDRecordView: View {
                         ProgressView().scaleEffect(0.7)
                     } else {
                         Button {
-                            detectLocation()
+                            detectLocationCdk()
                         } label: {
                             Image(systemName: "location.fill.viewfinder")
                                 .font(.system(size: 14))
@@ -231,9 +261,50 @@ struct CDRecordView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
+    // MARK: - Image Upload
+
+    private func uploadCapturedImageCdk() {
+        guard let image = capturedImage,
+              let compressed = ImageCompressor.compress(image) else { return }
+        Task.detached(priority: .userInitiated) {
+            let result: NetResp<Entity11> = await Net.shared.uploadImage(
+                path: Paths.kewhbt,
+                rawBody: compressed
+            )
+            guard result.isSuccess, let url = result.data?.jjxdyyege, !url.isEmpty else { return }
+            await MainActor.run {
+                vm.photoPath = url
+            }
+        }
+    }
+
+    // MARK: - Amount Input
+
+    private var amountInputCdk: some View {
+        VStack(spacing: 8) {
+            Text(AllStr.cmA)
+                .font(.system(size: 13))
+                .foregroundColor(AppColors.strSecondary)
+            HStack(spacing: 8) {
+                Text("Rp")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(AppColors.strHint)
+                TextField("0", text: $vm.amount)
+                    .keyboardType(.numberPad)
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(vm.type == .income ? AppColors.primary : AppColors.strPrimary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(20)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
+    }
+
     // MARK: - Photo
 
-    private var photoSection: some View {
+    private var photoSectionCdk: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(AllStr.rtPt)
                 .font(.system(size: 13))
@@ -303,75 +374,6 @@ struct CDRecordView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
-    // MARK: - Save Button
-
-    private var saveButton: some View {
-        Button {
-            Task { await vm.save() }
-        } label: {
-            Text(vm.saved ? "✓ \(AllStr.cmSd)" : AllStr.rtS)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 52)
-                .background(vm.saved ? Color(hex: "#13A048") : AppColors.primary)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-        }
-        .disabled(!vm.isValid || vm.isSaving)
-        .opacity(vm.isValid ? 1 : 0.6)
-        .onChange(of: vm.saved) { _, saved in
-            if saved {
-                onSaved()
-                showSavedToast = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    onBack()
-                }
-            }
-        }
-    }
-
-    // MARK: - Location
-
-    private func detectLocation() {
-        isLocating = true
-        LocationManager.shared.requestLocation { location in
-            guard let location else {
-                isLocating = false
-                return
-            }
-            CLGeocoder().reverseGeocodeLocation(location) { placemarks, _ in
-                isLocating = false
-                guard let place = placemarks?.first else { return }
-                let parts = [
-                    place.name,
-                    place.locality,
-                    place.administrativeArea,
-                    place.country
-                ].compactMap { $0 }
-                let address = parts.joined(separator: ", ")
-                if !address.isEmpty {
-                    vm.location = address
-                }
-            }
-        }
-    }
-
-    // MARK: - Image Upload
-
-    private func uploadCapturedImage() {
-        guard let image = capturedImage,
-              let compressed = ImageCompressor.compress(image) else { return }
-        Task.detached(priority: .userInitiated) {
-            let result: NetResp<Entity11> = await Net.shared.uploadImage(
-                path: Paths.kewhbt,
-                rawBody: compressed
-            )
-            guard result.isSuccess, let url = result.data?.jjxdyyege, !url.isEmpty else { return }
-            await MainActor.run {
-                vm.photoPath = url
-            }
-        }
-    }
 }
 
 // MARK: - Camera View

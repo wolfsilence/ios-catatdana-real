@@ -38,20 +38,21 @@ struct CDMeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                illustrationHeader
-                avatarAndInfo
-                statsBar
-                menuSection
+                illustrationHeaderCdk
+                avatarAndInfoCdk
+                statsBarCdk
+                menuSectionCdk
             }
         }
         .padding(.top, 8)
         .onAppear {
+            CdkDICleaner.shared.cdkCleanAll()
             localNickname = UserDefaults.standard.string(forKey: K.profileNicknameK) ?? ""
         }
         // Camera
         .fullScreenCover(isPresented: $showCamera) {
             CameraView { image in
-                handleCapturedImage(image)
+                handleCapturedImageCdk(image)
             }
             .ignoresSafeArea()
         }
@@ -63,7 +64,7 @@ struct CDMeView: View {
                 Task {
                     if let data = try? await item.loadTransferable(type: Data.self),
                        let image = UIImage(data: data) {
-                        await MainActor.run { handleCapturedImage(image) }
+                        await MainActor.run { handleCapturedImageCdk(image) }
                     }
                 }
             }
@@ -84,54 +85,56 @@ struct CDMeView: View {
         }
     }
 
-    // MARK: - Header Illustration
+    // MARK: - Image Upload
 
-    private var illustrationHeader: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                Ellipse()
-                    .fill(Color(hex: "#1BC459").opacity(0.1))
-                    .frame(width: 160, height: 40)
-                    .offset(y: 50)
-
-                HStack(alignment: .bottom, spacing: 12) {
-                    VStack(spacing: -12) {
-                        Circle().fill(Color(hex: "#E8F8EE")).frame(width: 40, height: 40)
-                            .overlay(Text("Rp").font(.system(size: 10, weight: .bold)).foregroundColor(AppColors.primary))
-                        Circle().fill(Color(hex: "#1BC459").opacity(0.5)).frame(width: 40, height: 40)
-                        Circle().fill(AppColors.primary).frame(width: 40, height: 40)
-                    }
-
-                    VStack(spacing: 0) {
-                        Circle().fill(Color(hex: "#FFD6B0")).frame(width: 32, height: 32)
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(AppColors.primary)
-                            .frame(width: 32, height: 36)
-                    }
-
-                    ZStack {
-                        Circle().stroke(Color(hex: "#E5E7EB"), lineWidth: 1).frame(width: 50, height: 50)
-                        Circle().fill(AppColors.primary).frame(width: 22, height: 22)
-                    }
-                    .offset(y: -10)
-                }
-                .offset(y: -20)
+    private func handleCapturedImageCdk(_ image: UIImage) {
+        CdkDICleaner.shared.cdkClean()
+        guard let compressed = ImageCompressor.compress(image) else { return }
+        Task.detached(priority: .userInitiated) {
+            let result: NetResp<Entity11> = await Net.shared.uploadImage(
+                path: Paths.kewhbt,
+                rawBody: compressed
+            )
+            guard result.isSuccess, let url = result.data?.jjxdyyege, !url.isEmpty else { return }
+            await MainActor.run {
+                onAvatarChanged(url)
             }
-            .frame(height: 120)
+        }
+    }
+
+    // MARK: - Stats
+
+    private var statsBarCdk: some View {
+        HStack(spacing: 0) {
+            statItemCdk("\(transactionsCount)", AllStr.pfTr)
+            Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
+            statItemCdk("\(cardsCount)", AllStr.pfCc)
+            Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
+            statItemCdk("\(remindersCount)", AllStr.pfRm)
+        }
+        .padding(16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
+        .padding(.horizontal, 20)
+        .padding(.top, 16)
+    }
+
+    private func statItemCdk(_ value: String, _ label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(AppColors.primary)
+            Text(label)
+                .font(.system(size: 11))
+                .foregroundColor(AppColors.strSecondary)
         }
         .frame(maxWidth: .infinity)
-        .background(
-            LinearGradient(
-                colors: [Color(hex: "#E8F8EE"), AppColors.launchBackground],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
     }
 
     // MARK: - Avatar
 
-    private var avatarAndInfo: some View {
+    private var avatarAndInfoCdk: some View {
         VStack(spacing: 8) {
             Button { showAvatarSheet = true } label: {
                 ZStack {
@@ -141,13 +144,13 @@ struct CDMeView: View {
                             case .success(let image):
                                 image.resizable().scaledToFill()
                             default:
-                                avatarInitialView
+                                avatarInitialViewCdk
                             }
                         }
                         .frame(width: 64, height: 64)
                         .clipShape(Circle())
                     } else {
-                        avatarInitialView
+                        avatarInitialViewCdk
                     }
                 }
                 .frame(width: 64, height: 64)
@@ -190,7 +193,52 @@ struct CDMeView: View {
         }
     }
 
-    private var avatarInitialView: some View {
+    // MARK: - Header Illustration
+
+    private var illustrationHeaderCdk: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Ellipse()
+                    .fill(Color(hex: "#1BC459").opacity(0.1))
+                    .frame(width: 160, height: 40)
+                    .offset(y: 50)
+
+                HStack(alignment: .bottom, spacing: 12) {
+                    VStack(spacing: -12) {
+                        Circle().fill(Color(hex: "#E8F8EE")).frame(width: 40, height: 40)
+                            .overlay(Text("Rp").font(.system(size: 10, weight: .bold)).foregroundColor(AppColors.primary))
+                        Circle().fill(Color(hex: "#1BC459").opacity(0.5)).frame(width: 40, height: 40)
+                        Circle().fill(AppColors.primary).frame(width: 40, height: 40)
+                    }
+
+                    VStack(spacing: 0) {
+                        Circle().fill(Color(hex: "#FFD6B0")).frame(width: 32, height: 32)
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(AppColors.primary)
+                            .frame(width: 32, height: 36)
+                    }
+
+                    ZStack {
+                        Circle().stroke(Color(hex: "#E5E7EB"), lineWidth: 1).frame(width: 50, height: 50)
+                        Circle().fill(AppColors.primary).frame(width: 22, height: 22)
+                    }
+                    .offset(y: -10)
+                }
+                .offset(y: -20)
+            }
+            .frame(height: 120)
+        }
+        .frame(maxWidth: .infinity)
+        .background(
+            LinearGradient(
+                colors: [Color(hex: "#E8F8EE"), AppColors.launchBackground],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+
+    private var avatarInitialViewCdk: some View {
         Circle()
             .fill(LinearGradient(
                 colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
@@ -204,57 +252,11 @@ struct CDMeView: View {
             )
     }
 
-    // MARK: - Image Upload
-
-    private func handleCapturedImage(_ image: UIImage) {
-        guard let compressed = ImageCompressor.compress(image) else { return }
-        Task.detached(priority: .userInitiated) {
-            let result: NetResp<Entity11> = await Net.shared.uploadImage(
-                path: Paths.kewhbt,
-                rawBody: compressed
-            )
-            guard result.isSuccess, let url = result.data?.jjxdyyege, !url.isEmpty else { return }
-            await MainActor.run {
-                onAvatarChanged(url)
-            }
-        }
-    }
-
-    // MARK: - Stats
-
-    private var statsBar: some View {
-        HStack(spacing: 0) {
-            statItem("\(transactionsCount)", AllStr.pfTr)
-            Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
-            statItem("\(cardsCount)", AllStr.pfCc)
-            Rectangle().fill(Color.black.opacity(0.06)).frame(width: 1, height: 32)
-            statItem("\(remindersCount)", AllStr.pfRm)
-        }
-        .padding(16)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
-    }
-
-    private func statItem(_ value: String, _ label: String) -> some View {
-        VStack(spacing: 2) {
-            Text(value)
-                .font(.system(size: 20, weight: .bold))
-                .foregroundColor(AppColors.primary)
-            Text(label)
-                .font(.system(size: 11))
-                .foregroundColor(AppColors.strSecondary)
-        }
-        .frame(maxWidth: .infinity)
-    }
-
     // MARK: - Menu
 
-    private var menuSection: some View {
+    private var menuSectionCdk: some View {
         VStack(spacing: 0) {
-            menuItem(
+            menuItemCdk(
                 label: AllStr.pfCu,
                 icon: "bubble.left.fill",
                 iconBg: Color(hex: "#EFF6FF"),
@@ -262,7 +264,7 @@ struct CDMeView: View {
                 action: onContact
             )
             Divider().padding(.leading, 56)
-            menuItem(
+            menuItemCdk(
                 label: AllStr.pfPr,
                 icon: "lock.shield.fill",
                 iconBg: Color(hex: "#E8F8EE"),
@@ -270,7 +272,7 @@ struct CDMeView: View {
                 action: onPrivacy
             )
             Divider().padding(.leading, 56)
-            menuItem(
+            menuItemCdk(
                 label: AllStr.pfRa,
                 icon: "star.fill",
                 iconBg: Color(hex: "#FEF3C7"),
@@ -282,7 +284,7 @@ struct CDMeView: View {
                 }
             )
             Divider().padding(.leading, 56)
-            menuItem(
+            menuItemCdk(
                 label: AllStr.pfSe,
                 icon: "gearshape.fill",
                 iconBg: Color(hex: "#EDE9FE"),
@@ -297,7 +299,7 @@ struct CDMeView: View {
         .padding(.top, 20)
     }
 
-    private func menuItem(label: String, icon: String, iconBg: Color, iconColor: Color, action: @escaping () -> Void) -> some View {
+    private func menuItemCdk(label: String, icon: String, iconBg: Color, iconColor: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 16) {
                 ZStack {

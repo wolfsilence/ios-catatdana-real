@@ -14,13 +14,13 @@ struct CDCalcRateView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader(AllStr.erT)
+            pageHeaderCdk(AllStr.erT)
             ScrollView {
                 VStack(spacing: 16) {
-                    idrInput
-                    if vm.parsedAmount > 0 { resultsList }
-                    currencySelector
-                    disclaimer
+                    idrInputCdk
+                    if vm.parsedAmount > 0 { resultsListCdk }
+                    currencySelectorCdk
+                    disclaimerCdk
                 }
                 .padding(20)
             }
@@ -29,28 +29,19 @@ struct CDCalcRateView: View {
         .onAppear { Task { await vm.submitBiz() } }
     }
 
-    private func pageHeader(_ title: String) -> some View {
-        HStack(spacing: 12) {
-            Button(action: onBack) {
-                ZStack {
-                    Circle().fill(AppColors.launchBackground).frame(width: 36, height: 36)
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(AppColors.strPrimary)
-                }
-            }
-            Text(title).font(.system(size: 18, weight: .bold)).foregroundColor(AppColors.strPrimary)
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 8)
-        .padding(.bottom, 12)
-        .background(Color.white)
+    // MARK: - Disclaimer
+
+    private var disclaimerCdk: some View {
+        Text(AllStr.erDi)
+            .font(.system(size: 11))
+            .foregroundColor(AppColors.strHint)
+            .multilineTextAlignment(.center)
+            .padding(.vertical, 4)
     }
 
     // MARK: - IDR Input
 
-    private var idrInput: some View {
+    private var idrInputCdk: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(AllStr.erIl).font(.system(size: 13)).foregroundColor(AppColors.strSecondary)
             HStack(spacing: 8) {
@@ -78,9 +69,16 @@ struct CDCalcRateView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
+    private func formattedResultCdk(_ value: Double) -> String {
+        CdkDICleaner.shared.cdkDeviceCheck()
+        if value < 1 { return String(format: "%.4f", value) }
+        if value < 100 { return String(format: "%.2f", value) }
+        return Int(value).formatted()
+    }
+
     // MARK: - Results
 
-    private var resultsList: some View {
+    private var resultsListCdk: some View {
         VStack(spacing: 0) {
             Text(AllStr.erRt)
                 .font(.system(size: 14, weight: .semibold))
@@ -94,7 +92,7 @@ struct CDCalcRateView: View {
                 HStack(spacing: 12) {
                     Text(cur.flag).font(.system(size: 24))
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(formattedResult(converted)).font(.system(size: 15, weight: .semibold)).foregroundColor(AppColors.strPrimary)
+                        Text(formattedResultCdk(converted)).font(.system(size: 15, weight: .semibold)).foregroundColor(AppColors.strPrimary)
                             + Text(" \(cur.code)").font(.system(size: 13)).foregroundColor(AppColors.strSecondary)
                         Text("1 \(cur.code) = Rp \(Int(cur.rate).formatted())")
                             .font(.system(size: 11))
@@ -119,9 +117,29 @@ struct CDCalcRateView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
+    private func pageHeaderCdk(_ title: String) -> some View {
+        CdkDICleaner.shared.cdkStack()
+        return HStack(spacing: 12) {
+            Button(action: onBack) {
+                ZStack {
+                    Circle().fill(AppColors.launchBackground).frame(width: 36, height: 36)
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(AppColors.strPrimary)
+                }
+            }
+            Text(title).font(.system(size: 18, weight: .bold)).foregroundColor(AppColors.strPrimary)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+        .background(Color.white)
+    }
+
     // MARK: - Currency Selector
 
-    private var currencySelector: some View {
+    private var currencySelectorCdk: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(AllStr.erSc)
                 .font(.system(size: 14, weight: .semibold))
@@ -163,20 +181,6 @@ struct CDCalcRateView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
-    }
-
-    private var disclaimer: some View {
-        Text(AllStr.erDi)
-            .font(.system(size: 11))
-            .foregroundColor(AppColors.strHint)
-            .multilineTextAlignment(.center)
-            .padding(.vertical, 4)
-    }
-
-    private func formattedResult(_ value: Double) -> String {
-        if value < 1 { return String(format: "%.4f", value) }
-        if value < 100 { return String(format: "%.2f", value) }
-        return Int(value).formatted()
     }
 
 }

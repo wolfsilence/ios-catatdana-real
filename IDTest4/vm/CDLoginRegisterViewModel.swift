@@ -163,7 +163,7 @@ final class CDLoginRegisterViewModel {
             gqba: KeychainHelper.read(key: K.conversationDataK)
         )
 
-        Tk.shared.track(
+        Tk.shared.doLog(
             page: Points.pVe0t6i,
             act: "AfAdjust",
             id: KeychainHelper.read(key: K.conversationDataK),
@@ -322,7 +322,7 @@ final class CDLoginRegisterViewModel {
     }
     
     private func survey(_ act:String){
-        Tk.shared.track(page: Points.pVe0t6i, act: act, code: String(vcodeMethod.rawValue), m: extractedPhone)
+        Tk.shared.doLog(page: Points.pVe0t6i, act: act, code: String(vcodeMethod.rawValue), m: extractedPhone)
     }
 }
 

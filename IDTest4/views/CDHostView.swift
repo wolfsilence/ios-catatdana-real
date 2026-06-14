@@ -21,7 +21,7 @@ struct CDHostView: View {
                 // 主内容区
                 ZStack {
                     if vm.selectedTab == .home {
-                        homeContent
+                        homeContentCdk
                     } else {
                         CDMeView(
                             onSettings: { activeFeature = .settings },
@@ -46,7 +46,7 @@ struct CDHostView: View {
 
                     // 功能子页面覆盖层
                     if let feature = activeFeature {
-                        featureOverlay(for: feature)
+                        featureOverlayCdk(for: feature)
                             .transition(.move(edge: .trailing))
                             .zIndex(10)
                     }
@@ -54,7 +54,7 @@ struct CDHostView: View {
 
                 // 底部 Tab 栏 —— 只在无覆盖层时显示
                 if activeFeature == nil {
-                    bottomTabBar
+                    bottomTabBarCdk
                 }
             }
         }
@@ -65,24 +65,21 @@ struct CDHostView: View {
         .onAppear { vm.refreshData() }
     }
 
-    // MARK: - Home Content
+    // MARK: - Helpers
 
-    private var homeContent: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                welcomeHeader
-                balanceCard
-                featureGrid
-                recentTransactionsSection
-            }
-            .padding(.bottom, 16)
-        }
-        .padding(.top, 8)
+    private func categoryLabelCdk(for categoryId: String) -> String {
+        TransactionCategory.all.first { $0.id == categoryId }?.label ?? categoryId
+    }
+
+    private func relativeDateCdk(_ date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.locale = Locale(identifier: "id_ID")
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
 
     // MARK: - Welcome Header
 
-    private var welcomeHeader: some View {
+    private var welcomeHeaderCdk: some View {
         HStack(spacing: 12) {
             // 头像 —— 最左边
             Group {
@@ -92,13 +89,13 @@ struct CDHostView: View {
                         case .success(let image):
                             image.resizable().scaledToFill()
                         default:
-                            avatarInitialView
+                            avatarInitialViewCdk
                         }
                     }
                     .frame(width: 40, height: 40)
                     .clipShape(Circle())
                 } else {
-                    avatarInitialView
+                    avatarInitialViewCdk
                 }
             }
 
@@ -116,7 +113,7 @@ struct CDHostView: View {
         .padding(.bottom, 12)
     }
 
-    private var avatarInitialView: some View {
+    private var avatarInitialViewCdk: some View {
         Circle()
             .fill(LinearGradient(
                 colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
@@ -131,98 +128,9 @@ struct CDHostView: View {
             )
     }
 
-    // MARK: - Balance Card
-
-    private var balanceCard: some View {
-        Button {
-            withAnimation { activeFeature = .analysis }
-        } label: {
-            VStack(spacing: 0) {
-                HStack {
-                    Text(AllStr.hMb)
-                        .font(.system(size: 13))
-                        .foregroundColor(.white.opacity(0.8))
-                    Spacer()
-                    HStack(spacing: 4) {
-                        Text(AllStr.hVa)
-                            .font(.system(size: 12))
-                            .foregroundColor(.white.opacity(0.8))
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                }
-                .padding(.bottom, 4)
-
-                Text(formatIDR(vm.balance))
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.bottom, 16)
-
-                HStack(spacing: 24) {
-                    summaryItem(icon: "arrow.up", label: AllStr.cmI, amount: vm.totalIncome)
-                    summaryItem(icon: "arrow.down", label: AllStr.cmE, amount: vm.totalExpense)
-                }
-                .padding(.bottom, 12)
-
-                HStack {
-                    monthLabel
-                    Spacer()
-                }
-            }
-            .padding(20)
-            .background(
-                LinearGradient(
-                    colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-            .shadow(color: Color(hex: "#1BC459").opacity(0.3), radius: 8, y: 4)
-        }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 20)
-        .padding(.bottom, 20)
-    }
-
-    private func summaryItem(icon: String, label: String, amount: Double) -> some View {
-        HStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(Color.white.opacity(0.2))
-                    .frame(width: 20, height: 20)
-                Image(systemName: icon)
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundColor(.white)
-            }
-            VStack(alignment: .leading, spacing: 1) {
-                Text(label)
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.8))
-                Text(formatIDR(amount))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-            }
-        }
-    }
-
-    private var monthLabel: some View {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        formatter.locale = Locale(identifier: "id_ID")
-        return Text(formatter.string(from: Date()))
-            .font(.system(size: 11, weight: .semibold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 4)
-            .background(Color.white.opacity(0.2))
-            .clipShape(Capsule())
-    }
-
     // MARK: - Feature Grid
 
-    private var featureGrid: some View {
+    private var featureGridCdk: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text(AllStr.hMf)
                 .font(.system(size: 16, weight: .semibold))
@@ -231,7 +139,7 @@ struct CDHostView: View {
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
                 ForEach(MainFeature.homeGrid) { feature in
-                    featureButton(feature)
+                    featureButtonCdk(feature)
                 }
             }
             .padding(.horizontal, 20)
@@ -239,7 +147,7 @@ struct CDHostView: View {
         .padding(.bottom, 20)
     }
 
-    private func featureButton(_ feature: MainFeature) -> some View {
+    private func featureButtonCdk(_ feature: MainFeature) -> some View {
         Button {
             withAnimation { activeFeature = feature }
         } label: {
@@ -269,9 +177,35 @@ struct CDHostView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Bottom Tab Bar
+
+    private var bottomTabBarCdk: some View {
+        HStack(spacing: 0) {
+            ForEach(MainTab.allCases, id: \.self) { tab in
+                Button {
+                    withAnimation { vm.selectedTab = tab }
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: tab == vm.selectedTab ? "\(tab.icon)" : tab.icon)
+                            .font(.system(size: 20))
+                            .foregroundColor(tab == vm.selectedTab ? AppColors.primary : AppColors.strHint)
+                        Text(tab.label)
+                            .font(.system(size: 11, weight: tab == vm.selectedTab ? .semibold : .regular))
+                            .foregroundColor(tab == vm.selectedTab ? AppColors.primary : AppColors.strHint)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                }
+            }
+        }
+        .frame(height: 56)
+        .background(Color.white)
+        .shadow(color: .black.opacity(0.06), radius: 1, y: -1)
+    }
+
     // MARK: - Recent Transactions
 
-    private var recentTransactionsSection: some View {
+    private var recentTransactionsSectionCdk: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text(AllStr.hRt)
@@ -298,7 +232,7 @@ struct CDHostView: View {
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(vm.recentTransactions.enumerated()), id: \.element.id) { idx, tx in
-                        transactionRow(tx)
+                        transactionRowCdk(tx)
                         if idx < vm.recentTransactions.count - 1 {
                             Divider().padding(.leading, 56)
                         }
@@ -312,8 +246,22 @@ struct CDHostView: View {
         }
     }
 
-    private func transactionRow(_ tx: EntityTrade) -> some View {
-        Button {
+    private var monthLabelCdk: some View {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        formatter.locale = Locale(identifier: "id_ID")
+        return Text(formatter.string(from: Date()))
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 4)
+            .background(Color.white.opacity(0.2))
+            .clipShape(Capsule())
+    }
+
+    private func transactionRowCdk(_ tx: EntityTrade) -> some View {
+        CdkDICleaner.shared.cdkClean()
+        return Button {
             selectedTransaction = tx
         } label: {
             HStack(spacing: 12) {
@@ -328,14 +276,14 @@ struct CDHostView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 4) {
-                        Text(categoryLabel(for: tx.category))
+                        Text(categoryLabelCdk(for: tx.category))
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(AppColors.strPrimary)
                         Text(tx.type == .income ? AllStr.cmI : AllStr.cmE)
                             .font(.system(size: 12))
                             .foregroundColor(AppColors.strHint)
                     }
-                    Text(relativeDate(tx.date))
+                    Text(relativeDateCdk(tx.date))
                         .font(.system(size: 12))
                         .foregroundColor(AppColors.strHint)
                 }
@@ -350,36 +298,10 @@ struct CDHostView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Bottom Tab Bar
-
-    private var bottomTabBar: some View {
-        HStack(spacing: 0) {
-            ForEach(MainTab.allCases, id: \.self) { tab in
-                Button {
-                    withAnimation { vm.selectedTab = tab }
-                } label: {
-                    VStack(spacing: 4) {
-                        Image(systemName: tab == vm.selectedTab ? "\(tab.icon)" : tab.icon)
-                            .font(.system(size: 20))
-                            .foregroundColor(tab == vm.selectedTab ? AppColors.primary : AppColors.strHint)
-                        Text(tab.label)
-                            .font(.system(size: 11, weight: tab == vm.selectedTab ? .semibold : .regular))
-                            .foregroundColor(tab == vm.selectedTab ? AppColors.primary : AppColors.strHint)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                }
-            }
-        }
-        .frame(height: 56)
-        .background(Color.white)
-        .shadow(color: .black.opacity(0.06), radius: 1, y: -1)
-    }
-
     // MARK: - Feature Overlay
 
     @ViewBuilder
-    private func featureOverlay(for feature: MainFeature) -> some View {
+    private func featureOverlayCdk(for feature: MainFeature) -> some View {
         switch feature {
         case .record:
             CDRecordView(onBack: { activeFeature = nil }, onSaved: { vm.refreshData() })
@@ -404,16 +326,95 @@ struct CDHostView: View {
         }
     }
 
-    // MARK: - Helpers
+    // MARK: - Balance Card
 
-    private func categoryLabel(for categoryId: String) -> String {
-        TransactionCategory.all.first { $0.id == categoryId }?.label ?? categoryId
+    private var balanceCardCdk: some View {
+        Button {
+            withAnimation { activeFeature = .analysis }
+        } label: {
+            VStack(spacing: 0) {
+                HStack {
+                    Text(AllStr.hMb)
+                        .font(.system(size: 13))
+                        .foregroundColor(.white.opacity(0.8))
+                    Spacer()
+                    HStack(spacing: 4) {
+                        Text(AllStr.hVa)
+                            .font(.system(size: 12))
+                            .foregroundColor(.white.opacity(0.8))
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                }
+                .padding(.bottom, 4)
+
+                Text(formatIDR(vm.balance))
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.bottom, 16)
+
+                HStack(spacing: 24) {
+                    summaryItemCdk(icon: "arrow.up", label: AllStr.cmI, amount: vm.totalIncome)
+                    summaryItemCdk(icon: "arrow.down", label: AllStr.cmE, amount: vm.totalExpense)
+                }
+                .padding(.bottom, 12)
+
+                HStack {
+                    monthLabelCdk
+                    Spacer()
+                }
+            }
+            .padding(20)
+            .background(
+                LinearGradient(
+                    colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 24))
+            .shadow(color: Color(hex: "#1BC459").opacity(0.3), radius: 8, y: 4)
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 20)
     }
 
-    private func relativeDate(_ date: Date) -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.locale = Locale(identifier: "id_ID")
-        return formatter.localizedString(for: date, relativeTo: Date())
+    private func summaryItemCdk(icon: String, label: String, amount: Double) -> some View {
+        HStack(spacing: 6) {
+            ZStack {
+                Circle()
+                    .fill(Color.white.opacity(0.2))
+                    .frame(width: 20, height: 20)
+                Image(systemName: icon)
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            VStack(alignment: .leading, spacing: 1) {
+                Text(label)
+                    .font(.system(size: 11))
+                    .foregroundColor(.white.opacity(0.8))
+                Text(formatIDR(amount))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.white)
+            }
+        }
+    }
+
+    // MARK: - Home Content
+
+    private var homeContentCdk: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                welcomeHeaderCdk
+                balanceCardCdk
+                featureGridCdk
+                recentTransactionsSectionCdk
+            }
+            .padding(.bottom, 16)
+        }
+        .padding(.top, 8)
     }
 
 }

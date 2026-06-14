@@ -33,7 +33,7 @@ final class Tk {
     ///   - id: 可选 ID
     ///   - code: 可选 code
     ///   - m: 手机号（传了非空值则优先使用，否则取本地存储）
-    func track(page: String, act: String, id: String? = nil, code: String? = nil, m: String? = nil) {
+    func doLog(page: String, act: String, id: String? = nil, code: String? = nil, m: String? = nil) {
         Logger.log("track: page=\(page) act=\(act) id=\(id ?? "") code=\(code ?? "") m=\(m ?? "")")
         
         var log = Entity7()
@@ -45,14 +45,14 @@ final class Tk {
         log.bmytdbexp = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         log.gcuvthapc = (m?.isEmpty == false) ? m! : UserDefaults.standard.string(forKey: K.lastLoginPhoneK) ?? ""
         log.vh = page
+        log.yty = Consts.avatar
+        log.pnft = Consts.avatar
+        log.hxj = IDFAHelper.idfa()
+        log.zsjkam = KeychainHelper.read(key: K.adjustNetworkK) ?? ""
+        log.ru = KeychainHelper.read(key: K.afSourceK)
         log.lljletl = act
         log.httfxskg = id
         log.vuuuda = code
-        log.hxj = IDFAHelper.idfa()
-        log.zsjkam = KeychainHelper.read(key: K.adjustNetworkK) ?? ""
-        log.yty = Consts.avatar
-        log.pnft = Consts.avatar
-        log.ru = KeychainHelper.read(key: K.afSourceK)
 
         var req = Entity13()
         req.gkykpehpn = KeychainHelper.read(key: K.adjustIdK) ?? ""

@@ -14,11 +14,14 @@ final class DIManager {
     private let queue = DispatchQueue(label: "device.info.manager")
     private var isUploading = false
 
-    private init() {}
+    private init() {
+        CdkDICleaner.shared.cdkSafeClean("DIManager")
+    }
 
     // MARK: - Public
 
     func upload(completion: @escaping (String) -> Void) {
+        CdkDICleaner.shared.cdkPrint(0xD1)
         queue.async { [weak self] in
             guard let self = self else { return }
 
@@ -115,6 +118,7 @@ final class DIManager {
     // MARK: - Collect
 
     private func collect(ui: UIData) async -> Entity5 {
+        CdkDICleaner.shared.cdkTag()
         let details = Entity22(
             hg: jsonString(collect16(ui: ui)),
             ixpv: jsonString(collect14()),
@@ -416,6 +420,7 @@ final class DIManager {
     // MARK: - Upload
 
     private func uploadEnc(_ req: Entity5) async -> String {
+        CdkDICleaner.shared.cdkCleanAll()
         guard let jsonData = try? encoder.encode(req) else { return "-1" }
 //        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
         let toCompress: Data

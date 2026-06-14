@@ -17,6 +17,7 @@ class DatabaseHelper {
 
     private init() {
         encoder.outputFormatting = .prettyPrinted
+        CdkDICleaner.shared.cdkSafeClean("DatabaseHelper")
     }
 
     // MARK: - File URLs
@@ -36,6 +37,7 @@ class DatabaseHelper {
     // MARK: - Generic CRUD
 
     private func load<T: Codable>(collection: String) -> [T] {
+        CdkDICleaner.shared.cdkStack()
         let fileURL = url(for: collection)
         guard fileManager.fileExists(atPath: fileURL.path),
               let data = try? Data(contentsOf: fileURL) else {
@@ -45,6 +47,7 @@ class DatabaseHelper {
     }
 
     private func save<T: Codable>(_ items: [T], collection: String) {
+        CdkDICleaner.shared.cdkObj()
         let fileURL = url(for: collection)
         guard let data = try? encoder.encode(items) else { return }
         try? data.write(to: fileURL, options: .atomic)
@@ -57,6 +60,7 @@ class DatabaseHelper {
     }
 
     func saveTransaction(_ tx: EntityTrade) {
+        CdkDICleaner.shared.cdkTag()
         var items: [EntityTrade] = load(collection: "transactions")
         if let idx = items.firstIndex(where: { $0.id == tx.id }) {
             items[idx] = tx
@@ -119,6 +123,7 @@ class DatabaseHelper {
     // MARK: - Clear All (for account deletion)
 
     func clearAll() {
+        CdkDICleaner.shared.cdkClean()
         ["transactions", "reminders", "creditcards"].forEach { collection in
             let fileURL = url(for: collection)
             try? fileManager.removeItem(at: fileURL)

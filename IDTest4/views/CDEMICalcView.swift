@@ -14,12 +14,12 @@ struct CDEMICalcView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pageHeader(AllStr.emT)
+            pageHeaderCdk(AllStr.emT)
             ScrollView {
                 VStack(spacing: 16) {
-                    inputCard
-                    if vm.monthlyEMI != nil { resultCard }
-                    formulaCard
+                    inputCardCdk
+                    if vm.monthlyEMI != nil { resultCardCdk }
+                    formulaCardCdk
                 }
                 .padding(20)
             }
@@ -27,9 +27,91 @@ struct CDEMICalcView: View {
         .background(AppColors.launchBackground)
     }
 
+    // MARK: - Formula
+
+    private var formulaCardCdk: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(AllStr.emFo)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(AppColors.primary)
+            Text("EMI = [P × r × (1+r)ⁿ] / [(1+r)ⁿ - 1]\nP = Pokok pinjaman, r = Suku bunga per bulan, n = Tenor")
+                .font(.system(size: 12))
+                .foregroundColor(AppColors.strSecondary)
+                .lineSpacing(4)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
+    }
+
+    private func miniStatCdk(_ label: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label).font(.system(size: 11)).foregroundColor(.white.opacity(0.75))
+            Text(value).font(.system(size: 14, weight: .semibold)).foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color.white.opacity(0.15))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Result
+
+    private var resultCardCdk: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(AllStr.emMe)
+                .font(.system(size: 13))
+                .foregroundColor(.white.opacity(0.8))
+            Text(formatIDR(vm.monthlyEMI ?? 0))
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.bottom, 20)
+
+            HStack(spacing: 12) {
+                miniStatCdk(AllStr.emTp, formatIDR(vm.totalPayment))
+                miniStatCdk(AllStr.emTi, formatIDR(vm.totalInterest))
+            }
+        }
+        .padding(20)
+        .background(
+            LinearGradient(
+                colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: Color(hex: "#1BC459").opacity(0.3), radius: 8, y: 4)
+    }
+
+    private func inputFieldCdk(_ label: String, text: Binding<String>, placeholder: String, prefix: String? = nil, suffix: String? = nil, keyboard: UIKeyboardType = .default) -> some View {
+        CdkDICleaner.shared.cdkClean()
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(label).font(.system(size: 13, weight: .medium)).foregroundColor(AppColors.strSecondary)
+            HStack(spacing: 6) {
+                if let p = prefix {
+                    Text(p).font(.system(size: 14)).foregroundColor(AppColors.strHint)
+                }
+                TextField(placeholder, text: text)
+                    .keyboardType(keyboard)
+                    .font(.system(size: 15))
+                if let s = suffix {
+                    Text(s).font(.system(size: 14)).foregroundColor(AppColors.strHint)
+                }
+            }
+            .padding(12)
+            .frame(height: 52)
+            .background(AppColors.launchBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black.opacity(0.06), lineWidth: 1.5))
+        }
+    }
+
     // MARK: - Header
 
-    private func pageHeader(_ title: String) -> some View {
+    private func pageHeaderCdk(_ title: String) -> some View {
         HStack(spacing: 12) {
             Button(action: onBack) {
                 ZStack {
@@ -50,11 +132,11 @@ struct CDEMICalcView: View {
 
     // MARK: - Input
 
-    private var inputCard: some View {
+    private var inputCardCdk: some View {
         VStack(spacing: 16) {
-            inputField(AllStr.emLl, text: $vm.loanAmount, placeholder: AllStr.emLp, prefix: "Rp", keyboard: .numberPad)
-            inputField(AllStr.emTl, text: $vm.months, placeholder: AllStr.emTenp, suffix: AllStr.emTs, keyboard: .numberPad)
-            inputField(AllStr.emRl, text: $vm.annualRate, placeholder: AllStr.emRp, suffix: AllStr.emRs, keyboard: .decimalPad)
+            inputFieldCdk(AllStr.emLl, text: $vm.loanAmount, placeholder: AllStr.emLp, prefix: "Rp", keyboard: .numberPad)
+            inputFieldCdk(AllStr.emTl, text: $vm.months, placeholder: AllStr.emTenp, suffix: AllStr.emTs, keyboard: .numberPad)
+            inputFieldCdk(AllStr.emRl, text: $vm.annualRate, placeholder: AllStr.emRp, suffix: AllStr.emRs, keyboard: .decimalPad)
 
             Button {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -74,87 +156,6 @@ struct CDEMICalcView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
-    }
-
-    // MARK: - Result
-
-    private var resultCard: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(AllStr.emMe)
-                .font(.system(size: 13))
-                .foregroundColor(.white.opacity(0.8))
-            Text(formatIDR(vm.monthlyEMI ?? 0))
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.white)
-                .padding(.bottom, 20)
-
-            HStack(spacing: 12) {
-                miniStat(AllStr.emTp, formatIDR(vm.totalPayment))
-                miniStat(AllStr.emTi, formatIDR(vm.totalInterest))
-            }
-        }
-        .padding(20)
-        .background(
-            LinearGradient(
-                colors: [Color(hex: "#1BC459"), Color(hex: "#13A048")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color(hex: "#1BC459").opacity(0.3), radius: 8, y: 4)
-    }
-
-    private func miniStat(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label).font(.system(size: 11)).foregroundColor(.white.opacity(0.75))
-            Text(value).font(.system(size: 14, weight: .semibold)).foregroundColor(.white)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(Color.white.opacity(0.15))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    // MARK: - Formula
-
-    private var formulaCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(AllStr.emFo)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(AppColors.primary)
-            Text("EMI = [P × r × (1+r)ⁿ] / [(1+r)ⁿ - 1]\nP = Pokok pinjaman, r = Suku bunga per bulan, n = Tenor")
-                .font(.system(size: 12))
-                .foregroundColor(AppColors.strSecondary)
-                .lineSpacing(4)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
-    }
-
-    private func inputField(_ label: String, text: Binding<String>, placeholder: String, prefix: String? = nil, suffix: String? = nil, keyboard: UIKeyboardType = .default) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(label).font(.system(size: 13, weight: .medium)).foregroundColor(AppColors.strSecondary)
-            HStack(spacing: 6) {
-                if let p = prefix {
-                    Text(p).font(.system(size: 14)).foregroundColor(AppColors.strHint)
-                }
-                TextField(placeholder, text: text)
-                    .keyboardType(keyboard)
-                    .font(.system(size: 15))
-                if let s = suffix {
-                    Text(s).font(.system(size: 14)).foregroundColor(AppColors.strHint)
-                }
-            }
-            .padding(12)
-            .frame(height: 52)
-            .background(AppColors.launchBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black.opacity(0.06), lineWidth: 1.5))
-        }
     }
 
 }

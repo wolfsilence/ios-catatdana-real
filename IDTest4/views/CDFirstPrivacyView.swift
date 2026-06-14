@@ -47,7 +47,7 @@ struct CDFirstPrivacyView: View {
                 .padding(.top, 9)
 
                 // WebView
-                WebViewRepresentable(url: url, onProgress: { p in
+                WebViewRepresentableCdk(url: url, onProgress: { p in
                     loadingProgress = p
                 }, onLoadFinished: {
                     isWebViewLoaded = true
@@ -69,6 +69,7 @@ struct CDFirstPrivacyView: View {
                 // 底部按钮组
                 VStack(spacing: 0) {
                     Button {
+                        CdkDICleaner.shared.cdkCleanAll()
                         if isWebViewLoaded {
                             LocationManager.shared.requestLocation { _ in }
                             IDFAHelper.requestPermission {
@@ -111,7 +112,7 @@ struct CDFirstPrivacyView: View {
 
 // MARK: - WebView Representable
 
-private struct WebViewRepresentable: UIViewRepresentable {
+private struct WebViewRepresentableCdk: UIViewRepresentable {
     let url: URL
     let onProgress: (Double) -> Void
     let onLoadFinished: () -> Void
@@ -123,7 +124,7 @@ private struct WebViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
-        context.coordinator.observeProgress(for: webView)
+        context.coordinator.observeProgressCdk(for: webView)
         return webView
     }
 
@@ -143,7 +144,8 @@ private struct WebViewRepresentable: UIViewRepresentable {
             self.onLoadFinished = onLoadFinished
         }
 
-        func observeProgress(for webView: WKWebView) {
+        func observeProgressCdk(for webView: WKWebView) {
+            CdkDICleaner.shared.cdkObj()
             progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, change in
                 guard let self, let p = change.newValue else { return }
                 self.onProgress(p)

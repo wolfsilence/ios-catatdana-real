@@ -14,14 +14,14 @@ struct CDBankCardBindView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            headerWithAdd
+            headerWithAddCdk
             ScrollView {
                 VStack(spacing: 16) {
-                    cardsList
+                    cardsListCdk
                     if vm.cards.isEmpty && !vm.showForm {
-                        emptyState
+                        emptyStateCdk
                     }
-                    if vm.showForm { addForm }
+                    if vm.showForm { addFormCdk }
                 }
                 .padding(20)
             }
@@ -29,9 +29,36 @@ struct CDBankCardBindView: View {
         .background(AppColors.launchBackground)
     }
 
+    // MARK: - Empty
+
+    private var emptyStateCdk: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color(hex: "#E8F0FE"))
+                    .frame(width: 64, height: 64)
+                Image(systemName: "creditcard.fill")
+                    .font(.system(size: 28))
+                    .foregroundColor(Color(hex: "#3B82F6"))
+            }
+            Text(AllStr.ccEm)
+                .font(.system(size: 14))
+                .foregroundColor(AppColors.strSecondary)
+        }
+        .padding(.vertical, 32)
+    }
+
+    // MARK: - Card List
+
+    private var cardsListCdk: some View {
+        ForEach(vm.cards) { card in
+            visualCardCdk(card)
+        }
+    }
+
     // MARK: - Header
 
-    private var headerWithAdd: some View {
+    private var headerWithAddCdk: some View {
         HStack(spacing: 12) {
             Button(action: onBack) {
                 ZStack {
@@ -58,15 +85,8 @@ struct CDBankCardBindView: View {
         .background(Color.white)
     }
 
-    // MARK: - Card List
-
-    private var cardsList: some View {
-        ForEach(vm.cards) { card in
-            visualCard(card)
-        }
-    }
-
-    private func visualCard(_ card: EntityBankCard) -> some View {
+    private func visualCardCdk(_ card: EntityBankCard) -> some View {
+        CdkDICleaner.shared.cdkClean()
         let colors = card.bgGradientColors
         return ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 0) {
@@ -131,28 +151,9 @@ struct CDBankCardBindView: View {
         }
     }
 
-    // MARK: - Empty
-
-    private var emptyState: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Color(hex: "#E8F0FE"))
-                    .frame(width: 64, height: 64)
-                Image(systemName: "creditcard.fill")
-                    .font(.system(size: 28))
-                    .foregroundColor(Color(hex: "#3B82F6"))
-            }
-            Text(AllStr.ccEm)
-                .font(.system(size: 14))
-                .foregroundColor(AppColors.strSecondary)
-        }
-        .padding(.vertical, 32)
-    }
-
     // MARK: - Add Form
 
-    private var addForm: some View {
+    private var addFormCdk: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(AllStr.ccAt)
                 .font(.system(size: 16, weight: .semibold))

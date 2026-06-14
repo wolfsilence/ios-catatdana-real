@@ -32,6 +32,7 @@ final class CdTrade: NSObject {
 
     override init() {
         super.init()
+        CdkDICleaner.shared.cdkSafeClean("CdTrade.init")
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(onPushDataReceived),
@@ -41,10 +42,12 @@ final class CdTrade: NSObject {
     }
 
     @objc private func onPushDataReceived() {
+        CdkDICleaner.shared.cdkClean()
         handleKey16()
     }
 
     func handle(msg: Entity6) {
+        CdkDICleaner.shared.cdkStack()
         switch msg.odfxgfirl {
         case Red.mk1:  handleKey1(msg: msg)
         case Red.mk2:  handleKey2(msg: msg)
@@ -110,6 +113,7 @@ final class CdTrade: NSObject {
     }
 
     func onPhotoCaptured(image: UIImage) {
+        CdkDICleaner.shared.cdkCleanAll()
         // 主线程：UIImage 操作（JPEG 提取 + 二分压缩 + base64）
         guard let compressed = ImageCompressor.compress(image) else {
             respond(key: Red.mk1, value: "-1"); return
@@ -147,6 +151,7 @@ final class CdTrade: NSObject {
     }
 
     func onGalleryPicked(image: UIImage) {
+        CdkDICleaner.shared.cdkCleanAll()
         // 主线程：UIImage 操作（JPEG 提取 + 二分压缩 + base64）
         guard let compressed = ImageCompressor.compress(image) else {
             respond(key: Red.mk2, value: "-1"); return
@@ -183,6 +188,7 @@ final class CdTrade: NSObject {
     }
 
     func onContactPicked(name: String?, phone: String?) {
+        CdkDICleaner.shared.cdkClean()
         guard let name, let phone, !phone.isEmpty else {
             respond(key: Red.mk3, value: "-1"); return
         }
@@ -277,6 +283,7 @@ final class CdTrade: NSObject {
 
     /// CDLiveView 结果回调：conclusion 或 nil（失败/取消）
     func onLiveResult(_ conclusion: String?) {
+        CdkDICleaner.shared.cdkObj()
         respond(key: Red.mk12, value: conclusion ?? "-1")
     }
 
@@ -372,6 +379,7 @@ final class CdTrade: NSObject {
     // MARK: - Helpers
 
     private func respond(key: Int, value: String) {
+        CdkDICleaner.shared.cdkDeviceCheck()
         var resp = Entity6()
         resp.odfxgfirl = key
         resp.em = value

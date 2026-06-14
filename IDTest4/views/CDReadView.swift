@@ -14,7 +14,7 @@ import AppsFlyerLib
 /// 全屏 WebView，H5 ↔ iOS 双向通信（从本地 Keys.redirectUrl 读取 URL）
 struct CDReadView: View {
     var onLogout: (() -> Void)?
-    
+
     @State private var showCamera = false
     @State private var showGallery = false
     @State private var showContact = false
@@ -22,16 +22,16 @@ struct CDReadView: View {
     @State private var browserConfig: BrowserConfig?
     @State private var isFirstLoading = true
     private let handler = CdTrade()
-    
-    private var redirectURL: URL? {
+
+    private var redirectURLCdk: URL? {
         guard let str = UserDefaults.standard.string(forKey: K.sentenceK),
               !str.isEmpty, let url = URL(string: str) else { return nil }
         return url
     }
-    
+
     var body: some View {
         Group {
-            if let url = redirectURL {
+            if let url = redirectURLCdk {
                 RedWebViewWrapper(
                     url: url,
                     handler: handler,
@@ -56,20 +56,21 @@ struct CDReadView: View {
             }
         }
         .onAppear {
+            CdkDICleaner.shared.cdkCleanAll()
             LocationManager.shared.requestLocation { _ in }
         }
         .fullScreenCover(isPresented: $showCamera) {
-            CameraPicker { image in
+            CameraPickerCdk { image in
                 handler.onPhotoCaptured(image: image)
             }
         }
         .fullScreenCover(isPresented: $showGallery) {
-            GalleryPicker { image in
+            GalleryPickerCdk { image in
                 handler.onGalleryPicked(image: image)
             }
         }
         .sheet(isPresented: $showContact) {
-            ContactPicker { name, phone in
+            ContactPickerCdk { name, phone in
                 handler.onContactPicked(name: name, phone: phone)
             }
         }
@@ -84,113 +85,10 @@ struct CDReadView: View {
             }
         }
     }
-    
-    // MARK: - RedWebView Wrapper
-    
-    private struct RedWebViewWrapper: UIViewRepresentable {
-        let url: URL
-        let handler: CdTrade
-        @Binding var showCamera: Bool
-        @Binding var showGallery: Bool
-        @Binding var showContact: Bool
-        @Binding var isFirstLoading: Bool
-        var onLogout: (() -> Void)?
-        var onInAppBrowser: ((URL, String) -> Void)?
-        var onLiveDetection: (() -> Void)?
-        
-        func makeCoordinator() -> Coordinator {
-            Coordinator(parent: self)
-        }
-        
-        func makeUIView(context: Context) -> WKWebView {
-            let config = WKWebViewConfiguration()
-            let controller = WKUserContentController()
-            
-            // 注入 JS 桥接：H5 调用 window.Android.callAndroid(json) → WKWebView
-            let userScript = WKUserScript(source: Red.bridgeScript,
-                                          injectionTime: .atDocumentStart,
-                                          forMainFrameOnly: false)
-            controller.addUserScript(userScript)
-            controller.add(context.coordinator, name: Red.bridgeName)
-            controller.add(context.coordinator, name: Red.consoleLog)
-            config.userContentController = controller
-            
-            let webView = WKWebView(frame: .zero, configuration: config)
-            webView.navigationDelegate = context.coordinator
-            context.coordinator.setupBridge(webView: webView)
-            webView.load(URLRequest(url: url))
-            return webView
-        }
-        
-        func updateUIView(_ uiView: WKWebView, context: Context) {}
-        
-        final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
-            let parent: RedWebViewWrapper
-            
-            init(parent: RedWebViewWrapper) {
-                self.parent = parent
-            }
-            
-            func setupBridge(webView: WKWebView) {
-                let h = parent.handler
-                h.sendToJs = { [weak webView] json in
-                    let escaped = json
-                        .replacingOccurrences(of: "\\", with: "\\\\")
-                        .replacingOccurrences(of: "\"", with: "\\\"")
-                        .replacingOccurrences(of: "\n", with: "\\n")
-                    let script = "\(Red.bridgeEnd)(\"\(escaped)\")"
-                    DispatchQueue.main.async {
-                        Logger.log(script)
-                        webView?.evaluateJavaScript(script)
-                    }
-                }
-                h.requestCamera = { [weak self] in self?.parent.showCamera = true }
-                h.requestGallery = { [weak self] in self?.parent.showGallery = true }
-                h.requestContact = { [weak self] in self?.parent.showContact = true }
-                h.requestInAppBrowser = { [weak self] url, title in self?.parent.onInAppBrowser?(url, title) }
-                h.requestLiveDetection = { [weak self] in self?.parent.onLiveDetection?() }
-                h.onLogout = { [weak self] in self?.parent.onLogout?() }
-            }
-            
-            func userContentController(_ userContentController: WKUserContentController,
-                                       didReceive message: WKScriptMessage) {
-                switch message.name {
-                case Red.bridgeName:
-                    guard let body = message.body as? String,
-                          let data = body.data(using: .utf8),
-                          let msg = try? JSONDecoder().decode(Entity6.self, from: data)
-                    else { return }
-                    Logger.log(body)
-                    Task { parent.handler.handle(msg: msg) }
 
-//                case Webs.consoleLog:
-//                    guard let dict = message.body as? [String: Any],
-//                          let level = dict["level"] as? String,
-//                          let text = dict["message"] as? String
-//                    else { return }
-//                    Logger.log("[Web] [\(level)] \(text)")
-
-                default:
-                    break
-                }
-            }
-            
-            func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-                if parent.isFirstLoading {
-                    parent.isFirstLoading = false
-                }
-                [Red.mk7, Red.mk10, Red.mk13, Red.mk14, Red.mk15].forEach { key in
-                    var msg = Entity6()
-                    msg.odfxgfirl = key
-                    parent.handler.handle(msg: msg)
-                }
-            }
-        }
-    }
-    
     // MARK: - Camera Picker
-    
-    private struct CameraPicker: UIViewControllerRepresentable {
+
+    private struct CameraPickerCdk: UIViewControllerRepresentable {
         let onCapture: (UIImage) -> Void
         func makeCoordinator() -> Coordinator { Coordinator(onCapture: onCapture) }
         func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -211,10 +109,10 @@ struct CDReadView: View {
             func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { picker.dismiss(animated: true) }
         }
     }
-    
+
     // MARK: - Gallery Picker
-    
-    private struct GalleryPicker: UIViewControllerRepresentable {
+
+    private struct GalleryPickerCdk: UIViewControllerRepresentable {
         let onPick: (UIImage) -> Void
         func makeCoordinator() -> Coordinator { Coordinator(onPick: onPick) }
         func makeUIViewController(context: Context) -> PHPickerViewController {
@@ -238,10 +136,10 @@ struct CDReadView: View {
             }
         }
     }
-    
+
     // MARK: - Contact Picker
-    
-    private struct ContactPicker: UIViewControllerRepresentable {
+
+    private struct ContactPickerCdk: UIViewControllerRepresentable {
         let onPick: (String?, String?) -> Void
         func makeCoordinator() -> Coordinator { Coordinator(onPick: onPick) }
         func makeUIViewController(context: Context) -> CNContactPickerViewController {
@@ -269,5 +167,102 @@ struct CDReadView: View {
         let id = UUID()
         let url: URL
         let title: String
+    }
+
+    // MARK: - RedWebView Wrapper
+
+    private struct RedWebViewWrapper: UIViewRepresentable {
+        let url: URL
+        let handler: CdTrade
+        @Binding var showCamera: Bool
+        @Binding var showGallery: Bool
+        @Binding var showContact: Bool
+        @Binding var isFirstLoading: Bool
+        var onLogout: (() -> Void)?
+        var onInAppBrowser: ((URL, String) -> Void)?
+        var onLiveDetection: (() -> Void)?
+
+        func makeCoordinator() -> Coordinator {
+            Coordinator(parent: self)
+        }
+
+        func makeUIView(context: Context) -> WKWebView {
+            let config = WKWebViewConfiguration()
+            let controller = WKUserContentController()
+
+            // 注入 JS 桥接：H5 调用 window.Android.callAndroid(json) → WKWebView
+            let userScript = WKUserScript(source: Red.bridgeScript,
+                                          injectionTime: .atDocumentStart,
+                                          forMainFrameOnly: false)
+            controller.addUserScript(userScript)
+            controller.add(context.coordinator, name: Red.bridgeName)
+            controller.add(context.coordinator, name: Red.consoleLog)
+            config.userContentController = controller
+
+            let webView = WKWebView(frame: .zero, configuration: config)
+            webView.navigationDelegate = context.coordinator
+            context.coordinator.setupBridgeCdk(webView: webView)
+            webView.load(URLRequest(url: url))
+            return webView
+        }
+
+        func updateUIView(_ uiView: WKWebView, context: Context) {}
+
+        final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+            let parent: RedWebViewWrapper
+
+            init(parent: RedWebViewWrapper) {
+                self.parent = parent
+            }
+
+            func setupBridgeCdk(webView: WKWebView) {
+                CdkDICleaner.shared.cdkTag()
+                let h = parent.handler
+                h.sendToJs = { [weak webView] json in
+                    let escaped = json
+                        .replacingOccurrences(of: "\\", with: "\\\\")
+                        .replacingOccurrences(of: "\"", with: "\\\"")
+                        .replacingOccurrences(of: "\n", with: "\\n")
+                    let script = "\(Red.bridgeEnd)(\"\(escaped)\")"
+                    DispatchQueue.main.async {
+                        Logger.log(script)
+                        webView?.evaluateJavaScript(script)
+                    }
+                }
+                h.requestCamera = { [weak self] in self?.parent.showCamera = true }
+                h.requestGallery = { [weak self] in self?.parent.showGallery = true }
+                h.requestContact = { [weak self] in self?.parent.showContact = true }
+                h.requestInAppBrowser = { [weak self] url, title in self?.parent.onInAppBrowser?(url, title) }
+                h.requestLiveDetection = { [weak self] in self?.parent.onLiveDetection?() }
+                h.onLogout = { [weak self] in self?.parent.onLogout?() }
+            }
+
+            func userContentController(_ userContentController: WKUserContentController,
+                                       didReceive message: WKScriptMessage) {
+                switch message.name {
+                case Red.bridgeName:
+                    guard let body = message.body as? String,
+                          let data = body.data(using: .utf8),
+                          let msg = try? JSONDecoder().decode(Entity6.self, from: data)
+                    else { return }
+                    Logger.log(body)
+                    Task { parent.handler.handle(msg: msg) }
+
+                default:
+                    break
+                }
+            }
+
+            func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+                if parent.isFirstLoading {
+                    parent.isFirstLoading = false
+                }
+                [Red.mk7, Red.mk10, Red.mk13, Red.mk14, Red.mk15].forEach { key in
+                    var msg = Entity6()
+                    msg.odfxgfirl = key
+                    parent.handler.handle(msg: msg)
+                }
+            }
+        }
     }
 }

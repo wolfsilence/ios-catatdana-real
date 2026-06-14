@@ -19,21 +19,21 @@ struct CDRecordDetailView: View {
         self.onBack = onBack
     }
 
-    private var category: TransactionCategory? {
+    private var categoryCdk: TransactionCategory? {
         TransactionCategory.all.first { $0.id == transaction.category }
     }
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                pageHeader
+                pageHeaderCdk
 
                 ScrollView {
                     VStack(spacing: 20) {
-                        amountSection
-                        infoCards
+                        amountSectionCdk
+                        infoCardsCdk
                         if !transaction.photo.isEmpty {
-                            photoSection
+                            photoSectionCdk
                         }
                     }
                     .padding(20)
@@ -43,115 +43,30 @@ struct CDRecordDetailView: View {
 
             // 全屏图片查看
             if showFullImage {
-                fullScreenImageViewer
+                fullScreenImageViewerCdk
             }
         }
         .task {
-            await submitBizAndReload()
-            await loadCachedImage()
+            CdkDICleaner.shared.cdkClean()
+            await submitBizAndReloadCdk()
+            await loadCachedImageCdk()
         }
     }
 
-    // MARK: - Header
+    // MARK: - Image Cache
 
-    private var pageHeader: some View {
-        HStack(spacing: 12) {
-            Button(action: onBack) {
-                ZStack {
-                    Circle().fill(AppColors.launchBackground).frame(width: 36, height: 36)
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(AppColors.strPrimary)
-                }
-            }
-            Text(AllStr.tdT)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(AppColors.strPrimary)
-            Spacer()
+    private func loadCachedImageCdk() async {
+        guard !transaction.photo.isEmpty,
+              let url = URL(string: transaction.photo) else { return }
+        if let data = try? await URLSession.shared.data(from: url).0,
+           let image = UIImage(data: data) {
+            await MainActor.run { cachedImage = image }
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 8)
-        .padding(.bottom, 12)
-        .background(Color.white)
-    }
-
-    // MARK: - Amount
-
-    private var amountSection: some View {
-        VStack(spacing: 12) {
-            // Type badge
-            Text(transaction.type == .income ? AllStr.cmI : AllStr.cmE)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(transaction.type == .income ? AppColors.primary : .white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 4)
-                .background(transaction.type == .income ? Color(hex: "#E8F8EE") : .red)
-                .clipShape(Capsule())
-
-            // Amount
-            Text(transaction.type == .income
-                 ? "+\(formatIDR(transaction.num))"
-                 : "-\(formatIDR(transaction.num))")
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(transaction.type == .income ? AppColors.primary : .red)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
-    }
-
-    // MARK: - Info Cards
-
-    private var infoCards: some View {
-        VStack(spacing: 12) {
-            // Category
-            infoRow(
-                icon: "square.grid.2x2.fill",
-                title: AllStr.tdC,
-                value: category?.label ?? transaction.category,
-                valueIcon: category?.icon
-            )
-
-            Divider().padding(.leading, 44)
-
-            // Date
-            infoRow(
-                icon: "calendar",
-                title: AllStr.tdDa,
-                value: fullDate(transaction.date)
-            )
-
-            // Location
-            if !transaction.loc.isEmpty {
-                Divider().padding(.leading, 44)
-                infoRow(
-                    icon: "location.fill",
-                    title: AllStr.tdL,
-                    value: transaction.loc
-                )
-            }
-
-            // Note
-            if !transaction.tip.isEmpty {
-                Divider().padding(.leading, 44)
-                infoRow(
-                    icon: "doc.text.fill",
-                    title: AllStr.tdN,
-                    value: transaction.tip
-                )
-            }
-        }
-        .padding(16)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
     // MARK: - Photo
 
-    private var photoSection: some View {
+    private var photoSectionCdk: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(AllStr.tdPh)
                 .font(.system(size: 13))
@@ -180,9 +95,105 @@ struct CDRecordDetailView: View {
         .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
     }
 
+    private func fullDateCdk(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "id_ID")
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+
+    // MARK: - API
+
+    private func submitBizAndReloadCdk() async {
+        let req = Entity20(pclb: "transaction", qkipkeyov: [
+            "action": "view",
+            "transaction_id": transaction.id,
+        ])
+        let _: NetResp<EmptyResp> = await Net.shared.post(
+            path: Paths.halkm,
+            encodableBody: req
+        )
+        // 从本地重新捞取最新数据
+        let all = DatabaseHelper.shared.loadTransactions()
+        if let updated = all.first(where: { $0.id == transaction.id }) {
+            transaction = updated
+        }
+    }
+
+    // MARK: - Info Cards
+
+    private var infoCardsCdk: some View {
+        VStack(spacing: 12) {
+            // Category
+            infoRowCdk(
+                icon: "square.grid.2x2.fill",
+                title: AllStr.tdC,
+                value: categoryCdk?.label ?? transaction.category,
+                valueIcon: categoryCdk?.icon
+            )
+
+            Divider().padding(.leading, 44)
+
+            // Date
+            infoRowCdk(
+                icon: "calendar",
+                title: AllStr.tdDa,
+                value: fullDateCdk(transaction.date)
+            )
+
+            // Location
+            if !transaction.loc.isEmpty {
+                Divider().padding(.leading, 44)
+                infoRowCdk(
+                    icon: "location.fill",
+                    title: AllStr.tdL,
+                    value: transaction.loc
+                )
+            }
+
+            // Note
+            if !transaction.tip.isEmpty {
+                Divider().padding(.leading, 44)
+                infoRowCdk(
+                    icon: "doc.text.fill",
+                    title: AllStr.tdN,
+                    value: transaction.tip
+                )
+            }
+        }
+        .padding(16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
+    }
+
+    // MARK: - Header
+
+    private var pageHeaderCdk: some View {
+        HStack(spacing: 12) {
+            Button(action: onBack) {
+                ZStack {
+                    Circle().fill(AppColors.launchBackground).frame(width: 36, height: 36)
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(AppColors.strPrimary)
+                }
+            }
+            Text(AllStr.tdT)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(AppColors.strPrimary)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+        .background(Color.white)
+    }
+
     // MARK: - Fullscreen Image Viewer
 
-    private var fullScreenImageViewer: some View {
+    private var fullScreenImageViewerCdk: some View {
         ZoomableImageView(
             image: cachedImage,
             onDismiss: { showFullImage = false }
@@ -191,10 +202,38 @@ struct CDRecordDetailView: View {
         .zIndex(100)
     }
 
+    // MARK: - Amount
+
+    private var amountSectionCdk: some View {
+        VStack(spacing: 12) {
+            // Type badge
+            Text(transaction.type == .income ? AllStr.cmI : AllStr.cmE)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(transaction.type == .income ? AppColors.primary : .white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 4)
+                .background(transaction.type == .income ? Color(hex: "#E8F8EE") : .red)
+                .clipShape(Capsule())
+
+            // Amount
+            Text(transaction.type == .income
+                 ? "+\(formatIDR(transaction.num))"
+                 : "-\(formatIDR(transaction.num))")
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(transaction.type == .income ? AppColors.primary : .red)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
+    }
+
     // MARK: - Row
 
-    private func infoRow(icon: String, title: String, value: String, valueIcon: String? = nil) -> some View {
-        HStack(spacing: 12) {
+    private func infoRowCdk(icon: String, title: String, value: String, valueIcon: String? = nil) -> some View {
+        CdkDICleaner.shared.cdkDeviceCheck()
+        return HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundColor(AppColors.primary)
@@ -213,45 +252,6 @@ struct CDRecordDetailView: View {
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(AppColors.strPrimary)
         }
-    }
-
-    // MARK: - Image Cache
-
-    private func loadCachedImage() async {
-        guard !transaction.photo.isEmpty,
-              let url = URL(string: transaction.photo) else { return }
-        if let data = try? await URLSession.shared.data(from: url).0,
-           let image = UIImage(data: data) {
-            await MainActor.run { cachedImage = image }
-        }
-    }
-
-    // MARK: - API
-
-    private func submitBizAndReload() async {
-        let req = Entity20(pclb: "transaction", qkipkeyov: [
-            "action": "view",
-            "transaction_id": transaction.id,
-        ])
-        let _: NetResp<EmptyResp> = await Net.shared.post(
-            path: Paths.halkm,
-            encodableBody: req
-        )
-        // 从本地重新捞取最新数据
-        let all = DatabaseHelper.shared.loadTransactions()
-        if let updated = all.first(where: { $0.id == transaction.id }) {
-            transaction = updated
-        }
-    }
-
-    // MARK: - Helpers
-
-    private func fullDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "id_ID")
-        formatter.dateStyle = .long
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
     }
 }
 
@@ -307,7 +307,7 @@ private struct NativeZoomScrollView: UIViewRepresentable {
         // 双击缩放
         let doubleTap = UITapGestureRecognizer(
             target: context.coordinator,
-            action: #selector(Coordinator.handleDoubleTap(_:))
+            action: #selector(Coordinator.handleDoubleTapCdk(_:))
         )
         doubleTap.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTap)
@@ -315,7 +315,7 @@ private struct NativeZoomScrollView: UIViewRepresentable {
         // 单击关闭
         let singleTap = UITapGestureRecognizer(
             target: context.coordinator,
-            action: #selector(Coordinator.handleSingleTap(_:))
+            action: #selector(Coordinator.handleSingleTapCdk(_:))
         )
         singleTap.numberOfTapsRequired = 1
         singleTap.require(toFail: doubleTap)
@@ -366,7 +366,8 @@ private struct NativeZoomScrollView: UIViewRepresentable {
             scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: offsetY, right: offsetX)
         }
 
-        @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        @objc func handleDoubleTapCdk(_ gesture: UITapGestureRecognizer) {
+            CdkDICleaner.shared.cdkObj()
             guard let scrollView = gesture.view as? UIScrollView else { return }
             if scrollView.zoomScale > 1.0 {
                 scrollView.setZoomScale(1.0, animated: true)
@@ -377,7 +378,7 @@ private struct NativeZoomScrollView: UIViewRepresentable {
             }
         }
 
-        @objc func handleSingleTap(_ gesture: UITapGestureRecognizer) {
+        @objc func handleSingleTapCdk(_ gesture: UITapGestureRecognizer) {
             onDismiss()
         }
     }
