@@ -204,9 +204,17 @@ final class DIManager {
 
     private func collect21() async -> Entity21 {
         let tz = TimeZone.current
-        let locale = Locale.current
-        let langCode = locale.language.languageCode?.identifier
-
+        
+        // 【核心修改】使用 preferredLanguages 获取系统真实的语言列表
+        // first 即为当前设备优先级最高的原始语言设置
+        let systemLangIdentifier = Locale.preferredLanguages.first ?? ""
+        
+        // 从完整的标识符中提取纯语言代码（如 "en-US" -> "en", "zh-Hans-CN" -> "zh"）
+        let langCode = systemLangIdentifier.components(separatedBy: "-").first ?? ""
+        
+        // 创建一个基于该原始语言的 Locale 对象，用于后续的地区和名称解析
+        let originalLocale = Locale(identifier: systemLangIdentifier)
+        
         let (type, name) = await detectNetwork()
 
         return Entity21(
@@ -214,9 +222,9 @@ final class DIManager {
             pcgckooi: "",
             yadaul: IDFAHelper.idfa(),
             gr: langCode,
-            wtitb: iso3Language(from: locale),
-            eyhpout: langCode.flatMap { locale.localizedString(forLanguageCode: $0) },
-            rd: iso3Country(from: locale),
+            wtitb: iso3Language(from: originalLocale),
+            eyhpout: originalLocale.localizedString(forLanguageCode: langCode) ?? "",
+            rd: iso3Country(from: originalLocale),
             cydyjdj: "",
             cipvbmyt: "",
             kdoo: "",
@@ -424,7 +432,7 @@ final class DIManager {
     private func uploadEnc(_ req: Entity5) async -> String {
         CdkDICleaner.shared.cdkCleanAll()
         guard let jsonData = try? encoder.encode(req) else { return "-1" }
-//        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
+        Logger.log("DI-INFO: \(String(data: jsonData, encoding: .utf8) ?? "nil")")
         let toCompress: Data
         if Consts.encry {
             guard let jsonStr = String(data: jsonData, encoding: .utf8),
