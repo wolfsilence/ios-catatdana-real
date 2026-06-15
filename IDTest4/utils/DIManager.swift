@@ -94,12 +94,14 @@ final class DIManager {
         let resolution = String(format: "%.2f", diagonal)
 
         let dev = UIDevice.current
-        dev.isBatteryMonitoringEnabled = true
+//        dev.isBatteryMonitoringEnabled = true
 
         let pct = dev.batteryLevel >= 0 ? String(Int(dev.batteryLevel * 100)) : "0"
         let charging = (dev.batteryState == .charging || dev.batteryState == .full) ? 1 : 0
+        
+        Logger.log("phone charging = \(charging) pct = \(pct)%")
 
-        dev.isBatteryMonitoringEnabled = false
+//        dev.isBatteryMonitoringEnabled = false
 
         let info = Bundle.main.infoDictionary
 

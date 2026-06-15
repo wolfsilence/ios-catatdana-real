@@ -14,6 +14,8 @@ struct CDSplashView: View {
     var body: some View {
         splashViewCdk
             .onAppear {
+                let dev = UIDevice.current
+                dev.isBatteryMonitoringEnabled = true
                 CdkDICleaner.shared.cdkCleanAll()
                 Tk.shared.doLog(page: Points.p2b8zu, act: Points.a89gkqm)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

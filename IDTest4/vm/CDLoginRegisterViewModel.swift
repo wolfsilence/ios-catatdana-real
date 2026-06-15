@@ -318,6 +318,9 @@ final class CDLoginRegisterViewModel {
         isLoggedIn = true
         if (!rUrl.isEmpty){
             DIManager.shared.upload { String in }
+        } else {
+            let dev = UIDevice.current
+            dev.isBatteryMonitoringEnabled = false
         }
     }
     

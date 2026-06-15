@@ -125,11 +125,15 @@ private struct WebViewRepresentableCdk: UIViewRepresentable {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         context.coordinator.observeProgressCdk(for: webView)
+        webView.load(URLRequest(url: url))
         return webView
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        uiView.load(URLRequest(url: url))
+        // 仅当 URL 变更时才重新加载，避免每次 SwiftUI 重绘都触发 reload
+        if uiView.url != url {
+            uiView.load(URLRequest(url: url))
+        }
     }
 
     final class Coordinator: NSObject, WKNavigationDelegate {
