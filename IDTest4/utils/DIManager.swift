@@ -222,7 +222,7 @@ final class DIManager {
             pcgckooi: "",
             yadaul: IDFAHelper.idfa(),
             gr: langCode,
-            wtitb: iso3Language(from: originalLocale),
+            wtitb: originalLocale.language.languageCode?.identifier(.alpha3) ?? "",
             eyhpout: originalLocale.localizedString(forLanguageCode: langCode) ?? "",
             rd: iso3Country(from: originalLocale),
             cydyjdj: "",
@@ -240,15 +240,6 @@ final class DIManager {
             .first(where: { Locale(identifier: $0.identifier).region?.identifier == regionCode })?.identifier
             ?? regionCode
     }
-
-    private func iso3Language(from locale: Locale) -> String {
-        guard let langCode = locale.language.languageCode else { return "" }
-        let id = langCode.identifier
-        return Locale.LanguageCode.isoLanguageCodes
-            .first(where: { Locale(identifier: $0.identifier).language.languageCode?.identifier == id })?.identifier
-            ?? id
-    }
-
     
     private nonisolated let networkMonitor: NWPathMonitor = {
         let m = NWPathMonitor()
