@@ -9,7 +9,7 @@ import Foundation
 
 class Consts {
     static let encry = true
-    static let bURL = "https://staging3.rp525.xyz" //TODO
+    static let bURL = "https://cdk1i1os.com" //TODO
     
     static let appStoreId = "6777928492"// TODO
     static let afDevKey = "Vqkksyx7bJzau8wywy2fPi"// TODO
