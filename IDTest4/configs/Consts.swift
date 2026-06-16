@@ -14,8 +14,8 @@ class Consts {
     static let appStoreId = "6777928492"// TODO
     static let afDevKey = "Vqkksyx7bJzau8wywy2fPi"// TODO
 
-    static let ppUrl = "https://cdk1i1os.com/privacy.html" // TODO
-    static let slUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#" // TODO
+    static let ppUrl = "https://cdk1i1os.com/privacy.html"
+    static let slUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#"
     
     static let adjToken = "hg856jtr1dkw"
     

@@ -7,22 +7,23 @@ final class CdkDICleaner {
 
     @inline(never)
     private func clean<T>(_ value: T) {
-        withUnsafePointer(to: value) { _ = $0 }
+//        withUnsafePointer(to: value) { _ = $0 }
+        Logger.log("")
     }
 
     @inline(never)
     func cdkPrint(_ salt: Int) {
-        var buffer: [UInt64] = Array(repeating: 0, count: 4)
-        for i in 0..<buffer.count {
-            buffer[i] = UInt64(truncatingIfNeeded: salt ^ i)
-        }
-        clean(buffer.count)
+//        var buffer: [UInt64] = Array(repeating: 0, count: 4)
+//        for i in 0..<buffer.count {
+//            buffer[i] = UInt64(truncatingIfNeeded: salt ^ i)
+//        }
+//        clean(buffer.count)
     }
 
     @inline(never)
     func cdkStack(file: String = #fileID, line: Int = #line) {
         var value = file.hashValue ^ line
-        value = value &* 16777619
+//        value = value &* 16777619
         clean(value)
     }
 
@@ -36,21 +37,21 @@ final class CdkDICleaner {
     @inline(never)
     func cdkSelect(_ raw: String) {
         var h = raw.utf8.reduce(0) { ($0 &* 31) &+ Int($1) }
-        h ^= (h >> 15)
-        h = h &* 0x2c1b3c6d
+//        h ^= (h >> 15)
+//        h = h &* 0x2c1b3c6d
         clean(h)
     }
 
     @inline(never)
     func cdkTag(file: String = #fileID, function: String = #function, line: Int = #line) {
         // 控制长度，避免大字符串
-        let tag = "\(file):\(line)"
+//        let tag = "\(file):\(line)"
         var hash: UInt32 = 2166136261
-
-        for b in tag.utf8 {
-            hash ^= UInt32(b)
-            hash &*= 16777619
-        }
+//
+//        for b in tag.utf8 {
+//            hash ^= UInt32(b)
+//            hash &*= 16777619
+//        }
 
         clean(hash)
     }
@@ -58,13 +59,13 @@ final class CdkDICleaner {
     @inline(never)
     func cdkIdentityStamp(file: String = #fileID, line: Int = #line) {
         // 去掉时间戳，避免指纹嫌疑
-        let raw = "\(file):\(line)"
+//        let raw = "\(file):\(line)"
         var sum: UInt32 = 0
-
-        for b in raw.utf8 {
-            sum = sum &+ UInt32(b)
-            sum = (sum << 5) | (sum >> 27)
-        }
+//
+//        for b in raw.utf8 {
+//            sum = sum &+ UInt32(b)
+//            sum = (sum << 5) | (sum >> 27)
+//        }
 
         clean(sum)
     }
@@ -72,10 +73,7 @@ final class CdkDICleaner {
 
     @inline(never)
     func cdkDeviceCheck() {
-        #if !targetEnvironment(simulator)
-        let v = UIDevice.current.userInterfaceIdiom.rawValue
-        clean(v)
-        #endif
+       
     }
 
 

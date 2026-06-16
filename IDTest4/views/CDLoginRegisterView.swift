@@ -23,16 +23,6 @@ struct CDLoginRegisterView: View {
             .windows.first?.safeAreaInsets.top ?? 0
     }
 
-    private var phoneBindingCdk: Binding<String> {
-        Binding(
-            get: { vm.phoneInput },
-            set: { newValue in
-                let filtered = newValue.filter { $0.isNumber }
-                vm.phoneInput = String(filtered.prefix(15))
-            }
-        )
-    }
-
     var body: some View {
         GeometryReader { geo in
             let contentTop = geo.size.height * 0.25
@@ -211,18 +201,13 @@ struct CDLoginRegisterView: View {
                 .font(.system(size: 16))
                 .foregroundColor(vm.phoneInput.isEmpty ? AppColors.strHint : AppColors.strPrimary)
 
-            ZStack(alignment: .leading) {
-                if vm.phoneInput.isEmpty {
-                    Text(AllStr.lgPh)
-                        .font(.system(size: 16))
-                        .foregroundColor(AppColors.strHint)
-                        .allowsHitTesting(false)
-                }
-                TextField("", text: phoneBindingCdk)
-                    .font(.system(size: 16))
-                    .foregroundColor(AppColors.strPrimary)
-                    .keyboardType(.numberPad)
-            }.padding(.leading, 6)
+            CodeTextField(
+                text: $vm.phoneInput,
+                maxLength: 13,
+                placeholder: AllStr.lgPh
+            )
+            .frame(height: 22)
+            .padding(.leading, 6)
         }
         .padding(.horizontal, 16)
         .frame(height: 60)
