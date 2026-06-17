@@ -122,6 +122,10 @@ jobs:
           BUILD_NUMBER=${{ github.run_number }}
           sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" "$PBXPROJ"
 
+          # 替换 Team ID，确保与 ASC API Key 所属 Team 一致
+          sed -i '' "s/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "$PBXPROJ"
+          echo "✅ Team ID → ${TEAM_ID}"
+
           # --- 从 Xcode 项目读取版本号 ---
           VERSION=$(grep -m1 'MARKETING_VERSION = ' "$PBXPROJ" | sed 's/.*MARKETING_VERSION = \(.*\);/\1/')
           echo "Version: $VERSION（来自 Xcode 项目）"
