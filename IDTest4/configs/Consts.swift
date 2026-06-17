@@ -9,10 +9,10 @@ import Foundation
 
 class Consts {
     static let encry = true
-    static let bURL = "https://cdk1i1os.com" //TODO
+    static let bURL = "https://cdk1i1os.com"
     
-    static let appStoreId = "6777928492"// TODO
-    static let afDevKey = "Vqkksyx7bJzau8wywy2fPi"// TODO
+    static let appStoreId = "6781208634"// TODO
+    static let afDevKey = "bdh84JPS3yPAQYnzc2kbk9"// TODO
 
     static let ppUrl = "https://cdk1i1os.com/privacy.html"
     static let slUrl = "https://sdk.thailand.accuauth.com/silent-liveness-h5/index.html#"
