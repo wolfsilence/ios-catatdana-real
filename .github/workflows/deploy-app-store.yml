@@ -168,6 +168,8 @@ jobs:
 
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
+            -configuration Release \
+            -sdk iphoneos \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
             -allowProvisioningUpdates \
