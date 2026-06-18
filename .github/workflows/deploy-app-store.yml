@@ -78,6 +78,11 @@ jobs:
 
           echo "✅ ASC credentials ready"
 
+          echo ""
+          echo "========= 🔍 Signing Identities ========="
+          security find-identity -v -p codesigning || true
+          echo "========================================="
+
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 4. 重命名项目 → 编译验证 → 失败则终止
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -161,36 +166,16 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
           echo "✅ Archive done"
-
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 5.5 删除 SPM 框架的供应商原始签名，强制 Export 重新签署
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🧹 Strip Vendor Signatures
-        run: |
-          FRAMEWORKS_DIR="./build/${PROJECT_NAME}.xcarchive/Products/Applications/${PROJECT_NAME}.app/Frameworks"
-          if [ -d "$FRAMEWORKS_DIR" ]; then
-            # 1. 删除传统 _CodeSignature 目录
-            find "$FRAMEWORKS_DIR" -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
-            # 2. 删除 xcframework .signature 签名包（Xcode 16+ 新格式）
-            find "$FRAMEWORKS_DIR" -name "*.signature" -type d -exec rm -rf {} + 2>/dev/null || true
-            find "$FRAMEWORKS_DIR" -name "*.signature" -type f -exec rm -f {} + 2>/dev/null || true
-            # 3. 逐个 framework 兜底再清一遍
-            find "$FRAMEWORKS_DIR" -name "*.framework" -type d | while read fw; do
-              rm -rf "$fw/_CodeSignature" 2>/dev/null || true
-              rm -rf "$fw"/*.signature 2>/dev/null || true
-            done
-            echo "✅ Stripped all vendor signatures (_CodeSignature + .signature)"
-          else
-            echo "ℹ️  No frameworks directory found, skipping"
-          fi
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 6. Export IPA
@@ -210,34 +195,6 @@ jobs:
             -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
           echo "✅ IPA exported → $(ls -lh $EXPORT_DIR/*.ipa)"
-
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 6.5 删除 IPA 中 Xcode 26 生成的 xcframework .signature 签名包
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🧹 Strip Signatures from IPA
-        run: |
-          IPA=$(ls $EXPORT_DIR/*.ipa | head -1)
-          echo "Stripping Signatures from: $IPA"
-
-          TMP=$(mktemp -d)
-          unzip -q "$IPA" -d "$TMP"
-
-          # 检查并删除 Xcode 26 生成的 Signatures/ 目录
-          if [ -d "$TMP/Signatures" ]; then
-            echo "Found Signatures/ directory, removing..."
-            ls -la "$TMP/Signatures/"
-            rm -rf "$TMP/Signatures"
-            echo "✅ Removed Signatures/"
-          else
-            echo "ℹ️  No Signatures/ directory found"
-          fi
-
-          # 重新打包 IPA
-          rm -f "$IPA"
-          ORIG_DIR=$(pwd)
-          cd "$TMP" && zip -qry "$ORIG_DIR/$IPA" . && cd "$ORIG_DIR"
-          rm -rf "$TMP"
-          echo "✅ IPA repackaged → $(ls -lh $IPA | awk '{print $5}')"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 7. Save IPA as Artifact
