@@ -164,12 +164,14 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # DEVELOPMENT_TEAM 通过命令行级联到所有 SPM targets
-          # 不指定 CODE_SIGN_IDENTITY，让 Automatic + ASC Key 自动选 Distribution 证书
+          # 命令行覆盖为 Manual + Apple Distribution，避免 Automatic 误选 Development
+          # DEVELOPMENT_TEAM 级联到所有 SPM targets，-allowProvisioningUpdates 自动创建 profile
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             DEVELOPMENT_TEAM="$TEAM_ID" \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
