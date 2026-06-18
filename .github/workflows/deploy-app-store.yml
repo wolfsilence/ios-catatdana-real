@@ -177,12 +177,15 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
           echo "✅ Archive done"
 
