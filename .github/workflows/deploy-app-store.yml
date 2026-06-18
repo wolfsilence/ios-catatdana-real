@@ -36,14 +36,16 @@ jobs:
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 2. Select latest Xcode
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🔧 Select Xcode (iOS 26 SDK)
+      - name: 🔧 Select Xcode
         run: |
           echo "Available Xcodes:"
           ls -d /Applications/Xcode*.app 2>/dev/null || echo "(none found)"
 
-          LATEST=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
-          echo "Picked: $LATEST"
-          sudo xcode-select -switch "$LATEST"
+          # 用 Xcode 16.4 而非 26，避免 xcframework .signature 签名冲突
+          XC="/Applications/Xcode_16.4.0.app"
+          if [ ! -d "$XC" ]; then XC="/Applications/Xcode_16.4.app"; fi
+          echo "Picked: $XC"
+          sudo xcode-select -switch "$XC"
           echo "Xcode $(xcodebuild -version | head -1)"
           echo "iOS SDK $(xcrun --sdk iphoneos --show-sdk-version)"
 
