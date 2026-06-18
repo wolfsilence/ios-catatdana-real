@@ -107,6 +107,10 @@ jobs:
             PBXPROJ="${PROJECT_NAME}.xcodeproj/project.pbxproj"
             sed -i '' "s/${OLD_NAME}/${PROJECT_NAME}/g" "$PBXPROJ"
             echo "✅ pbxproj 内引用全部替换"
+
+            # Also rename inside xcscheme files
+            find "${PROJECT_NAME}.xcodeproj" -name "*.xcscheme" -type f -exec sed -i '' "s/${OLD_NAME}/${PROJECT_NAME}/g" {} \;
+            echo "✅ xcscheme 内引用全部替换"
           fi
 
           PBXPROJ="${PROJECT_NAME}.xcodeproj/project.pbxproj"
