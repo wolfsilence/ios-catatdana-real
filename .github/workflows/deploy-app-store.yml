@@ -126,6 +126,10 @@ jobs:
           sed -i '' "s/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "$PBXPROJ"
           echo "✅ Team ID → ${TEAM_ID}"
 
+          # 确保 Release 使用 Distribution 证书签名（SPM 二进制 frameworks 必须）
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Automatic;\n\t\t\t\tCODE_SIGN_IDENTITY = "Apple Distribution";/' "$PBXPROJ"
+          echo "✅ CODE_SIGN_IDENTITY → Apple Distribution"
+
           # --- 从 Xcode 项目读取版本号 ---
           VERSION=$(grep -m1 'MARKETING_VERSION = ' "$PBXPROJ" | sed 's/.*MARKETING_VERSION = \(.*\);/\1/')
           echo "Version: $VERSION（来自 Xcode 项目）"
@@ -161,12 +165,16 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
+          # Archive 阶段用 Distribution 证书签名（SPM 二进制 frameworks 必须在此阶段签上）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
           echo "✅ Archive done"
 
