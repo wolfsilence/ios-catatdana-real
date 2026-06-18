@@ -152,21 +152,20 @@ jobs:
           echo "✅ 编译通过！继续打包上传..."
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 5. Archive
+      # 5. Archive（Manual 签名，同时签 SPM 二进制 frameworks）
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📦 Archive
-        env:
-          ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            -configuration Release \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="$TEAM_ID"
 
           echo "✅ Archive done"
 
