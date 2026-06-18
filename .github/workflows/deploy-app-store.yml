@@ -36,16 +36,11 @@ jobs:
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 2. Select latest Xcode
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🔧 Select Xcode
+      - name: 🔧 Select Xcode (iOS 26 SDK)
         run: |
-          echo "Available Xcodes:"
-          ls -d /Applications/Xcode*.app 2>/dev/null || echo "(none found)"
-
-          # 用 Xcode 16.4 而非 26，避免 xcframework .signature 签名冲突
-          XC="/Applications/Xcode_16.4.0.app"
-          if [ ! -d "$XC" ]; then XC="/Applications/Xcode_16.4.app"; fi
-          echo "Picked: $XC"
-          sudo xcode-select -switch "$XC"
+          LATEST=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          echo "Picked: $LATEST"
+          sudo xcode-select -switch "$LATEST"
           echo "Xcode $(xcodebuild -version | head -1)"
           echo "iOS SDK $(xcrun --sdk iphoneos --show-sdk-version)"
 
@@ -54,7 +49,7 @@ jobs:
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 🔑 Setup App Store Connect
         env:
-          ASC_API_KEY:   ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          ASC_API_KEY:   ${{ secrets.APP_STORE_CONNECT_KEY_ID_NEW }}
           ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
@@ -69,8 +64,6 @@ jobs:
           <dict>
               <key>method</key>
               <string>app-store-connect</string>
-              <key>signingStyle</key>
-              <string>automatic</string>
               <key>teamID</key>
               <string>${TEAM_ID}</string>
               <key>uploadSymbols</key>
@@ -168,6 +161,7 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
+          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
