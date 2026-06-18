@@ -212,41 +212,32 @@ jobs:
           echo "✅ IPA exported → $(ls -lh $EXPORT_DIR/*.ipa)"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 6.5 诊断：检查 Framework 签名是否被正确重签
+      # 6.5 删除 IPA 中 Xcode 26 生成的 xcframework .signature 签名包
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🔍 Check Framework Signature
+      - name: 🧹 Strip Signatures from IPA
         run: |
           IPA=$(ls $EXPORT_DIR/*.ipa | head -1)
-          echo "Checking: $IPA"
+          echo "Stripping Signatures from: $IPA"
 
-          unzip -q "$IPA" -d ipa_check
-          APP=$(find ipa_check/Payload -name "*.app" -type d | head -1)
-          echo "App bundle: $APP"
+          TMP=$(mktemp -d)
+          unzip -q "$IPA" -d "$TMP"
 
-          FW_DIR="$APP/Frameworks"
-          if [ ! -d "$FW_DIR" ]; then
-            echo "No Frameworks directory found"
-            exit 0
+          # 检查并删除 Xcode 26 生成的 Signatures/ 目录
+          if [ -d "$TMP/Signatures" ]; then
+            echo "Found Signatures/ directory, removing..."
+            ls -la "$TMP/Signatures/"
+            rm -rf "$TMP/Signatures"
+            echo "✅ Removed Signatures/"
+          else
+            echo "ℹ️  No Signatures/ directory found"
           fi
 
-          ALL_OK=true
-          find "$FW_DIR" -name "*.framework" -type d | while read fw; do
-            fw_name=$(basename "$fw")
-            echo ""
-            echo "========= $fw_name ========="
-
-            AUTHORITY=$(codesign -dv "$fw" 2>&1 | grep Authority | head -1 || echo "NO_AUTHORITY_FOUND")
-            echo "  $AUTHORITY"
-
-            if echo "$AUTHORITY" | grep -q "Apple Distribution"; then
-              echo "  ✅ OK"
-            else
-              echo "  ❌ NOT re-signed!"
-              ALL_OK=false
-            fi
-          done
-
-          rm -rf ipa_check
+          # 重新打包 IPA
+          rm -f "$IPA"
+          ORIG_DIR=$(pwd)
+          cd "$TMP" && zip -qry "$ORIG_DIR/$IPA" . && cd "$ORIG_DIR"
+          rm -rf "$TMP"
+          echo "✅ IPA repackaged → $(ls -lh $IPA | awk '{print $5}')"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 7. Save IPA as Artifact
