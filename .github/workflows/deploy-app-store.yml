@@ -38,6 +38,9 @@ jobs:
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 🔧 Select Xcode (iOS 26 SDK)
         run: |
+          echo "Available Xcodes:"
+          ls -d /Applications/Xcode*.app 2>/dev/null || echo "(none found)"
+
           LATEST=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
           echo "Picked: $LATEST"
           sudo xcode-select -switch "$LATEST"
@@ -191,51 +194,6 @@ jobs:
           echo "✅ IPA exported → $(ls -lh $EXPORT_DIR/*.ipa)"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 6.5 删除 Xcode 26 在 IPA 中生成的 Signatures/ 签名包
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🧹 Strip + Verify
-        run: |
-          IPA=$(ls $EXPORT_DIR/*.ipa | head -1)
-          echo "Stripping Signatures from: $IPA"
-
-          TMP=$(mktemp -d)
-          unzip -q "$IPA" -d "$TMP"
-
-          if [ -d "$TMP/Signatures" ]; then
-            echo "Removing Signatures/:"
-            ls "$TMP/Signatures/"
-            rm -rf "$TMP/Signatures"
-            echo "✅ Removed"
-          fi
-
-          # 重打包
-          rm -f "$IPA"
-          cd "$TMP" && zip -qry "$OLDPWD/$IPA" . && cd "$OLDPWD"
-
-          # 🔍 重新解压验证签名是否完整
-          echo ""
-          echo "========== VERIFY AFTER RE-ZIP =========="
-          TMP2=$(mktemp -d)
-          unzip -q "$IPA" -d "$TMP2"
-          APP2=$(find "$TMP2/Payload" -name "*.app" -type d | head -1)
-
-          echo "Main App:"
-          codesign -dvv "$APP2" 2>&1 | grep "Authority" || echo "❌ FAILED"
-
-          FW_DIR2="$APP2/Frameworks"
-          if [ -d "$FW_DIR2" ]; then
-            find "$FW_DIR2" -name "*.framework" -type d | sort | while read fw; do
-              fw_name=$(basename "$fw")
-              AUTHORITY=$(codesign -dvv "$fw" 2>&1 | grep "Authority" | head -1 || echo "❌ FAILED")
-              echo "$fw_name → $AUTHORITY"
-            done
-          fi
-          echo "========== END VERIFY =========="
-
-          rm -rf "$TMP" "$TMP2"
-          echo "✅ IPA repackaged → $(ls -lh $IPA | awk '{print $5}')"
-
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 7. Save IPA as Artifact
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 💾 Upload IPA to Artifacts
@@ -249,7 +207,6 @@ jobs:
       # 8. Upload to App Store Connect
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: ☁️ Upload to App Store Connect
-        if: false
         env:
           ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
