@@ -193,27 +193,51 @@ jobs:
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 6.5 删除 Xcode 26 在 IPA 中生成的 Signatures/ 签名包
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🧹 Strip Signatures from IPA
+      - name: 🔍 Diagnose IPA Signing
         run: |
           IPA=$(ls $EXPORT_DIR/*.ipa | head -1)
-          echo "Stripping Signatures from: $IPA"
+          echo "Diagnosing: $IPA"
 
           TMP=$(mktemp -d)
           unzip -q "$IPA" -d "$TMP"
 
+          APP=$(find "$TMP/Payload" -name "*.app" -type d | head -1)
+          echo "App bundle: $APP"
+
+          # 1. 检查 Signatures/ 元数据
           if [ -d "$TMP/Signatures" ]; then
-            echo "Found Signatures/ (Xcode 26 xcframework vendor signatures):"
+            echo ""
+            echo "========== Signatures/ =========="
             ls "$TMP/Signatures/"
-            rm -rf "$TMP/Signatures"
-            echo "✅ Removed Signatures/"
-          else
-            echo "ℹ️  No Signatures/ directory"
           fi
 
-          rm -f "$IPA"
-          cd "$TMP" && zip -qry "$OLDPWD/$IPA" . && cd "$OLDPWD"
+          # 2. 检查主 App 签名
+          echo ""
+          echo "========== Main App =========="
+          codesign -dvv "$APP" 2>&1 | grep -E "Authority|TeamIdentifier|Signature" || true
+
+          # 3. 检查每个 Framework 签名
+          FW_DIR="$APP/Frameworks"
+          if [ -d "$FW_DIR" ]; then
+            find "$FW_DIR" -name "*.framework" -type d | sort | while read fw; do
+              fw_name=$(basename "$fw")
+              echo ""
+              echo "========== $fw_name =========="
+              codesign -dvv "$fw" 2>&1 | grep -E "Authority|TeamIdentifier" || echo "  ⚠️ codesign check failed"
+              # 也看看有没有 _CodeSignature
+              if [ -d "$fw/_CodeSignature" ]; then
+                echo "  Has _CodeSignature"
+              else
+                echo "  ❌ NO _CodeSignature"
+              fi
+            done
+          fi
+
+          echo ""
+          echo "========== SUMMARY =========="
+          echo "✅ Diagnostic complete — check logs above for Authority values"
+
           rm -rf "$TMP"
-          echo "✅ IPA repackaged → $(ls -lh $IPA | awk '{print $5}')"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 7. Save IPA as Artifact
@@ -226,9 +250,10 @@ jobs:
           retention-days: 90
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 8. Upload to App Store Connect
+      # 8. Upload to App Store Connect (暂时跳过，先诊断)
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: ☁️ Upload to App Store Connect
+        if: false
         env:
           ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
