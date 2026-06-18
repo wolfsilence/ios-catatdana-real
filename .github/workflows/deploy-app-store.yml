@@ -152,6 +152,22 @@ jobs:
           echo "✅ 编译通过！继续打包上传..."
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # 4.5 🔍 诊断：签名环境和项目配置
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      - name: 🔍 Diagnose Signing Environment
+        run: |
+          echo "========== Keychain Identities =========="
+          security find-identity -v -p codesigning || echo "(none)"
+
+          echo ""
+          echo "========== Build Settings =========="
+          xcodebuild -scheme "$PROJECT_NAME" -showBuildSettings 2>/dev/null | egrep 'CODE_SIGN|PROVISIONING|DEVELOPMENT_TEAM' || echo "(not found)"
+
+          echo ""
+          echo "========== Profile Check =========="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "(no profiles)"
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 5. Archive
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📦 Archive
