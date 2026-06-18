@@ -64,6 +64,8 @@ jobs:
           <dict>
               <key>method</key>
               <string>app-store-connect</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
               <key>teamID</key>
               <string>${TEAM_ID}</string>
               <key>uploadSymbols</key>
@@ -148,13 +150,9 @@ jobs:
           BUILD_NUMBER=${{ github.run_number }}
           sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" "$PBXPROJ"
 
-          # 替换 Team ID，确保与 p12 证书 Team 一致
+          # 替换 Team ID
           sed -i '' "s/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "$PBXPROJ"
           echo "✅ Team ID → ${TEAM_ID}"
-
-          # Release 配置改为 Manual 签名（p12 已在 keychain 中）
-          sed -i '' "s/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g" "$PBXPROJ"
-          echo "✅ CODE_SIGN_STYLE → Manual"
 
           # --- 从 Xcode 项目读取版本号 ---
           VERSION=$(grep -m1 'MARKETING_VERSION = ' "$PBXPROJ" | sed 's/.*MARKETING_VERSION = \(.*\);/\1/')
@@ -182,12 +180,9 @@ jobs:
           echo "✅ 编译通过！继续打包上传..."
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 6. Archive (p12 Manual Signing)
+      # 6. Archive (纯 Manual，p12 已在 keychain 中)
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📦 Archive
-        env:
-          ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
@@ -197,11 +192,7 @@ jobs:
             -destination 'generic/platform=iOS' \
             CODE_SIGN_STYLE=Manual \
             "CODE_SIGN_IDENTITY=Apple Distribution" \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+            DEVELOPMENT_TEAM="$TEAM_ID"
 
           echo "✅ Archive done"
 
