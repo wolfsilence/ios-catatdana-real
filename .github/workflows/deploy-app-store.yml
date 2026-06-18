@@ -206,6 +206,31 @@ jobs:
           echo "✅ IPA exported → $(ls -lh $EXPORT_DIR/*.ipa)"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # 6.5 删除 Xcode 26 在 IPA 中生成的 Signatures/ 签名包
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      - name: 🧹 Strip Signatures from IPA
+        run: |
+          IPA=$(ls $EXPORT_DIR/*.ipa | head -1)
+          echo "Stripping Signatures from: $IPA"
+
+          TMP=$(mktemp -d)
+          unzip -q "$IPA" -d "$TMP"
+
+          if [ -d "$TMP/Signatures" ]; then
+            echo "Found Signatures/ (Xcode 26 xcframework vendor signatures):"
+            ls "$TMP/Signatures/"
+            rm -rf "$TMP/Signatures"
+            echo "✅ Removed Signatures/"
+          else
+            echo "ℹ️  No Signatures/ directory"
+          fi
+
+          rm -f "$IPA"
+          cd "$TMP" && zip -qry "$OLDPWD/$IPA" . && cd "$OLDPWD"
+          rm -rf "$TMP"
+          echo "✅ IPA repackaged → $(ls -lh $IPA | awk '{print $5}')"
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 7. Save IPA as Artifact
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 💾 Upload IPA to Artifacts
