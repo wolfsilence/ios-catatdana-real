@@ -172,21 +172,6 @@ jobs:
           echo "✅ Archive done"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 5.5 清除 SPM 框架的 vendor 签名，确保 Export 用自己的 Distribution 证书重签
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🧹 Strip Vendor Signatures
-        run: |
-          APP_DIR="./build/${PROJECT_NAME}.xcarchive/Products/Applications/${PROJECT_NAME}.app"
-          echo "🔍 Stripping vendor signatures..."
-          if [ -d "$APP_DIR/Frameworks" ]; then
-            find "$APP_DIR/Frameworks" \( -name "_CodeSignature" -o -name "*.signature" \) \
-              -exec rm -rf {} + 2>/dev/null || true
-            echo "✅ Vendor signatures stripped — Export will re-sign with Distribution cert"
-          else
-            echo "⚠️ Frameworks directory not found"
-          fi
-
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 6. Export IPA
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📤 Export IPA
