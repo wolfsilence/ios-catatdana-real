@@ -64,6 +64,8 @@ jobs:
           <dict>
               <key>method</key>
               <string>app-store-connect</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
               <key>teamID</key>
               <string>${TEAM_ID}</string>
               <key>uploadSymbols</key>
@@ -77,11 +79,6 @@ jobs:
           PLIST
 
           echo "✅ ASC credentials ready"
-
-          echo ""
-          echo "========= 🔍 Signing Identities ========="
-          security find-identity -v -p codesigning || true
-          echo "========================================="
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       # 4. 重命名项目 → 编译验证 → 失败则终止
@@ -168,14 +165,9 @@ jobs:
 
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
-            -configuration Release \
-            -sdk iphoneos \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+            CODE_SIGNING_ALLOWED=NO
 
           echo "✅ Archive done"
 
