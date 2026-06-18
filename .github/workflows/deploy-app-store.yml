@@ -181,7 +181,10 @@ jobs:
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
 
           echo "✅ Archive done"
 
