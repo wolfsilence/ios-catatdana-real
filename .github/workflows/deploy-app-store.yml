@@ -126,9 +126,6 @@ jobs:
           sed -i '' "s/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "$PBXPROJ"
           echo "✅ Team ID → ${TEAM_ID}"
 
-          # 保持 Automatic 签名，由 Archive 阶段通过 ASC API Key 自动选择 Distribution 证书
-          echo "✅ Code Signing: Automatic (Distribution cert via ASC API Key)"
-
           # --- 从 Xcode 项目读取版本号 ---
           VERSION=$(grep -m1 'MARKETING_VERSION = ' "$PBXPROJ" | sed 's/.*MARKETING_VERSION = \(.*\);/\1/')
           echo "Version: $VERSION（来自 Xcode 项目）"
@@ -164,18 +161,12 @@ jobs:
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
-          # Automatic + Release 配置 + DEVELOPMENT_TEAM 级联到 SPM targets
-          # ASC API Key 自动管理 Distribution 证书和 Profile，无需 p12
+          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
-            -configuration Release \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath ~/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+            CODE_SIGNING_ALLOWED=NO
 
           echo "✅ Archive done"
 
