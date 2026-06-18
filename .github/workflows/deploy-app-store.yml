@@ -177,11 +177,17 @@ jobs:
         run: |
           FRAMEWORKS_DIR="./build/${PROJECT_NAME}.xcarchive/Products/Applications/${PROJECT_NAME}.app/Frameworks"
           if [ -d "$FRAMEWORKS_DIR" ]; then
+            # 1. 删除传统 _CodeSignature 目录
             find "$FRAMEWORKS_DIR" -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
+            # 2. 删除 xcframework .signature 签名包（Xcode 16+ 新格式）
+            find "$FRAMEWORKS_DIR" -name "*.signature" -type d -exec rm -rf {} + 2>/dev/null || true
+            find "$FRAMEWORKS_DIR" -name "*.signature" -type f -exec rm -f {} + 2>/dev/null || true
+            # 3. 逐个 framework 兜底再清一遍
             find "$FRAMEWORKS_DIR" -name "*.framework" -type d | while read fw; do
               rm -rf "$fw/_CodeSignature" 2>/dev/null || true
+              rm -rf "$fw"/*.signature 2>/dev/null || true
             done
-            echo "✅ Stripped vendor signatures from frameworks"
+            echo "✅ Stripped all vendor signatures (_CodeSignature + .signature)"
           else
             echo "ℹ️  No frameworks directory found, skipping"
           fi
