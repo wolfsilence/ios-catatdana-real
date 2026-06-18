@@ -64,8 +64,6 @@ jobs:
           <dict>
               <key>method</key>
               <string>app-store-connect</string>
-              <key>signingStyle</key>
-              <string>automatic</string>
               <key>teamID</key>
               <string>${TEAM_ID}</string>
               <key>uploadSymbols</key>
@@ -81,33 +79,7 @@ jobs:
           echo "✅ ASC credentials ready"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 4. Import p12 & Provisioning Profile
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      - name: 🔐 Import Signing Certificate & Provisioning Profile
-        env:
-          P12_BASE64: ${{ secrets.P12_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          PROVISION_PROFILE: ${{ secrets.PROVISION_PROFILE }}
-        run: |
-          # --- 导入 p12 证书 ---
-          echo "$P12_BASE64" | base64 -d > certificate.p12
-          security create-keychain -p "" build.keychain
-          security list-keychains -d user -s build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -A -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
-
-          echo "✅ p12 imported"
-
-          # --- 安装 Provisioning Profile ---
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROVISION_PROFILE" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/distribution.mobileprovision
-
-          echo "✅ Provisioning Profile installed"
-
-      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 5. 重命名项目 → 编译验证 → 失败则终止
+      # 4. 重命名项目 → 编译验证 → 失败则终止
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 🔄 Rename Project & Compile Check
         env:
@@ -150,7 +122,7 @@ jobs:
           BUILD_NUMBER=${{ github.run_number }}
           sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/g" "$PBXPROJ"
 
-          # 替换 Team ID
+          # 替换 Team ID，确保与 ASC API Key 所属 Team 一致
           sed -i '' "s/DEVELOPMENT_TEAM = [A-Z0-9]*;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "$PBXPROJ"
           echo "✅ Team ID → ${TEAM_ID}"
 
@@ -180,24 +152,26 @@ jobs:
           echo "✅ 编译通过！继续打包上传..."
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 6. Archive (纯 Manual，p12 已在 keychain 中)
+      # 5. Archive
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📦 Archive
+        env:
+          ASC_KEY_ID:    ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           ARCHIVE_PATH="./build/${PROJECT_NAME}.xcarchive"
 
+          # Archive 阶段不签名，签名由 Export 阶段完成（Distribution 证书无需设备）
           xcodebuild archive \
             -scheme "$PROJECT_NAME" \
             -archivePath "$ARCHIVE_PATH" \
             -destination 'generic/platform=iOS' \
-            CODE_SIGN_STYLE=Manual \
-            "CODE_SIGN_IDENTITY=Apple Distribution" \
-            DEVELOPMENT_TEAM="$TEAM_ID"
+            CODE_SIGNING_ALLOWED=NO
 
           echo "✅ Archive done"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 7. Export IPA
+      # 6. Export IPA
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 📤 Export IPA
         env:
@@ -216,7 +190,7 @@ jobs:
           echo "✅ IPA exported → $(ls -lh $EXPORT_DIR/*.ipa)"
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 8. Save IPA as Artifact
+      # 7. Save IPA as Artifact
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: 💾 Upload IPA to Artifacts
         uses: actions/upload-artifact@v4
@@ -226,7 +200,7 @@ jobs:
           retention-days: 90
 
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      # 9. Upload to App Store Connect
+      # 8. Upload to App Store Connect
       # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       - name: ☁️ Upload to App Store Connect
         env:
