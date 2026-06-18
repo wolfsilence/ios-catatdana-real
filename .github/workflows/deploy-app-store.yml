@@ -84,15 +84,16 @@ jobs:
       - name: 🔐 Import Signing Certificate & Provisioning Profile
         env:
           P12_BASE64: ${{ secrets.P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
           PROVISION_PROFILE: ${{ secrets.PROVISION_PROFILE }}
         run: |
-          # --- 导入 p12 证书（无密码） ---
+          # --- 导入 p12 证书 ---
           echo "$P12_BASE64" | base64 -d > certificate.p12
           security create-keychain -p "" build.keychain
           security list-keychains -d user -s build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
-          security import certificate.p12 -k build.keychain -P "" -A -T /usr/bin/codesign -T /usr/bin/security
+          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -A -T /usr/bin/codesign -T /usr/bin/security
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
 
           echo "✅ p12 imported"
