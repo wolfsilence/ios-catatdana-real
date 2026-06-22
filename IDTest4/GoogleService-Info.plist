@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBwnywvgP14SPCzkXxHoqhGUI6__3EFpnE</string>
+	<string>AIzaSyAmHWTqnRBpL-sbPKmWFx-hoe-LwV4fgf0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>849845327709</string>
+	<string>259290797269</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>testcompany.catadanaku</string>
+	<string>com.uangkucatatan.app</string>
 	<key>PROJECT_ID</key>
-	<string>native-offline</string>
+	<string>cata-ec99f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>native-offline.firebasestorage.app</string>
+	<string>cata-ec99f.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:849845327709:ios:c23ba15bf56aef90fafab4</string>
+	<string>1:259290797269:ios:bc0602928fe136af0afe5c</string>
 </dict>
 </plist>
