@@ -333,7 +333,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IDTest4/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
+				INFOPLIST_KEY_CFBundleDisplayName = "UangKu Catatan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Akses kamera dibutuhkan supaya kamu bisa foto dan unggah gambar untuk fitur-fitur tertentu di aplikasi.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Izin lokasi diperlukan agar kami bisa menyesuaikan konten dan layanan sesuai area kamu.";
@@ -388,7 +388,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IDTest4/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IDTest4;
+				INFOPLIST_KEY_CFBundleDisplayName = "UangKu Catatan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Akses kamera dibutuhkan supaya kamu bisa foto dan unggah gambar untuk fitur-fitur tertentu di aplikasi.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Izin lokasi diperlukan agar kami bisa menyesuaikan konten dan layanan sesuai area kamu.";
